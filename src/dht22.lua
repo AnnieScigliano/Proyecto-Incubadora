@@ -1,10 +1,6 @@
---gpio.config( {gpio = {2}, dir= gpio.INPUT})
-
---print(dht.OK) 
---print(dht.ERROR_CHECKSUM) 
---print(dht.ERROR_TIMEOUT)
-
 pin = 2
+
+function printdht()
 status, temp, humi, temp_dec, humi_dec = dht.read2x(pin)
 if status == dht.OK then
     -- Integer firmware using this example
@@ -23,3 +19,6 @@ elseif status == dht.ERROR_CHECKSUM then
 elseif status == dht.ERROR_TIMEOUT then
     print( "DHT timed out." )
 end
+end
+
+printdht()

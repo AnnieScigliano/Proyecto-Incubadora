@@ -27,7 +27,7 @@ MIT license, http://opensource.org/licenses/MIT
 local M={
   name=...,       -- module name, upvalue from require('module-name')
   model=nil,      -- sensor model: BME280
-  verbose=false,    -- verbose output
+  verbose=nil,    -- verbose output
   debug=nil,      -- additional ckecks
   oss=0x01,       -- default oversamplig: 0=skip, 1=x1 .. 5=x16
   mode=0x03,      -- default sampling: 0=sleep, 1&2=forced(on demand), 3:normal(continious)
@@ -312,7 +312,6 @@ function M.read(...)
   M.temperature=t -- integer value of temperature [0.01 C]
   M.pressure   =p -- integer value of preassure   [0.01 hPa]
   M.humidity   =h -- integer value of rel.humidity[0.01 %]
-  print(('%s: p=%d[hPa],t=%d[C],h=%d[%%].'):format(M.name,p/100,t/100,h/100))
   if M.verbose==true then
     print(('%s: p=%d[hPa],t=%d[C],h=%d[%%].'):format(M.name,p/100,t/100,h/100))
   end
