@@ -1,1 +1,2 @@
+Integrantes: Jere Annie Pablo Santi
 Primero git add, después git commit, git pull si vienen cambios ver cómo se muestran y mergear, git push
