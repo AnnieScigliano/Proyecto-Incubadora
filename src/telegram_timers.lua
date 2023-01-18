@@ -35,14 +35,14 @@ local presionA = "https://api.telegram.org/" ..token .. "/sendMessage?chat_id=" 
 
 -- temporizador1: Temperatura
 
-temporizador2 = tmr.create()
-temporizador2:register(500, tmr.ALARM_AUTO,function()
+temporizador1 = tmr.create()
+temporizador1:register(500, tmr.ALARM_AUTO,function()
     temperature = sensor.temperature
     http.get(temperatura ,function(c, d) if c < 0 then print("falló el envio de temperatura, reintentando...") else print(c,#d) end end)
 
 end)
-temporizador2:interval(29000)
-temporizador2:start()
+temporizador1:interval(29000)
+temporizador1:start()
 
 
 --Temporizador2 : Humedad 
