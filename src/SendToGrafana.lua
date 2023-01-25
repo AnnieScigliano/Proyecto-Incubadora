@@ -34,6 +34,6 @@ function leeryenviardatos()
 end
 
 
-local mytimer2 = tmr.create()
-mytimer2:register(10000, tmr.ALARM_AUTO, leeryenviardatos)
-mytimer2:start()
+local sendatatmr = tmr.create()
+sendatatmr:register(10000, tmr.ALARM_AUTO, leeryenviardatos)
+sendatatmr:start()
