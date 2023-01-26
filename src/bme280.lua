@@ -312,7 +312,7 @@ function M.read(...)
   M.temperature=t -- integer value of temperature [0.01 C]
   M.pressure   =p -- integer value of preassure   [0.01 hPa]
   M.humidity   =h -- integer value of rel.humidity[0.01 %]
-  print(('%s: p=%d[hPa],t=%d[C],h=%d[%%].'):format(M.name,p/100,t/100,h/100))
+--  print(('%s: p=%d[hPa],t=%d[C],h=%d[%%].'):format(M.name,p/100,t/100,h/100))
   if M.verbose==true then
     print(('%s: p=%d[hPa],t=%d[C],h=%d[%%].'):format(M.name,p/100,t/100,h/100))
   end

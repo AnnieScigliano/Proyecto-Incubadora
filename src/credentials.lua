@@ -12,4 +12,6 @@ GATEWAY = "192.168.1.1"		-- your gateway
 GPIOBMESDA = 16
 GPIOBMESCL = 0
 
+GPIODHT22 = 2
+
 INICIALES = "jj"
