@@ -12,7 +12,7 @@ end
 
 -- Define la URL y los datos a enviar en json(?)
 --local url = "http://grafana.altermundi.net:8086/write?db=cto"
-local url = "http://grafana.altermundi.net:8086/write?db=cto"
+local url = SERVER
 local tokenGrafana = "token:e98697797a6a592e6c886277041e6b95"
 -- Crea la petición HTTP
 local headers = {
