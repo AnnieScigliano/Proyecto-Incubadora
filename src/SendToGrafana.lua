@@ -42,24 +42,24 @@ end
 function leeryenviardatosdht()
   status, temperature, humidity, temp_dec, humi_dec = dht.read2x(GPIODHT22)
   if status == dht.OK then
-    -- Integer firmware using this example
-    temperature = temperature + temp_dec/100
-    humidity = humidity + humi_dec/100
     pressure = 0
-  else
-    temperature = math.random(100,600)/100+90
-    humidity= math.random(100,600)/100+90
-    pressure = 0
+    --local datos = "mediciones,device="..INICIALES.."-dht22 temp="..temperature..",hum="..humidity..",press="..pressure
+    --datos = string.format("mediciones,device=%s-dht22 temp=%.2f,hum=%.2f,press=%.2f",INICIALES,temperature,humidity,pressure)
+    local datos = string.format("mediciones,device=%s-dht22 temp=%d.%03d,hum=%d.%03d,press=%.2f\r\n",
+      INICIALES,
+      math.floor(temperature),
+      temp_dec,
+      math.floor(humidity),
+      humi_dec
+    )
+    print (temperature,temp_dec)
+    print (datos)
+    http.post(url, { headers = headers }, datos, 
+      function(codigo, datos)
+        print("http post return "..codigo)
+        print(datos)
+      end)
   end
-  local datos = "mediciones,device="..INICIALES.."-dht22 temp="..temperature..",hum="..humidity..",press="..pressure
-  datos = string.format("mediciones,device=%s-dht22 temp=%.2f,hum=%.2f,press=%.2f",INICIALES,temperature,humidity,pressure)
-          
-  print (datos)
-  http.post(url, { headers = headers }, datos, 
-    function(codigo, datos)
-      print("http post return "..codigo)
-      print(datos)
-    end)
 end
 
 function leeryenviardatos()
