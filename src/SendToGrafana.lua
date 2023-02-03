@@ -1,74 +1,165 @@
--- Conexion Wifi poner los datos de cada wifi en credentials.lua pero no confirmar en el repo
+-- modules 
 dofile("wifiinit.lua")
 dofile("credentials.lua")
 
+-- Local variables 
 
-local sensorok = false
---Datos del sensor en variables
-local sensor = require('bme280')
-if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then 
-  sensorok = true
-end
-
--- Define la URL y los datos a enviar en json(?)
---local url = "http://grafana.altermundi.net:8086/write?db=cto"
+local token_grafana = "token:e98697797a6a592e6c886277041e6b95"
 local url = SERVER
-local tokenGrafana = "token:e98697797a6a592e6c886277041e6b95"
--- Crea la petición HTTP
-local headers = {
-  ["Content-Type"] = "text/plain",
-  ["Authorization"] = "Basic " .. tokenGrafana
-}
 
+------------------------------------------------------------------------------------
+-- Initializes the sensor to be able to read the data.
+--
+-- @var is_sensorok       boolean that checks the state of the sensor.
+-- @var sensor            is an instance of the bme280 module
+--                                               
+-- @param GPIOBMESDA     SDA pin number
+-- @param GPIOBMESCL     SCL pin number
+------------------------------------------------------------------------------------
 
-function leeryenviardatosbme()
-  if sensorok then
+local is_sensorok = false
+local sensor = require('bme280')
 
+if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then is_sensorok = true end
+
+------------------------------------------------------------------------------------
+-- @function send_and_read_data_bme    to read the data from the bme sensor 
+--                                     and send it by post request 
+--
+-- @var is_sensorok                    boolean that checks the state
+--                                     of the sensor.
+--
+-- @function sensor.read               of the bme280 module that returns the values 
+--                                     of the measurements
+--                                               
+-- @var temperature                    stores the temperature returned by the internal
+--                                     function of bme280
+--
+-- @var humidity                       stores the humidity returned by the internal 
+--                                     function of bme280
+--
+-- @var pressure                       stores the pressure returned by the internal
+--                                     function of bme280
+--
+-- @var data                           that contains the syntax of the data to be sent
+--
+-- @var headers                        variable that defines the content type and
+--                                     the type of authorization in sending the data
+--
+-- @funtion http.post                  nodemcu http library, allows to make web requests
+--
+-- @var url                            contains a string with the url to use
+--
+--
+-- @return                             request code and the date of the request  
+------------------------------------------------------------------------------------
+
+function send_and_read_data_bme()
+  if is_sensorok then
+    
     sensor.read()
-    temperature = (sensor.temperature/100)
-    humidity = (sensor.humidity/100)
-    pressure = math.floor(sensor.pressure)/100
+      
+    temperature = (sensor.temperature / 100)
+    humidity = (sensor.humidity / 100)
+    pressure = math.floor(sensor.pressure) / 100
 
-    local datos = "mediciones,device="..INICIALES.."-bme280 temp="..temperature..",hum="..humidity..",press="..pressure
-    print (datos)
-    http.post(url, { headers = headers }, datos, 
-      function(codigo, datos)
-        print("http post return "..codigo)
-        print(datos)
-      end)
-  end
+    local data = "mediciones,device=" .. INICIALES
+    .. "-bme280 temp=" .. temperature
+    .. ",hum=" .. humidity
+    ..",press=" .. pressure
+    
+    print(data)
+
+    local headers = {
+      ["Content-Type"] = "text/plain",
+      ["Authorization"] = "Basic " .. token_grafana
+    }
+
+    http.post(url, {headers = headers}, data, function(code, data)
+      
+      print("http post return " .. code) 
+      
+      print(data) -- testing that data is displayed correctly
+
+    end) -- function post
+  end -- if  
+end -- read_and_send_data_bme
+
+------------------------------------------------------------------------------------
+-- @function send_and_read_data_dht    to read the data from the dht22 sensor 
+--                                     and send it by post request
+-- 
+-- @var is_status                      boolean that checks the state
+--                                     of the sensor.
+--                                               
+-- @var temperature                    stores the temperature returned by the internal
+--                                     function of dht22
+--
+-- @var humidity                       stores the humidity returned by the internal
+--                                     function of dht22
+--
+-- @var temp_dec                       containing the temperature data in float
+--
+-- @var humi_dec                       containing the humidity data in float
+--
+-- @funtion dht22.read2x               internal function of nodemcu dht22 library, 
+--                                     allows to read sensor data
+--
+-- @param GPIODHT22                    pin number on which the dht22 is operating
+--
+-- @return                             returns the request code and the date of the
+--                                     request  
+------------------------------------------------------------------------------------
+
+function send_and_read_data_dht()
+  is_status, temperature, humidity, temp_dec, humi_dec = dht.read2x(GPIODHT22)
+    if is_status == dht.OK then
+      pressure = 0
+      
+      local data = "mediciones,device=" .. INICIALES
+      .. "-bme280 temp=" .. temperature
+      .. ",hum=" .. humidity
+      ..",press=" .. pressure
+      
+      local headers = {
+        ["Content-Type"] = "text/plain",
+        ["Authorization"] = "Basic " .. token_grafana
+      }
+      
+      print(data) -- testing that data is displayed correctly
+      
+      http.post(url, {headers = headers}, data, function(codigo, data)
+        
+        print("http post return " .. codigo)
+        print(data)
+
+    end) -- function post
+  end -- if
+end -- send_and_read_data_dht
+
+------------------------------------------------------------------------------------
+-- @function read_and_send_data_grafana    is in charge of calling the data sending
+--                                         functions
+------------------------------------------------------------------------------------
+
+function read_and_send_data_grafana()
+    
+    send_and_read_data_bme()
+    send_and_read_data_dht()
 end
 
-function leeryenviardatosdht()
-  status, temperature, humidity, temp_dec, humi_dec = dht.read2x(GPIODHT22)
-  if status == dht.OK then
-    pressure = 0
-    local datos = "mediciones,device="..INICIALES.."-dht22 temp="..temperature..",hum="..humidity..",press="..pressure
-    --datos = string.format("mediciones,device=%s-dht22 temp=%.2f,hum=%.2f,press=%.2f",INICIALES,temperature,humidity,pressure)
-    --local datos = string.format("mediciones,device=%s-dht22 temp=%d.%03d,hum=%d.%03d,press=%.2f\r\n",
-    --  INICIALES,
-    --  math.floor(temperature),
-    --  temp_dec,
-    --  math.floor(humidity),
-    --  humi_dec
-    --)
-    --print (temperature,temp_dec)
-    print (datos)
-    http.post(url, { headers = headers }, datos, 
-      function(codigo, datos)
-        print("http post return "..codigo)
-        print(datos)
-      end)
-  end
-end
-
-function leeryenviardatos()
-  leeryenviardatosbme()
-  leeryenviardatosdht()
-end
-
-local sendatatmr = tmr.create()
-sendatatmr:register(10000, tmr.ALARM_AUTO, leeryenviardatos)
-sendatatmr:start()
-
+------------------------------------------------------------------------------------
+-- @var send_data_tmr                  contains a timer
+--
+-- @function send_data_tmr:register    execute the function every 10 seconds
+--
+-- @param 10000                        time in milliseconds
+--
+-- @param tmr.ALARM_AUTO               automatically execute the function
+--
+--@param send_data_tmr:start           start the timer
+------------------------------------------------------------------------------------
+local send_data_tmr = tmr.create()
+send_data_tmr:register(10000, tmr.ALARM_AUTO, read_and_send_data_grafana)
+send_data_tmr:start()
 
