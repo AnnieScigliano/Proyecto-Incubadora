@@ -1,125 +1,123 @@
-# Proyecto-Incubadora
+# Project-Incubadora
 
-## Notas antes de empezar :raised_back_of_hand:
+## Notes before you start :raised_back_of_hand:
 
- Agregar el usuario actual al grupo dialout. Esto permitirá usar el USB de manera directa
+ add the current user to the dialout group. This will allow us to use the USB directly
 
 ```bash
 sudo usermod -a -G dialout $USER
 ```
- Tambien nos agregamos al grupo temporariamente para no tener que volver a loguearnos al sistema. Si no lo hacemos
-  será necesario reiniciar para que los cambios tengan efecto
+We also add ourselves to the group temporarily so we don't have to log in to the system again. If we do not, it will be necessary to restart for the changes to take effect.
 
 ```bash
 newgrp dialout
 ```
 
-## Firmware con soporte para Lua
-_Pasitos para hacer funcionar el ESP32_ :grinning:
+## Firmware with lua support
 
- Clonar el repositorio 
+ clone the repository
 
 ```bash
 git clone --branch dev-esp32 --depth=1 --shallow-submodules --recurse-submodules https://github.com/nodemcu/nodemcu-firmware.git firmwareESP32 
 ```
- Una vez clonado, descargar el archivo skdconfig desde este [enlace](https://nube.altermundi.net/s/3arPqaHxs763pmB/download?path=%2F&files=sdkconfig) y guardarlo en la carpeta 'firmwareESP32' luego se debe compilar con :
+ Once cloned, download the skdconfig file from this [link](https://nube.altermundi.net/s/3arPqaHxs763pmB/download?path=%2F&files=sdkconfig) and save it in 'firmwareESP32' folder then it should be compiled with :
 
 ```bash
 make
 ```
-## Grabar el Firmware con ESPTool 
+## Burn Firmware with ESPTool
 
-__Instalacion de ESPTool__
+__Installation of ESPTool__
 
 ```bash
 sudo apt install esptool
 ```
 
 
-Poner el ESP32 en el modo programacion sosteniendo el botón IO0 y apretando el botón RST al mismo tiempo
+Put the ESP32 in programming mode by holding the IO0 button and pressing the RST button at the same time.
 
-desde la carpeta 'build' ejecutar:
+from the 'build' folder run:
 
 ```bash
 esptool --chip esp32 --port /dev/ttyUSB0 --baud 921600 --before default_reset --after hard_reset write_flash -z --flash_mode dio --flash_freq 80m --flash_size detect 0x1000 bootloader/bootloader.bin 0x10000 NodeMCU.bin 0x8000 partitions.bin
 
 ```
 
-## Cargar los scripts Lua
+## Load the Lua scripts
 
-Para cargar los scripts tenemos 3 opciones:
+To load the scripts we have 3 options:
 * [EspLorer](https://github.com/4refr0nt/ESPlorer)
 * [nodemcu-uploader](https://pypi.org/project/nodemcu-uploader/)
 * [ZeroBrane](https://studio.zerobrane.com/)
 
 
 
-## Opción 1 (ESPlorer)
+## Option 1 (ESPlorer)
 
-clonar el repositorio:
+ clone the repository:
 
 ```bash
 git clone https://github.com/4refr0nt/ESPlorer.git
 ```
-despues de clonarlo:
+after cloning it:
 
 ```bash
 cd ESPlorer
 ./mvnw clean package
 ```
-para ejecutar ESPlorer:
+to execute ESPlorer:
 
 ```bash
 java -jar target/ESPlorer.jar
 ```
 
-## Opción 2 (nodemcu-uploader)
+## Option 2 (nodemcu-uploader)
 
-Instalación:
+installation:
 
 ```bash
 sudo pip install nodemcu-uploader
 ```
-una vez instalado, podemos subir archivos usando:
+once installed, we can upload files using:
 
 ```bash
 nodemcu-uploader upload init.lua
 ```
 
-para ver los distintos comandos que se pueden utilizar:
+to see the different commands that can be used:
 ```bash
 nodemcu-uploader -h
 ```
 
-## Opcíon 3 (ZeroBraneStudio)
+## Option 3 (ZeroBraneStudio)
 
-Instalación:
+installation:
 ```bash
 wget https://download.zerobrane.com/ZeroBraneStudioEduPack-1.90-linux.sh
 ```
-despues de descargar, le damos permiso de ejecución con:
+After downloading, we give it execution permission with:
 
 ```bash
 chmod +x ZeroBraneStudioEduPack-1.90-linux.sh
 ```
-despues de darle permisos, ejecutamos el instalador:
+after giving it permissions, run the installer:
 
 ```bash
 ./ZeroBraneStudioEduPack-1.90-linux.sh
 ```
 
-## Links Útiles
+## Useful Links
 
-* [Pad Incubadora](https://pad.codigosur.org/AM_incubadora)
-* [Informacion sobre el sensor BME280](https://3iinc.xyz/blog/how-to-use-i2c-sensor-bme280-with-esp32cam/)
-* [Documentacion nodemcu](https://nodemcu.readthedocs.io/en/dev-esp32)
-* [Repositorio con modulos Lua](https://github.com/novalabsxyz/api-examples/blob/master/script/bme280/bme280.lua)
-* [Infomacion sobre el sensor DHT22](https://nodemcu.readthedocs.io/en/dev-esp32/modules/dht/#dhtread2x)
-* [Tutoriales de Git](https://rogerdudler.github.io/git-guide/index.es.html )
-* [Archivos y fotos](https://nube.altermundi.net/s/3arPqaHxs763pmB?path=%2F)
+* [Pad incubadora](https://pad.codigosur.org/AM_incubadora)
+* [Sensor information BME280](https://3iinc.xyz/blog/how-to-use-i2c-sensor-bme280-with-esp32cam/)
+* [Documentation nodemcu](https://nodemcu.readthedocs.io/en/dev-esp32)
+* [Repository with modules Lua](https://github.com/novalabsxyz/api-examples/blob/master/script/bme280/bme280.lua)
+* [Sensor information DHT22](https://nodemcu.readthedocs.io/en/dev-esp32/modules/dht/#dhtread2x)
+* [Git Tutorials](https://rogerdudler.github.io/git-guide/index.es.html )
+* [Files and photos](https://nube.altermundi.net/s/3arPqaHxs763pmB?path=%2F)
 
 
-## Diagramas BME280 y DHT22
+## Diagrams BME280 y DHT22
 
 
 <p align="center" width="100%">
@@ -132,7 +130,7 @@ despues de darle permisos, ejecutamos el instalador:
 
 
 
-## Hecho con :heart: por:
+## made with :heart: by:
 
 <p align="center" width="100%">
     <img width="50%" src="https://user-images.githubusercontent.com/104506596/212185278-8443b89f-9731-4246-a4bd-83f83823351f.png">
