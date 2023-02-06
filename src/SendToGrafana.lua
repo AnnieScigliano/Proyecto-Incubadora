@@ -50,21 +50,19 @@ if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then is_sensorok = true end
 
 function send_data_grafana()
 
-    local data = "mediciones,device=" .. INICIALES 
-	  .. "-bme280 temp=".. temperature
-		.. ",hum=" .. humidity 
-		.. ",press=" .. pressure
+    local data = "mediciones,device=" .. INICIALES .. "-bme280 temp=" ..
+                  temperature .. ",hum=" .. humidity .. ",press=" .. pressure
 
     local headers = {
         ["Content-Type"] = "text/plain",
         ["Authorization"] = "Basic " .. token_grafana
     }
     http.post(url, {headers = headers}, data,
-    	function(c, d) print("HTTP POST return " .. c) end) -- * post function end
+              function(c, d) print("HTTP POST return " .. c) end) -- * post function end
 end -- * send_data_grafana end
 
 ------------------------------------------------------------------------------------
--- ! @function data_bme    							to read the data from the bme sensor 
+-- ! @function data_bme    							 to read the data from the bme sensor 
 -- !                                      
 --
 -- ! @var is_sensorok                    boolean that checks the state
@@ -85,18 +83,18 @@ end -- * send_data_grafana end
 
 function data_bme()
 
-	if is_sensorok then sensor.read() end
+    if is_sensorok then sensor.read() end
 
-  	temperature = (sensor.temperature / 100)
-  	humidity = (sensor.humidity / 100)
-  	pressure = math.floor(sensor.pressure) / 100
+    temperature = (sensor.temperature / 100)
+    humidity = (sensor.humidity / 100)
+    pressure = math.floor(sensor.pressure) / 100
 
-   	send_data_grafana()
+    send_data_grafana()
 
 end
 
 ------------------------------------------------------------------------------------
--- ! @function data_dht    							to read the data from the dht22 sensor 
+-- ! @function data_dht    							 to read the data from the dht22 sensor 
 -- 
 -- ! @var is_status                      boolean that checks the state
 -- !                                     of the sensor.
@@ -120,15 +118,15 @@ end
 
 function data_dht()
 
-	is_status, temperature, humidity, temp_dec, humi_dec = dht.read2x(GPIODHT22)
+    is_status, temperature, humidity, temp_dec, humi_dec = dht.read2x(GPIODHT22)
 
-  if is_status == dht.OK then
-      
-		pressure = 0
+    if is_status == dht.OK then
 
-    send_data_grafana()
+        pressure = 0
 
-	end -- if end 
+        send_data_grafana()
+
+    end -- if end 
 end -- data_dht end
 
 ------------------------------------------------------------------------------------
