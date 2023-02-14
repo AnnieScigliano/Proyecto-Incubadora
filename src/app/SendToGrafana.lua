@@ -10,45 +10,23 @@ local url = SERVER
 
 ------------------------------------------------------------------------------------
 -- ! Initializes the sensor to be able to read the data.
---
 -- ! @var is_sensorok       boolean that checks the state of the sensor.
 -- ! @var sensor            is an instance of the bme280 module
---                                               
--- ! @param GPIOBMESDA     SDA pin number
--- ! @param GPIOBMESCL     SCL pin number
 ------------------------------------------------------------------------------------
 
 if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then is_sensorok = true end
 
 ------------------------------------------------------------------------------------
 -- ! @function send_data_grafana    			to read the data from the bme sensor 
--- !                                     and send it by post request 
+-- !                                            and send it by post request 
+
+-- ! @funtion http.post                         nodemcu http library, allows to make web requests
+-- ! @var url                                   contains a string with the url to use
 --
--- ! @var is_sensorok                    boolean that checks the state
--- !                                     of the sensor.
---                                               
--- ! @var temperature                    stores the temperature returned by the internal
--- !                                     function of sensor
---
--- ! @var humidity                       stores the humidity returned by the internal 
--- !                                     function of sensor
---
--- ! @var pressure                       stores the pressure returned by the internal
--- !                                     function of sensor
---
--- ! @var data                           that contains the syntax of the data to be sent
---
--- ! @var headers                        variable that defines the content type and
--- !                                     the type of authorization in sending the data
---
--- ! @funtion http.post                  nodemcu http library, allows to make web requests
---
--- ! @var url                            contains a string with the url to use
---
--- ! @return                             request (c)ode and the (d)ata of the request  
+-- ! @return                                    request (c)ode and the (d)ata of the request  
 ------------------------------------------------------------------------------------
 
-function send_data_grafana()
+function send_data_grafana(INICIALES, temperature, humidity, pressure )
 
     local data = "mediciones,device=" .. INICIALES .. "-bme280 temp=" ..
                   temperature .. ",hum=" .. humidity .. ",press=" .. pressure
@@ -65,7 +43,7 @@ function send_data_grafana()
 end -- * send_data_grafana end
 
 ------------------------------------------------------------------------------------
--- ! @function data_bme    							 to read the data from the bme sensor 
+-- ! @function data_bme    				 to read the data from the bme sensor 
 -- !                                      
 --
 -- ! @var is_sensorok                    boolean that checks the state
@@ -73,15 +51,7 @@ end -- * send_data_grafana end
 --
 -- ! @function sensor.read               of the bme280 module that returns the values 
 -- !                                     of the measurements
---                                               
--- ! @var temperature                    stores the temperature returned by the internal
--- !                                     function of bme280
---
--- ! @var humidity                       stores the humidity returned by the internal 
--- !                                     function of bme280
---
--- ! @var pressure                       stores the pressure returned by the internal
--- !                                     function of bme280 
+--                                                
 ------------------------------------------------------------------------------------
 
 function data_bme()
@@ -97,29 +67,12 @@ function data_bme()
 end
 
 ------------------------------------------------------------------------------------
--- ! @function data_dht    							 to read the data from the dht22 sensor 
+-- ! @function data_dht    				 to read the data from the dht22 sensor 
 -- 
--- ! @var is_status                      boolean that checks the state
--- !                                     of the sensor.
---                                               
--- ! @var temperature                    stores the temperature returned by the internal
--- !                                     function of dht22
---
--- ! @var humidity                       stores the humidity returned by the internal
--- !                                     function of dht22
---
--- ! @var temp_dec                       containing the temperature data in float
---
--- ! @var humi_dec                       containing the humidity data in float
---
--- ! @funtion dht22.read2x               internal function of nodemcu dht22 library, 
--- !                                     allows to read sensor data
---
 -- ! @param GPIODHT22                    pin number on which the dht22 is operating
---
 ------------------------------------------------------------------------------------
 
-function data_dht()
+function data_dht(temperature, humidity, pressure)
 
     is_status, temperature, humidity, temp_dec, humi_dec = dht.read2x(GPIODHT22)
 
@@ -145,7 +98,6 @@ function read_and_send_data()
 end
 
 ------------------------------------------------------------------------------------
--- ! @var send_data_timer                contains a timer
 --
 -- ! @function send_data_timer:register  execute the function every 10 seconds
 --
