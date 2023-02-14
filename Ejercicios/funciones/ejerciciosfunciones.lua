@@ -15,7 +15,7 @@ print(mymathmodule.div(30,19))
 
 
 -- crear otro módulo que implement la funcion máx, format y la función control 
----la funcion  max debe devolver el mayor de dos numeros 
+-- la funcion  max debe devolver el mayor de dos numeros 
 my_module = require("my_module")
 
 resutl = my_module.max(54,545)
