@@ -3,7 +3,6 @@
 -----------------------------------
 
 local my_math = {}
-
 -----------------------------------
 --function adds two numbers
 --@param x  any number

@@ -49,7 +49,7 @@ accion = my_module.temp_control(42)
 print (accion)
 assert (accion=="apagar resistencia")
 
-accion = my_module.temp_control(38.5)
+accion = my_module.temp_control(38)
 print (accion)
 --assert (accion=="ok")
 
