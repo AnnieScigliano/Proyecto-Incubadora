@@ -22,11 +22,10 @@ if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then is_sensorok = true end
 
 -- ! @funtion http.post                         nodemcu http library, allows to make web requests
 -- ! @var url                                   contains a string with the url to use
---
--- ! @return                                    request (c)ode and the (d)ata of the request  
+-- 
 ------------------------------------------------------------------------------------
 
-function send_data_grafana(INICIALES, temperature, humidity, pressure )
+function send_data_grafana()
 
     local data = "mediciones,device=" .. INICIALES .. "-bme280 temp=" ..
                   temperature .. ",hum=" .. humidity .. ",press=" .. pressure
@@ -46,13 +45,9 @@ end -- * send_data_grafana end
 -- ! @function data_bme    				 to read the data from the bme sensor 
 -- !                                      
 --
--- ! @var is_sensorok                    boolean that checks the state
--- !                                     of the sensor.
---
 -- ! @function sensor.read               of the bme280 module that returns the values 
 -- !                                     of the measurements
---                                                
-------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
 
 function data_bme()
 
@@ -72,7 +67,7 @@ end
 -- ! @param GPIODHT22                    pin number on which the dht22 is operating
 ------------------------------------------------------------------------------------
 
-function data_dht(temperature, humidity, pressure)
+function data_dht()
 
     is_status, temperature, humidity, temp_dec, humi_dec = dht.read2x(GPIODHT22)
 
@@ -86,7 +81,7 @@ function data_dht(temperature, humidity, pressure)
 end -- data_dht end
 
 ------------------------------------------------------------------------------------
--- ! @function read_and_send_data	    	is in charge of calling the read and  data sending
+-- ! @function read_and_send_data	     is in charge of calling the read and  data sending
 -- !                                     functions
 ------------------------------------------------------------------------------------
 
