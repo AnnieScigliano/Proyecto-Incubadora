@@ -4,8 +4,8 @@
 -- rename the file to remove the underscore.
 -------------------------------------
 
-SSID = "MilJor"
-PASSWORD = "primavera25"
+SSID = "Santi y Sol 2.4GHz"
+PASSWORD = "fibertel987"
 
 IP_ADDR = "0.0.0.0" 		-- static IP
 NETMASK = "255.255.255.0"	-- your subnet

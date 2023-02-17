@@ -36,6 +36,10 @@ function configwifi()
   wifi.sta.connect()
 end -- end function
 
+----------------------------------
+--Scan all available wifi networks
+----------------------------------
+
 function scan()
   wifi.sta.scan({ hidden = 1 }, function(err,arr)
     mytimer:register(1000, tmr.ALARM_SINGLE, check_wifi)
@@ -48,10 +52,10 @@ function scan()
         print(string.format("%-32s",ap.ssid),ap.channel,ap.bssid,ap.rssi,ap.auth,ap.bandwidth)
       end
       print("-- Total APs: ", #arr)
-    end
-  end)
+    end -- end if 
+  end) -- end function
   
-end
+end -- end function
 
 -------------------------------------
 -- Define WiFi station event callbacks
@@ -117,11 +121,11 @@ wifi_disconnect_event = function(ev, info)
     mytimer = tmr.create()
     mytimer:register(10000, tmr.ALARM_SINGLE, configwifi)
     mytimer:start()
+    
+    scan()       
+    
     disconnect_ct = nil
 
-    function scan()      
-    end
-    
   end -- end if
 end -- end function
 
