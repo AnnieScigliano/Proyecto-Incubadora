@@ -1,10 +1,19 @@
 
--- Print AP list that is easier to read
-function listap(t) -- (SSID : Authmode, RSSI, BSSID, Channel)
-    print("\n\t\t\tSSID\t\t\t\t\tBSSID\t\t\t  RSSI\t\tAUTHMODE\t\tCHANNEL")
-    for bssid,v in pairs(t) do
-        local ssid, rssi, authmode, channel = string.match(v, "([^,]+),([^,]+),([^,]+),([^,]*)")
-        print(string.format("%32s",ssid).."\t"..bssid.."\t  "..rssi.."\t\t"..authmode.."\t\t\t"..channel)
-    end
-end
-wifi.sta.getap(1, listap)
+function scan()
+  wifi.sta.scan({ hidden = 1 }, function(err,arr)
+    mytimer:register(1000, tmr.ALARM_SINGLE, check_wifi)
+    mytimer:start()
+    if err then
+      print ("Scan failed:", err)
+    else
+      print(string.format("%-26s","SSID"),"Channel BSSID              RSSI Auth Bandwidth")
+      for i,ap in ipairs(arr) do
+        print(string.format("%-32s",ap.ssid),ap.channel,ap.bssid,ap.rssi,ap.auth,ap.bandwidth)
+      end
+      print("-- Total APs: ", #arr)
+    end -- end if 
+  end) -- end function
+  
+end -- end function
+
+scan()

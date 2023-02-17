@@ -4,8 +4,8 @@
 -- rename the file to remove the underscore.
 -------------------------------------
 
-SSID = "Santi y Sol 2.4GHz"
-PASSWORD = "fibertel987"
+SSID = "Sol y S 2.4GHz"
+PASSWORD = "fibertel98765"
 
 IP_ADDR = "0.0.0.0" 		-- static IP
 NETMASK = "255.255.255.0"	-- your subnet
@@ -16,7 +16,7 @@ GPIOBMESCL = 0
 
 GPIODHT22 = 2
 
-INICIALES = "jj"
+INICIALES = "SC"
 SERVER="http://grafana.altermundi.net:8086/write?db=cto"
 
 -------------------------------------
