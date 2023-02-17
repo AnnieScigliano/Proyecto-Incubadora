@@ -2,7 +2,7 @@
 --  This is the reference implementation to train lua fucntions. It
 --  implements part of the core functionality and has some incomplete comments.
 --
---  javier jorge
+--  Santiago Rodriguez Cetran
 --
 --  License:
 -----------------------------------------------------------------------------
