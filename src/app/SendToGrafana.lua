@@ -48,7 +48,7 @@ function data_bme()
 
     if is_sensorok then sensor.read() 
 		
-		else then
+		else
 
 			temperature = 0 
 			humidity = 0
