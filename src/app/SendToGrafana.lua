@@ -46,10 +46,9 @@ end -- * send_data_grafana end
 
 function data_bme()
 
-    if is_sensorok == True 
-		then sensor.read() 
+    if is_sensorok then sensor.read() 
 		
-		else 
+		else then
 
 			temperature = 0 
 			humidity = 0
