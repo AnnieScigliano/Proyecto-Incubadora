@@ -17,7 +17,7 @@ local url = SERVER
 if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then is_sensorok = true end
 
 ------------------------------------------------------------------------------------
--- ! @function send_data_grafana    			to read the data from the bme sensor 
+-- ! @function send_data_grafana    	 to read the data from the bme sensor 
 -- ! @funtion http.post                  nodemcu http library, allows to make web requests
  ------------------------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ function send_data_grafana()
 end -- * send_data_grafana end
 
 ------------------------------------------------------------------------------------
--- ! @function data_bme    							 to read the data from the bme sensor 
+-- ! @function data_bme    				 to read the data from the bme sensor 
 
 -- ! @function sensor.read               of the bme280 module that returns the values 
 --	                                     of the measurements 
@@ -50,7 +50,7 @@ function data_bme()
 		then sensor.read() 
 		
 		else 
-			
+
 			temperature = 0 
 			humidity = 0
 			pressure = 0
