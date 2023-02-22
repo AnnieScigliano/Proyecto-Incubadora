@@ -2,7 +2,7 @@
 --  This is the reference implementation to train lua fucntions. It 
 --  implements part of the core functionality and has some incomplete comments.
 --
---  javier jorge
+--  Anabella Scigliano
 --
 --  License: 
 -----------------------------------------------------------------------------
@@ -11,16 +11,20 @@
 local my_module =  {}
 
 -------------------------------------
--- What is this funciton doing ?
+-- function shows the higher number
 --
--- @param num1  ??
--- @param num2  ??
--- @return ??
+-- @param num1  any
+-- @param num2  any
+-- @return higher
 -------------------------------------
-function my_module.max(num1, num2)
-  return num1
-end
 
+function my_module.max(num1, num2)
+  if num1 > num2 then
+    return num1
+  else
+    return num2
+  end
+end
 
 -------------------------------------
 -- Controls temperature
@@ -29,21 +33,28 @@ end
 -- @return "prender resistencia" if temp is grater than 38,"apagar resistencia"
 -- if temp is lower than 39. otherwise "ok"
 -------------------------------------
+
 function my_module.temp_control(temperature)
-  return nil
-end
-
+  if temperature > 38 then
+    return ("apagar resistencia")
+  elseif temperature < 38 then
+    return ("prender resistencia")
+  elseif temperature == 38 then
+    return ("ok")
+  end --end if
+end --end function
 
 -------------------------------------
--- What is this funciton doing ?
+-- Controls humidity
 --
--- @param humidity  ??
--- @return ??
+-- @param humidity  in air
+-- @return 
 -------------------------------------
+
 function my_module.humidity_control(humidity)
-  if humidity<30 then
+  if humidity < 30 then
     return ("aumentar superficie")
-  elseif humidity>90 then
+  elseif humidity > 90 then
     return ("reducir superficie")
   end
   return "ok"
