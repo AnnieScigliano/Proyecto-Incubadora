@@ -96,6 +96,17 @@ wifi_disconnect_event = function(ev, info)
     print("Retrying connection...(attempt " .. (disconnect_ct + 1) .. " of " .. total_tries .. ")")
   else
     wifi.sta.disconnect()
+    wifi.sta.scan({ hidden = 1 }, function(err,arr)
+      if err then
+        print ("Scan failed:", err)
+      else
+        print(string.format("%-26s","SSID"),"Channel BSSID              RSSI Auth Bandwidth")
+      for i,ap in ipairs(arr) do
+        print(string.format("%-32s",ap.ssid),ap.channel,ap.bssid,ap.rssi,ap.auth,ap.bandwidth)
+      end
+      print("-- Total APs: ", #arr)
+      end
+    end)
     print("Aborting connection to AP!")
     mytimer = tmr.create()
     mytimer:register(10000, tmr.ALARM_SINGLE, configwifi)
