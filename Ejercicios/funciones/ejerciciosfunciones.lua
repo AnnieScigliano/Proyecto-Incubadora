@@ -18,6 +18,15 @@ print(mymathmodule.div(30,19))
 ---la funcion  max debe devolver el mayor de dos numeros 
 my_module = require("my_module")
 
+function my_module.max(num1,num2)
+    if num1>num2 then 
+        return num1 
+    else
+        return num2
+    end
+end
+
+
 resutl = my_module.max(54,545)
 print (resutl)
 assert(resutl==545)

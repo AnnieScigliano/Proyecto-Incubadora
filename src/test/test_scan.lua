@@ -47,8 +47,8 @@ wifi.sta.disconnect()
 scan()
 station_cfg={}
 
-station_cfg.ssid="4374"
-station_cfg.pwd="12345666"
+station_cfg.ssid="Sol y Santi 2.4GHz"
+station_cfg.pwd="fibertel98765"
 station_cfg.auto=false
 wifi.sta.config(station_cfg, true);
 wifi.sta.connect();
