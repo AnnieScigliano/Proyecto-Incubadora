@@ -14,7 +14,11 @@ local url = SERVER
 -- ! @var sensor            is an instance of the bme280 module
 ------------------------------------------------------------------------------------
 
-if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then is_sensorok = true end
+if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then 
+    
+    is_sensorok = true 
+
+end -- end if
 
 ------------------------------------------------------------------------------------
 -- ! @function send_data_grafana    			to read the data from the bme sensor 
@@ -36,10 +40,11 @@ function send_data_grafana()
     }
     http.post(url, {headers = headers}, data,
       
-      function(c, d) print("HTTP POST return " .. c)
+      function(code_return, data_return) 
+        print("HTTP POST return " .. code_return)
       
-    end) -- * post function end
-end -- * send_data_grafana end
+    end) -- function end
+end -- send_data_grafana end
 
 ------------------------------------------------------------------------------------
 -- ! @function data_bme    				 to read the data from the bme sensor 
@@ -51,7 +56,11 @@ end -- * send_data_grafana end
 
 function data_bme()
 
-    if is_sensorok then sensor.read() end
+    if is_sensorok then 
+        
+        sensor.read() 
+    
+    end -- end if
 
     temperature = (sensor.temperature / 100)
     humidity = (sensor.humidity / 100)
@@ -59,7 +68,7 @@ function data_bme()
 
     send_data_grafana()
 
-end
+end -- data_bme end
 
 ------------------------------------------------------------------------------------
 -- ! @function data_dht    				 to read the data from the dht22 sensor 
@@ -81,7 +90,7 @@ function data_dht()
 end -- data_dht end
 
 ------------------------------------------------------------------------------------
--- ! @function read_and_send_data	     is in charge of calling the read and  data sending
+-- ! @function read_and_send_data	     is in charge of calling the read and data sending
 -- !                                     functions
 ------------------------------------------------------------------------------------
 
@@ -90,7 +99,7 @@ function read_and_send_data()
     data_bme()
     data_dht()
 
-end
+end -- read_and_send_data end
 
 ------------------------------------------------------------------------------------
 --
