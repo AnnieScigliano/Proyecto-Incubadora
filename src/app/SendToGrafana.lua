@@ -48,7 +48,7 @@ if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then is_sensorok = true end
 -- ! @return                             request (c)ode and the (d)ata of the request  
 ------------------------------------------------------------------------------------
 
-function send_data_grafana()
+function send_data_grafana(temperature,humidity,pressure,INICIALES)
 
     local data = "mediciones,device=" .. INICIALES .. "-bme280 temp=" ..
                   temperature .. ",hum=" .. humidity .. ",press=" .. pressure
@@ -92,7 +92,7 @@ function data_bme()
     humidity = (sensor.humidity / 100)
     pressure = math.floor(sensor.pressure) / 100
 
-    send_data_grafana()
+    send_data_grafana(temperature,humidity,pressure,INICIALES)
 
 end
 
