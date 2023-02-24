@@ -58,9 +58,7 @@ function send_data_grafana()
         ["Authorization"] = "Basic " .. token_grafana
     }
     http.post(url, {headers = headers}, data,
-      
       function(c, d) print("HTTP POST return " .. c)
-      
     end) -- * post function end
 end -- * send_data_grafana end
 
