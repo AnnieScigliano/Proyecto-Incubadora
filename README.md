@@ -117,7 +117,7 @@ after giving it permissions, run the installer:
 * [Files and photos](https://nube.altermundi.net/s/3arPqaHxs763pmB?path=%2F)
 
 
-## Diagrams BME280 y DHT22
+## Diagrams BME280 & DHT22
 
 
 <p align="center" width="100%">
@@ -125,10 +125,14 @@ after giving it permissions, run the installer:
 </p>
 
 <p align="center" width="100%">
-    <img width="100%" src="https://i.postimg.cc/B67SfSYR/image.png">
+    <img width="100%" src="[https://i.postimg.cc/B67SfSYR/image.png">
 </p>
 
+## Full diagram RELAYs, BME280 & DHT22
 
+<p align="center" width="100%">
+    <img width="100%" src="https://i.postimg.cc/B67SfSYR/image.png">
+</p>
 
 ## made with :heart: by:
 
