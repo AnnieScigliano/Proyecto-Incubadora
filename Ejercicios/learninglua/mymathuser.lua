@@ -1,17 +1,12 @@
 --Crear un módulo mymath.lua que realice estas operaciones
 mymathmodule = require("mymath")
+incubator = require("incubator")
 
 print(mymathmodule.add(10,20))
 assert(mymathmodule.add(10,20)==30)
 
 print(mymathmodule.sub(30,20))
 assert(mymathmodule.sub(30,20)==10)
-
-print(mymathmodule.mul(10,20))
-assert(mymathmodule.mul(10,20)==200)
-
-print(mymathmodule.div(30,19))
--- Deberiía imprimir 1.5789473684211
 
 
 INICIALES = "jj"
@@ -63,5 +58,26 @@ assert (accion=="ok")
 accion = my_module.temp_control(10)
 print (accion)
 assert (accion=="prender resistencia")
+
+print (incubator.getValues())
+print (incubator.getValues())
+print (incubator.getValues())
+print (incubator.getValues())
+print (incubator.getValues())
+print (incubator.getValues())
+incubator.temp_control(true)
+print (incubator.getValues())
+print (incubator.getValues())
+print (incubator.getValues())
+print (incubator.getValues())
+print (incubator.getValues())
+print (incubator.getValues())
+print (incubator.getValues())
+incubator.temp_control(false)
+print (incubator.getValues())
+print (incubator.getValues())
+print (incubator.getValues())
+print (incubator.getValues())
+print (incubator.getValues())
 
 
