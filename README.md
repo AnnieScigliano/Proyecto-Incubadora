@@ -125,7 +125,7 @@ after giving it permissions, run the installer:
 </p>
 
 <p align="center" width="100%">
-    <img width="100%" src="[https://i.postimg.cc/B67SfSYR/image.png">
+    <img width="100%" src="https://i.postimg.cc/B67SfSYR/image.png">
 </p>
 
 ## Controller diagram
