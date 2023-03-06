@@ -59,10 +59,11 @@ end -- data_bme end
 function data_dht()
 	is_status, temperature, humidity, temp_dec, humi_dec = dht.read2x(GPIODHT22)
 
-	if is_status != dht.OK then
+	if is_status ~= dht.OK then
 		temperature =0
 		humidity = 0
 	end -- if end
+	
 	pressure = 0
 	send_data_grafana()
 end -- data_dht end
