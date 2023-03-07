@@ -11,13 +11,13 @@
 
 
 local incubator =  {
-  name=...,       -- module name, upvalue from require('module-name')
-  model=nil,      -- incubator model: 
+	name=...,       -- module name, upvalue from require('module-name')
+	model=nil,      -- incubator model: 
 	resistor=true,
 	humidifier=false,
-  temperature=29,-- integer value of temperature [0.01 C]
-  pressure   =0,-- integer value of preassure [Pa]=[0.01 hPa]
-  humidity   =0 -- integer value of rel.humidity [0.01 %]
+	temperature=29,-- integer value of temperature [0.01 C]
+	pressure   =0,-- integer value of preassure [Pa]=[0.01 hPa]
+	humidity   =0 -- integer value of rel.humidity [0.01 %]
 }
 
 
@@ -62,6 +62,7 @@ end
 -------------------------------------
 function incubator.humidifier(status)
 	humidifier = status
+	print(status)
 end
 
 return incubator	
