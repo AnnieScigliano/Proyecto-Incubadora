@@ -14,11 +14,22 @@ if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then
 end -- end if
 
 ------------------------------------------------------------------------------------
--- ! @function send_data_grafana    	   to read the data from the bme sensor 
--- ! @funtion http.post                  nodemcu http library, allows to make web requests
- ------------------------------------------------------------------------------------
+-- ! @function send_data_grafana         to read the data from the bme sensor 
+-- !                                     and send it by post request 
+--                                               
+-- ! @var temperature                    stores the temperature returned by the internal
+-- !                                     function of sensor
+--
+-- ! @var humidity                       stores the humidity returned by the internal 
+-- !                                     function of sensor
+--
+-- ! @var pressure                       stores the pressure returned by the internal
+-- !                                     function of sensor
+--
+-- ! @var  INICIALES                     user's initials, brought from credential.lua   
+------------------------------------------------------------------------------------
 
-function send_data_grafana()
+function send_data_grafana(temperature,humidity,pressure,INICIALES)
 
 		local data = "mediciones,device=" .. INICIALES .. "-bme280 temp=" ..
 									temperature .. ",hum=" .. humidity .. ",press=" .. pressure
@@ -50,7 +61,7 @@ function data_bme()
 		pressure = 0
 		print('[!] Failed to start bme')
 	end -- end if
-	send_data_grafana()
+	send_data_grafana(temperature,humidity,pressure,INICIALES)
 end -- data_bme end
 
 ------------------------------------------------------------------------------------
@@ -65,7 +76,7 @@ function data_dht()
 	end -- if end
 	
 	pressure = 0
-	send_data_grafana()
+	send_data_grafana(temperature,humidity,pressure,INICIALES)
 end -- data_dht end
 
 ------------------------------------------------------------------------------------

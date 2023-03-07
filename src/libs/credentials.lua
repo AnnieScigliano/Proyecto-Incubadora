@@ -9,8 +9,8 @@ IP_ADDR = "" 		-- static IP
 NETMASK = ""	-- your subnet
 GATEWAY = ""		-- your gateway
 
-GPIOBMESDA = 16
-GPIOBMESCL = 0
+GPIOBMESDA = 14
+GPIOBMESCL = 15
 
 GPIODHT22 = 2
 
