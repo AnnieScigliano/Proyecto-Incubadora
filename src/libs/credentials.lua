@@ -2,18 +2,18 @@
 -- Put your credentials here, and 
 -- rename the file to remove the underscore.
 
-SSID = "el valle reinicia/el-galpon"
-PASSWORD = "12345666"
+SSID = "Sol y Santi 2.4GHz"
+PASSWORD = "fibertel98765"
 
 IP_ADDR = "" 		-- static IP
 NETMASK = ""	-- your subnet
 GATEWAY = ""		-- your gateway
 
-GPIOBMESDA = 16
-GPIOBMESCL = 0
+GPIOBMESDA = 14
+GPIOBMESCL = 15
 
 GPIODHT22 = 2
 
-INICIALES = "JJ"
+INICIALES = "SC"
 SERVER="http://grafana.altermundi.net:8086/write?db=cto"
 --SERVER="http://192.168.43.26:8080/"

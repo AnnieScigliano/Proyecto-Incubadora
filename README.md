@@ -130,6 +130,16 @@ after giving it permissions, run the installer:
 
 ## Controller diagram
 
+
+<p align="center" width="100%">
+    <img width="100%" src="https://postimg.cc/LgYyWB9b/image.png">
+</p>
+
+<p align="center" width="100%">
+    <img width="100%" src="https://postimg.cc/kBKWGhB5/image.png">
+</p>
+
+
 <p align="center" width="100%">
     <img width="100%" src="https://i.postimg.cc/9FNbx62y/Screenshot-from-2023-02-27-09-37-52.png">
 </p>
