@@ -31,7 +31,7 @@ end -- end if
 
 function send_data_grafana(temperature,humidity,pressure,INICIALES)
 
-		local data = "mediciones,device=" .. INICIALES .. "-bme280 temp=" ..
+		local data = "mediciones,device=" .. INICIALES .. " temp=" ..
 									temperature .. ",hum=" .. humidity .. ",press=" .. pressure
 
 		local headers = {
@@ -61,7 +61,7 @@ function data_bme()
 		pressure = 0
 		print('[!] Failed to start bme')
 	end -- end if
-	send_data_grafana(temperature,humidity,pressure,INICIALES)
+	send_data_grafana(temperature,humidity,pressure,INICIALES.."-bme")
 end -- data_bme end
 
 ------------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ function data_dht()
 	end -- if end
 	
 	pressure = 0
-	send_data_grafana(temperature,humidity,pressure,INICIALES)
+	send_data_grafana(temperature,humidity,pressure,INICIALES.."-dht")
 end -- data_dht end
 
 ------------------------------------------------------------------------------------
