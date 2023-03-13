@@ -17,8 +17,22 @@ local incubator =  {
 	humidifier=false,
 	temperature=29,-- integer value of temperature [0.01 C]
 	pressure   =0,-- integer value of preassure [Pa]=[0.01 hPa]
-	humidity   =0 -- integer value of rel.humidity [0.01 %]
+	humidity   =0, -- integer value of rel.humidity [0.01 %]
+	testing	= false,
+	testingmaxtem=0, 
+	testingnintem=0
 }
+
+-------------------------------------
+-- Enables testing mode asserting correct incubator funcioning
+--
+-- @param status "on" increments temperature, "off" temp changes randomly
+-------------------------------------
+function enableTesting(max,min)
+	testing = true;
+	testingmaxtem = max
+	testingnintem = min
+end
 
 
 -------------------------------------
@@ -28,6 +42,16 @@ local incubator =  {
 -------------------------------------
 function incubator.getValues()
 	
+	if testing then
+		print(incubator.temperature,testingmaxtem,testingnintem, incubator.resistor)
+		if (incubator.temperature > testingmaxtem) then
+			assert(not incubator.resistor)
+		end --if
+		if (incubator.temperature < testingnintem) then
+			assert( incubator.resistor)
+		end --if
+	end -- if testing
+
 	if resistor then
 		incubator.temperature = (incubator.temperature +1) 
 	else
@@ -39,7 +63,8 @@ function incubator.getValues()
 	else
 		incubator.humidity = (incubator.humidity - math.random(1,4)) 
 	end
-	
+
+
 	return incubator.temperature, incubator.humidity, incubator.pressure
 	
 end
