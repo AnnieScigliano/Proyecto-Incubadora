@@ -10,8 +10,6 @@ local url = SERVER
 
 ------------------------------------------------------------------------------------
 -- ! Initializes the sensor to be able to read the data.
--- ! @var is_sensorok       boolean that checks the state of the sensor.
--- ! @var sensor            is an instance of the bme280 module
 ------------------------------------------------------------------------------------
 
 if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then 
@@ -19,11 +17,9 @@ if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then
 end -- end if
 
 ------------------------------------------------------------------------------------
--- ! @function send_data_grafana    			to read the data from the bme sensor 
+-- ! @function send_data_grafana    						to read the data from the bme sensor 
 -- !                                            and send it by post request 
 -- ! @funtion http.post                         nodemcu http library, allows to make web requests
--- ! @var url                                   contains a string with the url to use
--- 
 ------------------------------------------------------------------------------------
 function send_data_grafana()
 
@@ -41,7 +37,7 @@ function send_data_grafana()
 end -- send_data_grafana end
 
 ------------------------------------------------------------------------------------
--- ! @function data_bme    				 to read the data from the bme sensor 
+-- ! @function data_bme    							 to read the data from the bme sensor 
 -- !                                      
 -- ! @function sensor.read               of the bme280 module that returns the values 
 -- !                                     of the measurements
@@ -62,8 +58,6 @@ end -- data_bme end
 
 ------------------------------------------------------------------------------------
 -- ! @function data_dht    				 to read the data from the dht22 sensor 
--- 
--- ! @param GPIODHT22                    pin number on which the dht22 is operating
 ------------------------------------------------------------------------------------
 function data_dht()
 		is_status, temperature, humidity, temp_dec, humi_dec = dht.read2x(GPIODHT22)
@@ -76,7 +70,7 @@ function data_dht()
 end -- data_dht end
 
 ------------------------------------------------------------------------------------
--- ! @function read_and_send_data	     is in charge of calling the read and data sending
+-- ! @function read_and_send_data	     		is in charge of calling the read and data sending
 -- !                                     functions
 ------------------------------------------------------------------------------------
 function read_and_send_data()
@@ -84,14 +78,7 @@ function read_and_send_data()
 		data_dht()
 end -- read_and_send_data end
 
-------------------------------------------------------------------------------------
---
--- ! @function send_data_timer:register  execute the function every 10 seconds
---
--- ! @param 10000                        time in milliseconds
--- ! @param tmr.ALARM_AUTO               automatically execute the function
--- ! @param send_data_tmr:start          start the timer
-------------------------------------------------------------------------------------
+
 local send_data_timer = tmr.create()
 send_data_timer:register(10000, tmr.ALARM_AUTO, read_and_send_data)
 send_data_timer:start()
