@@ -9,38 +9,57 @@
 -----------------------------------------------------------------------------
 incubator = require("incubator")
 
+------------------------------------------------------------------------------------
+-- ! @function tempcontrol          			activates or deactivates temperature control 
+-- !                                             
+-- ! @param temperature                         saves sensor temperature
+--	
+-- ! @const temp_on                             saves maximum temperature
+-- ! @const temp_off 							saves minimum temperature
+--
+------------------------------------------------------------------------------------
 
-function tempcontrol(temperature, TEMP_ON, TEMP_OFF)
+function tempcontrol(temperature, temp_on, temp_off)
 
-	local TEMP_ON = 36
-	local TEMP_OFF = 38
+	local temp_on = 36
+	local temp_off = 38
 
-	if temperature <= TEMP_ON then
+	if temperature <= temp_on then
 		incubator.heater(true)
-	elseif temperature >= TEMP_OFF then
+	elseif temperature >= temp_off then
 		incubator.heater(false)
-	end
+	end -- end if
 
-end
+end -- end function
 
-function humidity_control(humidity, HUM_ON, HUM_OFF)
+------------------------------------------------------------------------------------
+-- ! @function humidity_control        			activates or deactivates humidity control 
+-- !                                             
+-- ! @param humidity    	                    saves sensor humidity
+--	
+-- ! @const hum_on                              saves maximum humidity
+-- ! @const hum_off 							saves minimum humidity
+--
+------------------------------------------------------------------------------------
 
-	local HUM_ON = HUM_ON
-	local HUM_OFF = HUM_OFF
+function humidity_control(humidity, hum_on, hum_off)
 
-	if humidity <= HUM_ON then
+	local hum_on = hum_on
+	local hum_off = hum_off
+
+	if humidity <= hum_on then
 		incubator.humidifier(true)
-	elseif humidity >= HUM_OFF then
+	elseif humidity >= hum_off then
 		incubator.humidifier(false)		
-	end
+	end -- end if
 
-end
+end -- end function
 
 local clock = os.clock
 function sleep(n) -- seconds
 	local t0 = clock()
 	while clock() - t0 <= n do
-	end
+	end -- end while
 end
 
 while (true) do
@@ -58,4 +77,4 @@ while (true) do
 	print('Temperatura actual: ' .. incubator.temperature)
 	print('Humedad actual: ' .. incubator.humidity)
 
-end
+end -- end while
