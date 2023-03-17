@@ -156,6 +156,12 @@ after giving it permissions, run the installer:
     <img width="50%" src="https://user-images.githubusercontent.com/104506596/212185278-8443b89f-9731-4246-a4bd-83f83823351f.png">
 </p>
 
+## files we need to send to the ESP32
+
+1. bmw280.lua located in the libs folder 
+2. credentials.lua located in the libs folder (in lines 5 and 6 you have to write your SSID and password)
+3. wifiinit.lua located in the app folder 
+4. SendToGrafana.lua located in the app folder  
 
 
 
