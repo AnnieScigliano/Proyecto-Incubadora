@@ -2,25 +2,39 @@
 --  This is the reference implementation to train lua fucntions. It
 --  implements part of the core functionality and has some incomplete comments.
 --
---  javier jorge
+--  javier jorge 
+--  Jere Castro
 --
---  License:
+--  License: 
 -----------------------------------------------------------------------------
-incubator = require("incubator")
 
+incubator = require("incubator") -- module 
 
-function tempcontrol(temperature, TEMP_ON, TEMP_OFF)
+-----------------------------------------------------------------------------
+--  @function temp_control				activates or deactivates temperature control 
+--  @param temperature 					save sensor temperature
+-- 	@const TEMP_ON 							save maximum temperature
+-- 	@const TEMP_ON 							save minimum temperature
+-----------------------------------------------------------------------------
+function temp_control(temperature, TEMP_ON, TEMP_OFF)
 
-	local TEMP_ON = 36
-	local TEMP_OFF = 38
+	local TEMP_ON = TEMP_ON
+	local TEMP_OFF = TEMP_OFF
 
 	if temperature <= TEMP_ON then
 		incubator.heater(true)
 	elseif temperature >= TEMP_OFF then
 		incubator.heater(false)
-	end
+	end -- end if
 
-end
+end -- end temp_control
+
+-----------------------------------------------------------------------------
+--  @function humidity_control	activates or deactivates humidity control 
+--  @param temperature 					save sensor humidity
+-- 	@const TEMP_ON 							save maximum humidity
+-- 	@const TEMP_ON 							save minimum humidity
+-----------------------------------------------------------------------------
 
 function humidity_control(humidity, HUM_ON, HUM_OFF)
 
@@ -30,17 +44,17 @@ function humidity_control(humidity, HUM_ON, HUM_OFF)
 	if humidity <= HUM_ON then
 		incubator.humidifier(true)
 	elseif humidity >= HUM_OFF then
-		incubator.humidifier(false)		
-	end
+		incubator.humidifier(false)
+	end -- end if
 
-end
+end -- end humidity_control
 
 local clock = os.clock
 function sleep(n) -- seconds
 	local t0 = clock()
 	while clock() - t0 <= n do
-	end
-end
+	end -- end while 
+end -- end sleep
 
 while (true) do
 	--os.execute("sleep " .. tonumber(1))
@@ -51,9 +65,8 @@ while (true) do
 	humidity = incubator.humidity
 	pressure = incubator.preassure
 
-	tempcontrol(temperature, 36, 38)
+	temp_control(temperature, 36, 38)
 	humidity_control(humidity,10, 20)
-	
 	print('Temperatura actual: ' .. incubator.temperature)
 	print('Humedad actual: ' .. incubator.humidity)
 

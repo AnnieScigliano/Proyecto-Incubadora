@@ -65,6 +65,6 @@ function incubator.humidifier(status)
 	print(status)
 end
 
-return incubator	
+return incubator
 
 
