@@ -16,10 +16,10 @@ function led_setup()
         print(string.byte(data))
         pcf8574.write(data)
         if dir == 1 then
-            data = 0xff
+            data = 0x02
             dir = -dir
         else
-            data = 0x00
+            data = 0x01
             dir = -dir
         end
    end
