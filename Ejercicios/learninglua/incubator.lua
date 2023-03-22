@@ -20,7 +20,7 @@ local incubator =  {
 	humidity   =0, -- integer value of rel.humidity [0.01 %]
 	testing	= false,
 	testingmaxtem=0, 
-	testingnintem=0
+	testingmintem=0
 }
 
 -------------------------------------
@@ -28,10 +28,10 @@ local incubator =  {
 --
 -- @param status "on" increments temperature, "off" temp changes randomly
 -------------------------------------
-function enableTesting(max,min)
-	testing = true;
-	testingmaxtem = max
-	testingnintem = min
+function incubator.enableTesting(min,max)
+	incubator.testing = true;
+	incubator.testingmaxtem = max
+	incubator.testingmintem = min
 end
 
 
@@ -41,24 +41,13 @@ end
 -- @param status "on" increments temperature, "off" temp changes randomly
 -------------------------------------
 function incubator.getValues()
-	
-	if testing then
-		print(incubator.temperature,testingmaxtem,testingnintem, incubator.resistor)
-		if (incubator.temperature > testingmaxtem) then
-			assert(not incubator.resistor)
-		end --if
-		if (incubator.temperature < testingnintem) then
-			assert( incubator.resistor)
-		end --if
-	end -- if testing
-
-	if resistor then
+	if incubator.resistor then
 		incubator.temperature = (incubator.temperature +1) 
 	else
 		incubator.temperature = (incubator.temperature - math.random(1,4)) 
 	end
 	
-	if humidifier then
+	if incubator.humidifier then
 		incubator.humidity = (incubator.humidity +1) 
 	else
 		incubator.humidity = (incubator.humidity - math.random(1,4)) 
@@ -75,10 +64,22 @@ end
 -- @param status "true" increments temperature, "false" temp decrements randomly
 -------------------------------------
 function incubator.heater(status--[[bool]])
-	resistor = status
+	incubator.resistor = status
 	print(status)
+	incubator.assertconditions()
 end
 
+function incubator.assertconditions()
+	if incubator.testing then
+		print(incubator.temperature,incubator.testingmaxtem,incubator.testingmintem, incubator.resistor)
+		if (incubator.temperature > incubator.testingmaxtem) then
+			assert(not incubator.resistor)
+		end --if
+		if (incubator.temperature < incubator.testingmintem) then
+			assert( incubator.resistor)
+		end --if
+	end -- if testing
+end
 
 -------------------------------------
 -- Activates or deactivates humidity control
