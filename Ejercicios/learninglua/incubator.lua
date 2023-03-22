@@ -32,7 +32,7 @@ function incubator.enableTesting(min,max)
 	incubator.testing = true;
 	incubator.testingmaxtem = max
 	incubator.testingmintem = min
-end
+end --end function
 
 
 -------------------------------------
@@ -45,18 +45,18 @@ function incubator.getValues()
 		incubator.temperature = (incubator.temperature +1) 
 	else
 		incubator.temperature = (incubator.temperature - math.random(1,4)) 
-	end
+	end --endif
 	
 	if incubator.humidifier then
 		incubator.humidity = (incubator.humidity +1) 
 	else
 		incubator.humidity = (incubator.humidity - math.random(1,4)) 
-	end
+	end --endif
 
 
 	return incubator.temperature, incubator.humidity, incubator.pressure
 	
-end
+end --endfunction
 
 -------------------------------------
 -- Activates or deactivates temperature control
@@ -67,7 +67,7 @@ function incubator.heater(status--[[bool]])
 	incubator.resistor = status
 	print(status)
 	incubator.assertconditions()
-end
+end --endfuction
 
 function incubator.assertconditions()
 	if incubator.testing then
@@ -79,7 +79,7 @@ function incubator.assertconditions()
 			assert( incubator.resistor)
 		end --if
 	end -- if testing
-end
+end --endfucition
 
 -------------------------------------
 -- Activates or deactivates humidity control

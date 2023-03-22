@@ -9,13 +9,15 @@
 incubator = require("incubator")
 
 
-function tempcontrol(temp, temp_on, temp_off)
-	if temp <= temp_on then
+function tempcontrol(temperature, temp_on, temp_off)
+
+	if temperature <= temp_on then
 		incubator.heater(true)
-	elseif temp >= temp_off then
+	elseif temperature >= temp_off then
 		incubator.heater(false)
 	end -- end if
-end --end fucntion
+
+end -- end function
 
 local clock = os.clock
 
@@ -29,10 +31,10 @@ while (true)
 do
 	--os.execute("sleep " .. tonumber(1))
 	sleep(1)
-	incubator.enableTesting(36,38)
+	incubator.enableTesting(30,35)
 	print(".")
 	temp,hum,pres=incubator.getValues()
-	tempcontrol(temp, 36, 38)
+	tempcontrol(temp, 30, 35)
 	incubator.assertconditions()
 
 end
