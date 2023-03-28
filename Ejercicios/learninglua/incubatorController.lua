@@ -18,9 +18,6 @@ incubator = require("incubator")
 
 function tempcontrol(temperature, temp_on, temp_off)
 
-	local temp_on = 36
-	local temp_off = 38
-
 	if temperature <= temp_on then
 		incubator.heater(true)
 	elseif temperature >= temp_off then
@@ -36,9 +33,6 @@ end --end function
 ------------------------------------------------------
 
 function humcontrol(humidity, hum_on, hum_off)
-
-	local hum_on = hum_on
-	local hum_off = hum_off
 
 	if humidity <= hum_on then
 		incubator.humidifier(true)
@@ -70,12 +64,8 @@ do
 	--os.execute("sleep " .. tonumber(1))
 	sleep(1)
 
-	incubator.getValues()
-	temperature = incubator.temperature
-	humidity = incubator.humidity
-	pressure = incubator.pressure
-
-
+	temperature, humidity, pressure = incubator.getValues()  
+	
 	tempcontrol(temperature, 36, 38)
 	humcontrol(humidity, 10, 20)
 
