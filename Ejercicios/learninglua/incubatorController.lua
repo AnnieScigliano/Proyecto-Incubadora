@@ -10,19 +10,16 @@
 incubator = require("incubator")
 
 ------------------------------------------------------------------------------------
--- ! @function tempcontrol          			activates or deactivates temperature control 
+-- ! @function tempcontrol						activates or deactivates temperature control 
 -- !                                             
--- ! @param temperature                         saves sensor temperature
+-- ! @param temperature							saves sensor temperature
 --	
--- ! @const temp_on                             saves maximum temperature
+-- ! @const temp_on								saves maximum temperature
 -- ! @const temp_off 							saves minimum temperature
 --
 ------------------------------------------------------------------------------------
 
 function tempcontrol(temperature, temp_on, temp_off)
-
-	local temp_on = 36
-	local temp_off = 38
 
 	if temperature <= temp_on then
 		incubator.heater(true)
@@ -33,19 +30,16 @@ function tempcontrol(temperature, temp_on, temp_off)
 end -- end function
 
 ------------------------------------------------------------------------------------
--- ! @function humidity_control        			activates or deactivates humidity control 
+-- ! @function humidity_control					activates or deactivates humidity control 
 -- !                                             
--- ! @param humidity    	                    saves sensor humidity
+-- ! @param humidity							saves sensor humidity
 --	
--- ! @const hum_on                              saves maximum humidity
--- ! @const hum_off 							saves minimum humidity
+-- ! @const hum_on								saves maximum humidity
+-- ! @const hum_off								saves minimum humidity
 --
 ------------------------------------------------------------------------------------
 
 function humidity_control(humidity, hum_on, hum_off)
-
-	local hum_on = hum_on
-	local hum_off = hum_off
 
 	if humidity <= hum_on then
 		incubator.humidifier(true)
@@ -66,10 +60,7 @@ while (true) do
 	--os.execute("sleep " .. tonumber(1))
 	sleep(1)
 
-	incubator.getValues()
-	temperature = incubator.temperature
-	humidity = incubator.humidity
-	pressure = incubator.preassure
+	temperature,humidity,pressure=incubator.getValues()
 
 	tempcontrol(temperature, 36, 38)
 	humidity_control(humidity,10, 20)
