@@ -35,10 +35,16 @@ function M.initValues()
 	if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then
 		is_sensorok = true
 	end -- end if()
-	gpio.config( { gpio={14,15,13}, dir=gpio.OUT })
+	gpio.config( { gpio={14,15,13,12}, dir=gpio.OUT })
 	gpio.set_drive(13, gpio.DRIVE_3)
 	gpio.set_drive(14, gpio.DRIVE_3)
 	gpio.set_drive(15, gpio.DRIVE_3)
+    gpio.set_drive(12, gpio.DRIVE_3)
+    gpio.write(13, 1)
+    gpio.write(14, 1)
+    gpio.write(15, 1)
+    gpio.write(12, 1)
+    
 end -- end function
 
 -------------------------------------
@@ -96,9 +102,9 @@ end --endfunction
 function M.heater(status --[[bool]])
 	M.resistor = status
 	if status then
-		gpio.write(14, 0)
+		gpio.write(12, 0)
 	else
-		gpio.write(14, 1)
+		gpio.write(12, 1)
 	end
 	print(status)
 	M.assertconditions()
