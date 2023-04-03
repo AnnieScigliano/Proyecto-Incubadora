@@ -10,6 +10,12 @@ incubator = require("incubator")
 require("SendToGrafana")
 dofile('credentials.lua')
 
+------------------------------------------------------------------------------------
+-- ! @function temp_control 	     handles temperature control
+-- ! @param temperature						 overall temperature
+-- ! @param temp_on 							 temperature at which the resistor turns on
+-- ! @param temp_off 							 temperature at which the resistor turns off
+------------------------------------------------------------------------------------
 
 function temp_control(temperature, temp_on, temp_off)
 
@@ -25,9 +31,8 @@ end -- end function
 function read_and_control()
 	temp,hum,pres=incubator.get_values()
 	temp_control(temp, 37.5, 38)
-	incubator.assert_conditions()
     
-end
+end -- end function 
 
 ------------------------------------------------------------------------------------
 -- ! @function read_and_send_data	    	is in charge of calling the read and  data sending
