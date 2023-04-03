@@ -34,7 +34,7 @@ local is_sensorok = false
 function M.initValues()
 	if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then
 		is_sensorok = true
-	end -- end if()
+	end -- end if
 	gpio.config( { gpio={14,15,13,12}, dir=gpio.OUT })
 	gpio.set_drive(13, gpio.DRIVE_3)
 	gpio.set_drive(14, gpio.DRIVE_3)
@@ -50,7 +50,8 @@ end -- end function
 -------------------------------------
 -- Enables testing mode asserting correct M funcioning
 --
--- @param status "on" increments temperature, "off" temp changes randomly
+-- @param min is equal to the minimum temperature to test
+-- @param max is equal to the maximum temperature to test
 -------------------------------------
 function M.enableTesting(min, max,simulatetemp)
 	M.testing = true;
@@ -70,13 +71,13 @@ function M.getValues()
 			M.temperature = (M.temperature + 1)
 		else
 			M.temperature = (M.temperature - math.random(1, 4))
-		end --endif
+		end --end if
 
 		if M.humidifier then
 			M.humidity = (M.humidity + 1)
 		else
 			M.humidity = (M.humidity - math.random(1, 4))
-		end --endif
+		end --end if
 	else
 		if is_sensorok then
 			sensor.read()
@@ -89,10 +90,10 @@ function M.getValues()
 			M.pressure = 0
 			print('[!] Failed to start bme')
 		end -- end if
-	end
+	end --if end 
 
 	return M.temperature, M.humidity, M.pressure
-end --endfunction
+end --end function
 
 -------------------------------------
 -- Activates or deactivates temperature control
@@ -108,19 +109,19 @@ function M.heater(status --[[bool]])
 	end
 	print(status)
 	M.assertconditions()
-end --endfuction
+end --end function
 
 function M.assertconditions()
 	print(M.temperature, M.testingmaxtem, M.testingmintem, M.resistor)
 	if M.testing then
 		if (M.temperature > M.testingmaxtem) then
 			assert(not M.resistor)
-		end --if
+		end --if end 
 		if (M.temperature < M.testingmintem) then
 			assert(M.resistor)
-		end --if
+		end --if end 
 	end -- if testing
-end   --endfucition
+end   --end fucition
 
 -------------------------------------
 -- Activates or deactivates humidity control
@@ -133,8 +134,8 @@ function M.humidifier(status)
 		gpio.write(13, 0)
 	else
 		gpio.write(13, 1)
-	end
+	end -- if end 
 	print(status)
-end
+end -- function end 
 
 return M
