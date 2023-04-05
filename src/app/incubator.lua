@@ -35,15 +35,13 @@ function M.init_values()
 	if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then
 		is_sensorok = true
 	end -- end if
-	gpio.config( { gpio={14,15,13,12}, dir=gpio.OUT })
-	gpio.set_drive(13, gpio.DRIVE_3)
+	gpio.config( { gpio={GPIORELEY1, GPIOBMESCL, GPIOBMESDA}, dir=gpio.OUT })
+	gpio.set_drive(GPIORELEY1, gpio.DRIVE_3)
 	gpio.set_drive(14, gpio.DRIVE_3)
 	gpio.set_drive(15, gpio.DRIVE_3)
-    gpio.set_drive(12, gpio.DRIVE_3)
-    gpio.write(13, 1)
-    gpio.write(14, 1)
-    gpio.write(15, 1)
-    gpio.write(12, 1)
+    gpio.write(GPIORELEY1, 1)
+    gpio.write(GPIOBMESDA, 1)
+    gpio.write(GPIOBMESCL, 1)
     
 end -- end function
 
@@ -103,9 +101,9 @@ end --end function
 function M.heater(status --[[bool]])
 	M.resistor = status
 	if status then
-		gpio.write(12, 0)
+		gpio.write(GPIORELEY1, 0)
 	else
-		gpio.write(12, 1)
+		gpio.write(GPIORELEY1, 1)
 	end
 	print(status)
 	M.assert_conditions()
@@ -131,9 +129,9 @@ end   --end fucition
 function M.humidifier(status)
 	humidifier = status
 	if status then
-		gpio.write(13, 0)
+		gpio.write(GPIORELEY2, 0)
 	else
-		gpio.write(13, 1)
+		gpio.write(GPIORELEY2, 1)
 	end -- if end 
 	print(status)
 end -- function end 
