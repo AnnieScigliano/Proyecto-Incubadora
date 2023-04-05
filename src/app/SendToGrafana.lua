@@ -3,11 +3,10 @@ dofile('wifiinit.lua')
 dofile('credentials.lua')
 
 -- ! Local Variables 
-local is_sensorok = false
-local sensor = require('bme280')
 local token_grafana = "token:e98697797a6a592e6c886277041e6b95"
 local url = SERVER
 
+<<<<<<< HEAD
 ------------------------------------------------------------------------------------
 -- ! Initializes the sensor to be able to read the data.
 -- ! @var is_sensorok       boolean that checks the state of the sensor.
@@ -18,6 +17,8 @@ if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then
 		is_sensorok = true 
 end -- end if
 
+=======
+>>>>>>> origin
 ------------------------------------------------------------------------------------
 -- ! @function send_data_grafana    			to read the data from the bme sensor 
 -- !                                            and send it by post request 
@@ -27,7 +28,7 @@ end -- end if
 ------------------------------------------------------------------------------------
 function send_data_grafana()
 
-		local data = "mediciones,device=" .. INICIALES .. "-bme280 temp=" ..
+		local data = "mediciones,device=" .. INICIALES .. " temp=" ..
 									temperature .. ",hum=" .. humidity .. ",press=" .. pressure
 		local headers = {
 				["Content-Type"] = "text/plain",
@@ -40,6 +41,7 @@ function send_data_grafana()
 		end) -- function end
 end -- send_data_grafana end
 
+<<<<<<< HEAD
 ------------------------------------------------------------------------------------
 -- ! @function data_bme    				 to read the data from the bme sensor 
 -- !                                      
@@ -95,3 +97,7 @@ end -- read_and_send_data end
 local send_data_timer = tmr.create()
 send_data_timer:register(10000, tmr.ALARM_AUTO, read_and_send_data)
 send_data_timer:start()
+=======
+
+
+>>>>>>> origin

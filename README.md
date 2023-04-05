@@ -13,6 +13,17 @@ We also add ourselves to the group temporarily so we don't have to log in to the
 newgrp dialout
 ```
 
+if you are usign ubuntu 22 and the esp32cam motherboard based on "ID 1a86:7523 QinHeng Electronics CH340 serial converter" you won't be able to use the device. This happens because of conflict between product IDs (a Braille screen reader and my CH340 based chip). Here is the solution :
+
+Edit /usr/lib/udev/rules.d/85-brltty.rules; Search for this line and comment it out:
+
+```bash
+ENV{PRODUCT}=="1a86/7523/*", ENV{BRLTTY_BRAILLE_DRIVER}="bm", GOTO="brltty_usb_run"
+```
+
+then reboot.
+
+
 ## Firmware with lua support
 
  clone the repository
@@ -158,6 +169,12 @@ after giving it permissions, run the installer:
     <img width="50%" src="https://user-images.githubusercontent.com/104506596/212185278-8443b89f-9731-4246-a4bd-83f83823351f.png">
 </p>
 
+## files we need to send to the ESP32
+
+1. bmw280.lua located in the libs folder 
+2. credentials.lua located in the libs folder (in lines 5 and 6 you have to write your SSID and password)
+3. wifiinit.lua located in the app folder 
+4. SendToGrafana.lua located in the app folder  
 
 
 
