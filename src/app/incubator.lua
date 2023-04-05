@@ -32,18 +32,18 @@ local is_simulate_temp_local = false
 local is_sensorok = false
 
 function M.init_values()
-	if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then
+	if sensor.init(GPIO_BME_SDA, GPIO_BME_SCL, true) then
 		is_sensorok = true
 	end -- end if
-	gpio.config( { gpio={14,15,13,12}, dir=gpio.OUT })
-	gpio.set_drive(13, gpio.DRIVE_3)
-	gpio.set_drive(14, gpio.DRIVE_3)
-	gpio.set_drive(15, gpio.DRIVE_3)
-    gpio.set_drive(12, gpio.DRIVE_3)
-    gpio.write(13, 1)
-    gpio.write(14, 1)
-    gpio.write(15, 1)
-    gpio.write(12, 1)
+	gpio.config( { gpio={GPIO_BME_SDA,GPIO_BME_SCL,GPIO_RELAY_1,GPIO_RELAY_2}, dir=gpio.OUT })
+	gpio.set_drive(GPIO_RELAY_1, gpio.DRIVE_3)
+	gpio.set_drive(GPIO_BME_SDA, gpio.DRIVE_3)
+	gpio.set_drive(GPIO_BME_SCL, gpio.DRIVE_3)
+    gpio.set_drive(GPIO_RELAY_2, gpio.DRIVE_3)
+    gpio.write(GPIO_RELAY_1, 1)
+    gpio.write(GPIO_BME_SDA, 1)
+    gpio.write(GPIO_BME_SCL, 1)
+    gpio.write(GPIO_RELAY_2, 1)
     
 end -- end function
 
@@ -103,9 +103,9 @@ end --end function
 function M.heater(status --[[bool]])
 	M.resistor = status
 	if status then
-		gpio.write(12, 0)
+		gpio.write(GPIO_RELAY_2, 0)
 	else
-		gpio.write(12, 1)
+		gpio.write(GPIO_RELAY_2, 1)
 	end
 	print(status)
 	M.assert_conditions()
@@ -131,9 +131,9 @@ end   --end fucition
 function M.humidifier(status)
 	humidifier = status
 	if status then
-		gpio.write(13, 0)
+		gpio.write(GPIO_RELAY_1, 0)
 	else
-		gpio.write(13, 1)
+		gpio.write(GPIO_RELAY_1, 1)
 	end -- if end 
 	print(status)
 end -- function end 
