@@ -3,11 +3,10 @@ dofile('wifiinit.lua')
 dofile('credentials.lua')
 
 -- ! Local Variables 
-local is_sensorok = false
-local sensor = require('bme280')
 local token_grafana = "token:e98697797a6a592e6c886277041e6b95"
 local url = SERVER
 
+<<<<<<< HEAD
 ------------------------------------------------------------------------------------
 -- ! Initializes the sensor to be able to read the data.
 ------------------------------------------------------------------------------------
@@ -22,8 +21,27 @@ end -- end if
 -- ! @funtion http.post                         nodemcu http library, allows to make web requests
 ------------------------------------------------------------------------------------
 function send_data_grafana()
+=======
+------------------------------------------------------------------------------------
+-- ! @function send_data_grafana         to read the data from the bme sensor 
+-- !                                     and send it by post request 
+--                                               
+-- ! @var temperature                    stores the temperature returned by the internal
+-- !                                     function of sensor
+--
+-- ! @var humidity                       stores the humidity returned by the internal 
+-- !                                     function of sensor
+--
+-- ! @var pressure                       stores the pressure returned by the internal
+-- !                                     function of sensor
+--
+-- ! @var  INICIALES                     user's initials, brought from credential.lua   
+------------------------------------------------------------------------------------
 
-		local data = "mediciones,device=" .. INICIALES .. "-bme280 temp=" ..
+function send_data_grafana(temperature,humidity,pressure,INICIALES)
+>>>>>>> origin
+
+		local data = "mediciones,device=" .. INICIALES .. " temp=" ..
 									temperature .. ",hum=" .. humidity .. ",press=" .. pressure
 		local headers = {
 				["Content-Type"] = "text/plain",
@@ -36,6 +54,7 @@ function send_data_grafana()
 		end) -- function end
 end -- send_data_grafana end
 
+<<<<<<< HEAD
 ------------------------------------------------------------------------------------
 -- ! @function data_bme    							 to read the data from the bme sensor 
 -- !                                      
@@ -82,3 +101,7 @@ end -- read_and_send_data end
 local send_data_timer = tmr.create()
 send_data_timer:register(10000, tmr.ALARM_AUTO, read_and_send_data)
 send_data_timer:start()
+=======
+
+
+>>>>>>> origin
