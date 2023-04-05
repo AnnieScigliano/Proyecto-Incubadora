@@ -121,6 +121,7 @@ function wifi_disconnect_event (ev, info)
 	print("\nWiFi connection to AP(" .. info.ssid .. ") has failed!")
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   if disconnect_ct == nil then
     disconnect_ct = 1
   else
@@ -149,6 +150,8 @@ function wifi_disconnect_event (ev, info)
     disconnect_ct = nil
   end -- end if
 =======
+=======
+>>>>>>> origin
 	------------------------------------------------------------------------------------
 	-- There are many possible disconnect reasons, the following iterates through
 	-- the list and returns the string corresponding to the disconnect reason.
@@ -191,7 +194,10 @@ function wifi_disconnect_event (ev, info)
 		mytimer:start()
 		disconnect_ct = nil
 	end -- end if
+<<<<<<< HEAD
 >>>>>>> playground
+=======
+>>>>>>> origin
 end -- end function
 
 configwifi()

@@ -3,12 +3,16 @@ dofile('wifiinit.lua')
 dofile('credentials.lua')
 
 -- ! Local Variables 
+<<<<<<< HEAD
 local is_sensorok = false
 local sensor = require('bme280')
+=======
+>>>>>>> origin
 local token_grafana = "token:e98697797a6a592e6c886277041e6b95"
 local url = SERVER
 
 ------------------------------------------------------------------------------------
+<<<<<<< HEAD
 -- ! Initializes the sensor to be able to read the data.
 -- ! @var is_sensorok       boolean that checks the state of the sensor.
 -- ! @var sensor            is an instance of the bme280 module
@@ -29,11 +33,34 @@ function send_data_grafana()
 
 		local data = "mediciones,device=" .. INICIALES .. "-bme280 temp=" ..
 									temperature .. ",hum=" .. humidity .. ",press=" .. pressure
+=======
+-- ! @function send_data_grafana         to read the data from the bme sensor 
+-- !                                     and send it by post request 
+--                                               
+-- ! @var temperature                    stores the temperature returned by the internal
+-- !                                     function of sensor
+--
+-- ! @var humidity                       stores the humidity returned by the internal 
+-- !                                     function of sensor
+--
+-- ! @var pressure                       stores the pressure returned by the internal
+-- !                                     function of sensor
+--
+-- ! @var  INICIALES                     user's initials, brought from credential.lua   
+------------------------------------------------------------------------------------
+
+function send_data_grafana(temperature,humidity,pressure,INICIALES)
+
+		local data = "mediciones,device=" .. INICIALES .. " temp=" ..
+									temperature .. ",hum=" .. humidity .. ",press=" .. pressure
+
+>>>>>>> origin
 		local headers = {
 				["Content-Type"] = "text/plain",
 				["Authorization"] = "Basic " .. token_grafana
 		}
 		http.post(url, {headers = headers}, data,
+<<<<<<< HEAD
 			function(code_return, data_return) 
 				print("HTTP POST return " .. code_return)
 			
@@ -95,3 +122,13 @@ end -- read_and_send_data end
 local send_data_timer = tmr.create()
 send_data_timer:register(10000, tmr.ALARM_AUTO, read_and_send_data)
 send_data_timer:start()
+=======
+			
+			function(code_return, data_return) print("HTTP POST return " .. code_return)
+			
+		end) -- * post function end
+end -- * send_data_grafana end
+
+
+
+>>>>>>> origin
