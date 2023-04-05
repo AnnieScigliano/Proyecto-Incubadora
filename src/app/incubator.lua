@@ -40,6 +40,7 @@ function M.init_values()
 	gpio.set_drive(14, gpio.DRIVE_3)
 	gpio.set_drive(15, gpio.DRIVE_3)
     gpio.write(GPIORELEY1, 1)
+	gpio.write(GPIORELEY2, 1)
     gpio.write(GPIOBMESDA, 1)
     gpio.write(GPIOBMESCL, 1)
     
