@@ -56,11 +56,13 @@ esptool --chip esp32 --port /dev/ttyUSB0 --baud 921600 --before default_reset --
 
 ## Load the Lua scripts
 
-To load the scripts we have 3 options:
+To load the scripts we have 2 options:
 * [EspLorer](https://github.com/4refr0nt/ESPlorer)
 * [nodemcu-uploader](https://pypi.org/project/nodemcu-uploader/)
-* [ZeroBrane](https://studio.zerobrane.com/)
 
+## Editing Lua scripts
+* [ZeroBrane](https://studio.zerobrane.com/)
+* VSCodium... remember to install sumneko's Lua package, then using the open addon manager install esp32 definitions. 
 
 
 ## Option 1 (ESPlorer)
