@@ -12,6 +12,7 @@ apt-get install luarocks
 
 sudo luarocks install busted
 sudo luarocks install json-lua 
+sudo luarocks install inspect
 ```
 ## How to run the tests
 

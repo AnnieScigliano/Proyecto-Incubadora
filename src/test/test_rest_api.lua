@@ -55,13 +55,26 @@ describe("Api REST test", function()
 		assert.same(obj1, obj2)
 	end)
 
+	local function get_and_assert_200(atribute)
+		local body, code, headers, status = http.request("http://192.168.1.1/"..atribute
+		print(code, status, body)
+		assert.are_equal(code,200)
+		return body
+	end
+
+	local function post_and_assert_201(atribute,value)
+		--In that case, if a body is provided as a string, the function will perform a POST method in the url.
+		body, code, headers, status = http.request("http://192.168.1.1/".. atribute,value)
+		assert.are_equal(201,code)
+		return body
+	end
+
 	describe("nested", function()
-		pending("I should finish this test later")
-		print("anidada")
+		pending("wating for rest api to be avaliable in the device")
 		it("set max limit", function()
 			describe("get temp", function()
-				local body, code, headers, status = http.request("http://192.168.1.1/maxtemp")
-				print(code, status, body)
+				--get the actual max
+				body = get_and_assert_200("maxtemp")
 				local lua_value        = JSON:decode(body) -- decode example
 				print(lua_value.message)
 				assert.are_equal(lua_value.message,"success")
@@ -70,18 +83,17 @@ describe("Api REST test", function()
 				local actual_max = lua_value.temp
 				local new_max = 53
 				assert.are_not_equal(actual_max,new_max)
-
-				--In that case, if a body is provided as a string, the function will perform a POST method in the url.
-				body, code, headers, status = http.request("http://192.168.1.1/maxtemp",53)
-				assert.are_equal(201,code)
-
-				local body, code, headers, status = http.request("http://192.168.1.1/maxtemp")
-				print(code, status, body)
-				local lua_value = JSON:decode(body) -- decode example
+				--set the new max
+				post_and_assert_201("maxtemp",new_max)
+				--get the new max
+				body = get_and_assert_200("maxtemp")
+				lua_value = JSON:decode(body) -- decode example
 				assert.are_equal(lua_value.message,"success")
 				print(lua_value.temp)
 				assert.is_number(lua_value.temp)
 				assert.are_equal(new_max,lua_value.temp)
+				--restore the old max
+				post_and_assert_201("maxtemp",actual_max)
 			end)
 		end)
 	end)
