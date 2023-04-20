@@ -58,10 +58,31 @@ describe("Api REST test", function()
 	describe("nested", function()
 		pending("I should finish this test later")
 		print("anidada")
-		it("also runs the before_each here", function()
-			print("it 2 anidad")
-			-- if this describe also had a before_each, it would run
-			-- both, starting with the parents'. You can go n-deep.
+		it("set max limit", function()
+			describe("get temp", function()
+				local body, code, headers, status = http.request("http://192.168.1.1/maxtemp")
+				print(code, status, body)
+				local lua_value        = JSON:decode(body) -- decode example
+				print(lua_value.message)
+				assert.are_equal(lua_value.message,"success")
+				print(lua_value.temp)
+				assert.is_number(lua_value.temp)
+				local actual_max = lua_value.temp
+				local new_max = 53
+				assert.are_not_equal(actual_max,new_max)
+
+				--In that case, if a body is provided as a string, the function will perform a POST method in the url.
+				body, code, headers, status = http.request("http://192.168.1.1/maxtemp",53)
+				assert.are_equal(201,code)
+
+				local body, code, headers, status = http.request("http://192.168.1.1/maxtemp")
+				print(code, status, body)
+				local lua_value = JSON:decode(body) -- decode example
+				assert.are_equal(lua_value.message,"success")
+				print(lua_value.temp)
+				assert.is_number(lua_value.temp)
+				assert.are_equal(new_max,lua_value.temp)
+			end)
 		end)
 	end)
 end)
