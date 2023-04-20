@@ -26,7 +26,7 @@ local url = SERVER
 ------------------------------------------------------------------------------------
 function create_grafana_message(temperature,humidity,pressure,INICIALES,time)
 	local data = "mediciones,device=" .. INICIALES .. " temp=" ..
-									temperature .. ",hum=" .. humidity .. ",press=" .. pressure
+									temperature .. ",hum=" .. humidity .. ",press=" .. pressure .." " .. time
 	return data
 end
 
