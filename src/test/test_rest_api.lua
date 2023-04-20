@@ -56,7 +56,7 @@ describe("Api REST test", function()
 	end)
 
 	local function get_and_assert_200(atribute)
-		local body, code, headers, status = http.request("http://192.168.1.1/"..atribute
+		local body, code, headers, status = http.request("http://192.168.1.1/"..atribute)
 		print(code, status, body)
 		assert.are_equal(code,200)
 		return body
