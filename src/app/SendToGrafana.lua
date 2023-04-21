@@ -49,7 +49,7 @@ end
 
 function send_data_grafana(temperature,humidity,pressure,INICIALES)
 
-		--todo add time source 
+		--todo: add time source 
 		local data = create_grafana_message(temperature,humidity,pressure,INICIALES,0)
 
 		local headers = {
