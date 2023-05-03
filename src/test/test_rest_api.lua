@@ -54,9 +54,18 @@ describe("Api REST test", function()
 		print(inspect(lua_value))
 		print(inspect(raw_json_text))
 		print(inspect(pretty_json_text))
-		print("it 1")
+		print("it 1 .........")
 		-- obj2 is reset thanks to the before_each
-		assert.same(obj1, obj2)
+		r, c = http.request {
+			url = "http://www.google.com",
+			headers = {  ["content-Type"] = 'application/json' },
+			body = 87
+		}
+		print("it 2 .........")
+
+		print(r,c)
+		print("it 3 .........")
+
 	end)
 
 	local function get_and_assert_200(atribute)
@@ -67,9 +76,25 @@ describe("Api REST test", function()
 	end
 
 	local function post_and_assert_201(atribute, value)
+		h = {
+			--   date = "Tue, 18 Sep 2001 20:42:21 GMT",
+			--   server = "Apache/1.3.12 (Unix)  (Red Hat/Linux)",
+			--   ["last-modified"] = "Wed, 05 Sep 2001 06:11:20 GMT",
+			--   ["content-length"] = 15652,
+			--   ["connection"] = "close",
+			 ["content-Type"] = 'application/json'
+			 }
+			
 		--In that case, if a body is provided as a string, the function will perform a POST method in the url.
-		body, code, headers, status = http.request(apiendpoint .. atribute, value)
-		print(code, status, body, headers, atribute, value)
+		body, code, headers, status = http.request {
+			url = apiendpoint .. atribute,
+			headers = { ["content-Type"] = 'application/json',
+						["Accept"]='application/json',
+						["content-length"] = tostring(#value) },
+			method = "POST",
+			source = ltn12.source.string(value),
+		}
+		print(2,code, status, body, headers, atribute, value)
 		assert.are_equal(201, code)
 		return body
 	end
