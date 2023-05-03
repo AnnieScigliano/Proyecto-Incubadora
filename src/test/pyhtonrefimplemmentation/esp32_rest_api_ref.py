@@ -21,7 +21,6 @@ def maxtempgeter():
     if request.method == 'GET':
         return '{"message": "success", "maxtemp":'+str(maxtemp)+'}'
     if request.method == 'POST':
-        time.sleep(5)
         maxtemp = request.json.get('maxtemp')
         return Response( status=201)
 
@@ -31,7 +30,6 @@ def mintempgeter():
     if request.method == 'GET':
         return '{"message": "success", "mintemp":'+str(mintemp)+'}'
     if request.method == 'POST':
-        time.sleep(5)
         mintemp = request.json.get('mintemp')
         return Response( status=201)
 
