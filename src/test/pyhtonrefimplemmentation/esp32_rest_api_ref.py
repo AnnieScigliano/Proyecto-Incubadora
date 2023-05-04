@@ -1,3 +1,4 @@
+#sudo apt install python3-flask
 # esp32_rest_api_ref.py
 # flask --app esp32_rest_api_ref run
 import time
