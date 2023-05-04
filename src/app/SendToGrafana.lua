@@ -50,7 +50,9 @@ end
 function send_data_grafana(temperature,humidity,pressure,INICIALES)
 
 		--todo: add time source 
-		local data = create_grafana_message(temperature,humidity,pressure,INICIALES,0)
+		local data = create_grafana_message(temperature,humidity,pressure,INICIALES, string.format("%.0f", ((time.get() - 120) *1000000000))) 
+
+		print(data)
 
 		local headers = {
 				["Content-Type"] = "text/plain",
