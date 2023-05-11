@@ -9,7 +9,8 @@ LibreMesh unit testing is based in the powerful [busted](https://lunarmodules.gi
 ## Install required sofotware
 ```
 apt-get install luarocks
-
+sudo luarocks install --server=https://luarocks.org/dev ltn12
+sudo luarocks install luasockets
 sudo luarocks install busted
 sudo luarocks install json-lua 
 sudo luarocks install inspect

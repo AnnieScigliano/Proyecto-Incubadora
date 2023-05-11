@@ -34,8 +34,14 @@ git clone --branch dev-esp32 --depth=1 --shallow-submodules --recurse-submodules
  Once cloned, download the skdconfig file from this [link](https://nube.altermundi.net/s/3arPqaHxs763pmB/download?path=%2F&files=sdkconfig) and save it in 'firmwareESP32' folder then it should be compiled with :
 
 ```bash
-make
+make menuconfig  
 ```
+
+```bash
+make -j4  
+```
+
+
 ## Burn Firmware with ESPTool
 
 __Installation of ESPTool__
