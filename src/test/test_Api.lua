@@ -28,12 +28,12 @@ function version(req)
 end -- end function
 
 -------------------------------------
---! @function maxtemp   print the current temperature
+--! @function max_temp   print the current temperature
 --
 --!	@param req  				server request
 -------------------------------------
 
-function maxtemp(req)
+function max_temp(req)
 		
 		local body_data = {
 				message = "success",
@@ -71,6 +71,26 @@ function date(req)
 
 end -- end function
 
+-------------------------------------
+--! @function maxtemp   print the current temperature
+--
+--!	@param req  				server request
+-------------------------------------
+
+function max_temp_post(req)
+		
+	local body_data = req.body()
+
+	local body_json = sjson.decode(body_data)
+
+return {
+		 status = "200 OK",
+		 type = "application/json",
+		 body = body_json
+		 }
+
+end -- end function
+
 --* start local server
 
 httpd.start({ webroot = "web", auto_index = httpd.INDEX_ALL})
@@ -78,7 +98,8 @@ httpd.start({ webroot = "web", auto_index = httpd.INDEX_ALL})
 --* dynamic routes to serve
 
 httpd.dynamic(httpd.GET,"/version", version)
-httpd.dynamic(httpd.GET,"/maxtemp", maxtemp)
+httpd.dynamic(httpd.GET,"/maxtemp", max_temp)
+httpd.dynamic(httpd.GET,"/maxtemppost", max_temp_post)
 httpd.dynamic(httpd.GET,"/date", date)
 
 
