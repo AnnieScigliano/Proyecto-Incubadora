@@ -1,0 +1,229 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr B 17000 11000
+encoding utf-8
+Sheet 1 1
+Title "Sheet_1_2023-05-17.schdoc"
+Date "17 05 2023"
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+Wire Wire Line
+	3350 8250 2950 8250
+Wire Wire Line
+	3350 6450 3350 8250
+Wire Wire Line
+	2950 6450 3350 6450
+Wire Wire Line
+	3150 8150 2950 8150
+Wire Wire Line
+	3150 6350 3150 8150
+Wire Wire Line
+	2950 6350 3150 6350
+$Comp
+L power:GND #PWR?64650DF2
+U 1 1 64650DF2
+P 3750 10200
+F 0 "GND" H 3750 10340 20  0000 C CNN
+F 1 "GND" H 3750 10310 30  0000 C CNN
+F 2 "" H 3750 10200 70  0000 C CNN
+F 3 "" H 3750 10200 70  0000 C CNN
+	1    3750 10200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1750 6050 1450 6050
+Wire Wire Line
+	1450 6150 1750 6150
+Wire Wire Line
+	1400 6250 1750 6250
+Wire Wire Line
+	1450 6350 1750 6350
+Wire Wire Line
+	700 7550 1750 7550
+Wire Wire Line
+	700 5750 700 7550
+Wire Wire Line
+	1750 5750 700 5750
+Wire Wire Line
+	550 7650 1750 7650
+Wire Wire Line
+	550 5850 550 7650
+Wire Wire Line
+	1750 5850 550 5850
+Wire Wire Line
+	400 7750 1750 7750
+Wire Wire Line
+	400 5950 400 7750
+Wire Wire Line
+	1750 5950 400 5950
+Wire Wire Line
+	1550 9200 1550 6150
+Wire Wire Line
+	2900 9200 1550 9200
+Wire Wire Line
+	2900 10200 2900 9200
+Wire Wire Line
+	3750 10200 2900 10200
+Wire Wire Line
+	2950 5850 4090 5850
+$Comp
+L power:VCC #PWR?64650DF1
+U 1 1 64650DF1
+P 5300 7600
+F 0 "VCC" H 5300 7600 20  0000 C CNN
+F 1 "VCC" H 5300 7530 30  0000 C CNN
+F 2 "" H 5300 7600 70  0000 C CNN
+F 3 "" H 5300 7600 70  0000 C CNN
+	1    5300 7600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?64650DF0
+U 1 1 64650DF0
+P 5300 8400
+F 0 "VCC_2" H 5300 8400 20  0000 C CNN
+F 1 "VCC" H 5300 8330 30  0000 C CNN
+F 2 "" H 5300 8400 70  0000 C CNN
+F 3 "" H 5300 8400 70  0000 C CNN
+	1    5300 8400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?64650DEF
+U 1 1 64650DEF
+P 5300 9300
+F 0 "VCC_3" H 5300 9300 20  0000 C CNN
+F 1 "VCC" H 5300 9230 30  0000 C CNN
+F 2 "" H 5300 9300 70  0000 C CNN
+F 3 "" H 5300 9300 70  0000 C CNN
+	1    5300 9300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5300 8600 5300 8400
+Wire Wire Line
+	5300 9500 5300 9300
+Wire Wire Line
+	5300 7600 5300 7700
+Text Notes 4350 7190 0    72   ~ 0
+IN1:heater
+Text Notes 4700 7840 0    72   ~ 0
+IN2:vent
+Text Notes 4500 8990 0    72   ~ 0
+IN3:humidifier
+Wire Notes Line
+	3900 6800 3900 10000
+Wire Notes Line
+	3900 6800 6650 6800
+Wire Notes Line
+	3900 10000 6650 10000
+Wire Notes Line
+	6650 6800 6650 10000
+Wire Wire Line
+	3450 7650 4000 7650
+Wire Wire Line
+	3450 10200 3450 7650
+$Comp
+L power:+3.3V #PWR?64650DEE
+U 1 1 64650DEE
+P 3650 8600
+F 0 "+3.3V" H 3650 8600 20  0000 C CNN
+F 1 "3.3V" H 3650 8530 30  0000 C CNN
+F 2 "" H 3650 8600 70  0000 C CNN
+F 3 "" H 3650 8600 70  0000 C CNN
+	1    3650 8600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3650 8750 3650 8600
+Wire Wire Line
+	3850 8750 3650 8750
+Wire Wire Line
+	3850 8050 3850 8750
+Wire Wire Line
+	4000 8050 3850 8050
+Wire Wire Line
+	4600 7750 4350 7750
+Wire Wire Line
+	4600 7200 4600 7750
+Wire Wire Line
+	5300 7200 4600 7200
+Wire Wire Line
+	5100 7850 4350 7850
+Wire Wire Line
+	5100 8000 5100 7850
+Wire Wire Line
+	5300 8000 5100 8000
+Wire Wire Line
+	5300 8100 5300 8000
+Wire Wire Line
+	4450 7950 4350 7950
+Wire Wire Line
+	4450 9000 4450 7950
+Wire Wire Line
+	5300 9000 4450 9000
+$Comp
+L power:+3.3V #PWR?64650DED
+U 1 1 64650DED
+P 3800 5350
+F 0 "+3.3V_2" H 3800 5350 20  0000 C CNN
+F 1 "3.3V" H 3800 5280 30  0000 C CNN
+F 2 "" H 3800 5350 70  0000 C CNN
+F 3 "" H 3800 5350 70  0000 C CNN
+	1    3800 5350
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?64650DEC
+U 1 1 64650DEC
+P 3750 6300
+F 0 "GND_2" H 3750 6440 20  0000 C CNN
+F 1 "GND" H 3750 6410 30  0000 C CNN
+F 2 "" H 3750 6300 70  0000 C CNN
+F 3 "" H 3750 6300 70  0000 C CNN
+	1    3750 6300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3750 6250 3750 6300
+Wire Wire Line
+	4090 6250 3750 6250
+Wire Wire Line
+	3800 5650 4090 5650
+Wire Wire Line
+	3800 5350 3800 5650
+Wire Wire Line
+	3750 5350 3800 5350
+Wire Wire Line
+	3550 7750 4000 7750
+Wire Wire Line
+	3550 5950 3550 7750
+Wire Wire Line
+	2950 5950 3550 5950
+Connection ~ 1450 6250
+Connection ~ 1550 6150
+Connection ~ 3450 10200
+Connection ~ 3800 5350
+Wire Notes Line
+	3050 10050 3050 10600
+Wire Notes Line
+	3050 10050 4000 10050
+Wire Notes Line
+	3050 10600 4000 10600
+Wire Notes Line
+	4000 10050 4000 10600
+Wire Notes Line
+	3300 8300 3300 8800
+Wire Notes Line
+	3300 8300 4050 8300
+Wire Notes Line
+	3300 8800 4050 8800
+Wire Notes Line
+	4050 8300 4050 8800
+$EndSCHEMATC
