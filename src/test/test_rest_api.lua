@@ -1,8 +1,8 @@
 --package.path = package.path .. ';../?.lua'
 --require("app.SendToGrafana")
 local http = require("socket.http")
-local apiendpoint = "http://127.0.0.1:5000/"
-
+local apiendpoint = "http://192.168.16.102:5000/"
+local ltn12 = require("ltn12")
 
 describe("Api REST test", function()
 	items = {

@@ -12,5 +12,9 @@
         "bit32": "disable",
         "utf8": "disable",
         "os": "disable"
-    }
+    },
+    "Lua.diagnostics.globals": [
+        "min_temp",
+        "max_temp"
+    ]
 }
