@@ -16,12 +16,10 @@ dofile('credentials.lua')
 -- ! @param min_temp 							 temperature at which the resistor turns on
 -- ! @param,max_temp 							 temperature at which the resistor turns off
 ------------------------------------------------------------------------------------
+min_temp = 37.5
+max_temp = 38
 
-
-function temp_control(temperature, min_temp, max_temp)
-   min_temp = 37.5
-   max_temp = 38
-    
+function temp_control(temperature, min_temp, max_temp)    
     if temperature <= min_temp then
         incubator.heater(true)
     elseif temperature >= max_temp then
@@ -57,7 +55,7 @@ end
 
 
 incubator.init_values()
-incubator.enable_testing(37.5,38,false)
+incubator.enable_testing(min_temp,max_temp,false)
 
 local send_data_timer = tmr.create()
 send_data_timer:register(3000, tmr.ALARM_AUTO, read_and_send_data)
@@ -130,36 +128,35 @@ end -- end function
 --!	@param req  				server request
 -------------------------------------
 function max_temp_post(req)    
-    
-	t = sjson.decode('{"key":"value"}')
-	for k,v in pairs(t) do print(k,v) end 
-	
-    local reqbody = req.getbody()
+	local reqbody = req.getbody()
     print(reqbody)
-    
 	local body_json = sjson.decode(reqbody)
 
     -- Obtener el nuevo valor de max_temp del cuerpo de la solicitud POST
     print(body_json.maxtemp)
     local new_max_temp = body_json.maxtemp
 
-    -- Actualizar el valor de max_temp en el archivo incubator_controler.lua
-    max_temp = new_max_temp
+    if type(new_max_temp) == "number" and new_max_temp < 42 and new_max_temp  >= 0 and new_max_temp >= min_temp then
+		
+		max_temp = new_max_temp 
+		
+		return {
+			status = "201 Created"
+		}
+	else 
+
+		return {
+			status = "400 Bad Request"
+		}
+	end
 	
-
-    return {
-        status = "201 Created"
-    }
+	
 end
-
 --! @function maxtemp   print the current temperature
 --
 --!	@param req  				server request
 -------------------------------------
 function min_temp_post(req)    
-    
-	t = sjson.decode('{"key":"value"}')
-	for k,v in pairs(t) do print(k,v) end 
 	
     local reqbody = req.getbody()
     print(reqbody)
@@ -170,13 +167,20 @@ function min_temp_post(req)
     print(body_json.mintemp)
     local new_min_temp = body_json.mintemp
 
-    -- Actualizar el valor de max_temp en el archivo incubator_controler.lua
-    min_temp = new_min_temp
+	if new_min_temp >= 0 and new_min_temp <= max_temp and type(new_min_temp) == "number" then
+		   
+		min_temp = new_min_temp
+	   return {
+			   status = "201 Created"
+		   }		
 	
-
-    return {
-        status = "201 Created"
-    }
+		
+	else
+		return {
+			status = "400 Bad Request"
+		}
+	
+	end
 end
 -------------------------------------
 --! @function date   		print the current date
