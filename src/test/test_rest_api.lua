@@ -1,7 +1,7 @@
 --package.path = package.path .. ';../?.lua'
 --require("app.SendToGrafana")
 local http = require("socket.http")
-local apiendpoint = "http://192.168.16.102:5000/"
+local apiendpoint = "http://10.5.3.43/"
 local ltn12 = require("ltn12")
 
 describe("Api REST test", function()
@@ -12,6 +12,9 @@ describe("Api REST test", function()
 		{ ["category"] = "geters",       ["name"] = "version", ["value"] = "0.0.1", ["comparator"] = "=" },
 		--get the actual date and assert that the date from the device is in the future
 		{ ["category"] = "geters",       ["name"] = "date",    ["value"] = 0,   ["comparator"] = "<" },
+		{ ["category"] = "geters",       ["name"] = "mintemp",    ["value"] = 0,   ["comparator"] = ">" },
+		{ ["category"] = "geters",       ["name"] = "mintemp",    ["value"] = 0,   ["comparator"] = "<" },
+
 
 	}
 	setup(
