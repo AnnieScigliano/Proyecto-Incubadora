@@ -11,6 +11,9 @@ local sensor = require('bme280')
 local token_grafana = "token:e98697797a6a592e6c886277041e6b95"
 local url = SERVER
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
 
 ------------------------------------------------------------------------------------
 -- ! @function create_grafana_message    to read the data from the bme sensor 
@@ -36,7 +39,9 @@ function create_grafana_message(temperature,humidity,pressure,INICIALES,time)
 end
 
 
+>>>>>>> main
 ------------------------------------------------------------------------------------
+<<<<<<< HEAD
 <<<<<<< HEAD
 -- ! Initializes the sensor to be able to read the data.
 -- ! @var is_sensorok       boolean that checks the state of the sensor.
@@ -72,28 +77,58 @@ function send_data_grafana()
 -- !                                     function of sensor
 --
 -- ! @var  INICIALES                     user's initials, brought from credential.lua   
+=======
+-- ! Initializes the sensor to be able to read the data.
+-- ! @var is_sensorok       boolean that checks the state of the sensor.
+-- ! @var sensor            is an instance of the bme280 module
+>>>>>>> santi
 ------------------------------------------------------------------------------------
 
-function send_data_grafana(temperature,humidity,pressure,INICIALES)
+if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then 
+		is_sensorok = true 
+end -- end if
 
+=======
+>>>>>>> origin
+------------------------------------------------------------------------------------
+-- ! @function send_data_grafana    			to read the data from the bme sensor 
+-- !                                            and send it by post request 
+-- ! @funtion http.post                         nodemcu http library, allows to make web requests
+-- ! @var url                                   contains a string with the url to use
+-- 
+------------------------------------------------------------------------------------
+function send_data_grafana()
+
+<<<<<<< HEAD
+		local data = "mediciones,device=" .. INICIALES .. " temp=" ..
+									temperature .. ",hum=" .. humidity .. ",press=" .. pressure
+=======
 		--todo: add time source 
 		local data = create_grafana_message(temperature,humidity,pressure,INICIALES, string.format("%.0f", ((time.get() - 120) *1000000000))) 
 
 		print(data)
 
+<<<<<<< HEAD
 >>>>>>> origin
+=======
+>>>>>>> main
+>>>>>>> santi
 		local headers = {
 				["Content-Type"] = "text/plain",
 				["Authorization"] = "Basic " .. token_grafana
 		}
 		http.post(url, {headers = headers}, data,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> santi
 			function(code_return, data_return) 
 				print("HTTP POST return " .. code_return)
 			
 		end) -- function end
 end -- send_data_grafana end
 
+<<<<<<< HEAD
 ------------------------------------------------------------------------------------
 -- ! @function data_bme    				 to read the data from the bme sensor 
 -- !                                      
@@ -150,6 +185,7 @@ local send_data_timer = tmr.create()
 send_data_timer:register(10000, tmr.ALARM_AUTO, read_and_send_data)
 send_data_timer:start()
 =======
+<<<<<<< HEAD
 			
 			function(code_return, data_return) print("HTTP POST return " .. code_return)
 			
@@ -158,4 +194,8 @@ end -- * send_data_grafana end
 
 
 
+=======
+
+
+>>>>>>> santi
 >>>>>>> origin
