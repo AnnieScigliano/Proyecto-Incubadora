@@ -1,12 +1,40 @@
 -- ! Modules 
-dofile('wifiinit.lua')
-dofile('credentials.lua')
+--dofile('wifiinit.lua')
+--dofile('credentials.lua')
 
 -- ! Local Variables 
 local token_grafana = "token:e98697797a6a592e6c886277041e6b95"
 local url = SERVER
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+------------------------------------------------------------------------------------
+-- ! @function create_grafana_message    to read the data from the bme sensor 
+-- !                                     and send it by post request 
+--                                               
+-- ! @var temperature                    stores the temperature returned by the internal
+-- !                                     function of sensor
+--
+-- ! @var humidity                       stores the humidity returned by the internal 
+-- !                                     function of sensor
+--
+-- ! @var pressure                       stores the pressure returned by the internal
+-- !                                     function of sensor
+--
+-- ! @var INICIALES                      user's initials, brought from credential.lua  
+--
+-- ! @var time							 time in nanosecconds since 
+------------------------------------------------------------------------------------
+function create_grafana_message(temperature,humidity,pressure,INICIALES,time)
+	local data = "mediciones,device=" .. INICIALES .. " temp=" ..
+									temperature .. ",hum=" .. humidity .. ",press=" .. pressure .." " .. time
+	return data
+end
+
+
+>>>>>>> main
 ------------------------------------------------------------------------------------
 -- ! Initializes the sensor to be able to read the data.
 -- ! @var is_sensorok       boolean that checks the state of the sensor.
@@ -28,8 +56,16 @@ end -- end if
 ------------------------------------------------------------------------------------
 function send_data_grafana()
 
+<<<<<<< HEAD
 		local data = "mediciones,device=" .. INICIALES .. " temp=" ..
 									temperature .. ",hum=" .. humidity .. ",press=" .. pressure
+=======
+		--todo: add time source 
+		local data = create_grafana_message(temperature,humidity,pressure,INICIALES, string.format("%.0f", ((time.get() - 120) *1000000000))) 
+
+		print(data)
+
+>>>>>>> main
 		local headers = {
 				["Content-Type"] = "text/plain",
 				["Authorization"] = "Basic " .. token_grafana

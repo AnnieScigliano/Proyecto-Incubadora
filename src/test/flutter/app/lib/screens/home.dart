@@ -1,4 +1,5 @@
-import 'package:app/model/iss_position_model.dart';
+//import 'package:app/model/iss_position_model.dart';
+import 'package:app/model/maxtemp_model.dart';
 import 'package:flutter/material.dart';
 //import 'package:app/model/user_model.dart';
 import 'package:app/apiservice.dart';
@@ -11,7 +12,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late IssPosition? _userModel = null;
+  late Maxtemp? _userModel = null;
   @override
   void initState() {
     super.initState();
@@ -19,7 +20,7 @@ class _HomeState extends State<Home> {
   }
 
   void _getData() async {
-    _userModel = (await ApiService().getPosition())!;
+    _userModel = (await ApiService().getMaxtemp());
     Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
   }
 
@@ -42,7 +43,7 @@ class _HomeState extends State<Home> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(_userModel!.timestamp.toString()),
+                          Text(_userModel!.maxtemp.toString()),
                           Text(_userModel!.message),
                         ],
                       ),

@@ -1,0 +1,16 @@
+{
+    "Lua.workspace.library": [
+        "/home/santi/.config/VSCodium/User/globalStorage/sumneko.lua/addonManager/addons/busted/module/library",
+        "${3rd}/luassert/library",
+        "/home/santi/.config/VSCodium/User/globalStorage/sumneko.lua/addonManager/addons/nodemcu-esp32/module/library"
+    ],
+    "Lua.workspace.checkThirdParty": false,
+    "Lua.runtime.version": "Lua 5.3",
+    "Lua.runtime.builtin": {
+        "math": "disable",
+        "bit": "disable",
+        "bit32": "disable",
+        "utf8": "disable",
+        "os": "disable"
+    }
+}
