@@ -77,7 +77,7 @@ end -- end function
 --
 -- ! @param ev                           event status
 -- ! @param info                         net information
---
+-- ! 
 ------------------------------------------------------------------------------------
 
 function wifi_got_ip_event (ev, info)
@@ -91,6 +91,9 @@ function wifi_got_ip_event (ev, info)
 	print("NodeMCU IP config:", info.ip, "netmask", info.netmask, "gw", info.gw)
 	print("Startup will resume momentarily, you have 3 seconds to abort.")
 	print("Waiting...")
+	print(time.get(), " hora vieja")
+	time.initntp("pool.ntp.org")
+	print(time.get(), " hora nueva")
 
 end -- end function
 
