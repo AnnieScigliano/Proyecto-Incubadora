@@ -1,5 +1,6 @@
+import 'package:app/model/iss_position_model.dart';
 import 'package:flutter/material.dart';
-import 'package:app/model/user_model.dart';
+//import 'package:app/model/user_model.dart';
 import 'package:app/apiservice.dart';
 
 class Home extends StatefulWidget {
@@ -10,7 +11,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late List<Users>? _userModel = [];
+  late IssPosition? _userModel = null;
   @override
   void initState() {
     super.initState();
@@ -18,7 +19,7 @@ class _HomeState extends State<Home> {
   }
 
   void _getData() async {
-    _userModel = (await ApiService().getUsers())!;
+    _userModel = (await ApiService().getPosition())!;
     Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
   }
 
@@ -28,12 +29,12 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text('REST API Example'),
       ),
-      body: _userModel == null || _userModel!.isEmpty
+      body: _userModel == null
           ? const Center(
               child: CircularProgressIndicator(),
             )
           : ListView.builder(
-              itemCount: _userModel!.length,
+              itemCount: 1,
               itemBuilder: (context, index) {
                 return Card(
                   child: Column(
@@ -41,19 +42,12 @@ class _HomeState extends State<Home> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(_userModel![index].id.toString()),
-                          Text(_userModel![index].username),
+                          Text(_userModel!.timestamp.toString()),
+                          Text(_userModel!.message),
                         ],
                       ),
                       const SizedBox(
                         height: 20.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(_userModel![index].email),
-                          Text(_userModel![index].website),
-                        ],
                       ),
                     ],
                   ),
