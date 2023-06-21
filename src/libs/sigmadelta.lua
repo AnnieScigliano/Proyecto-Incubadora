@@ -9,6 +9,9 @@ function changeduty()
     print("seteando duty a ", value)
     sigma_delta.setduty(0, value)
     value = value + 10
+    if value > 127 then
+        value = -127
+    end
 
 end
 
