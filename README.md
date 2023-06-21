@@ -34,6 +34,7 @@ git clone --branch dev-esp32 --depth=1 --shallow-submodules --recurse-submodules
  Once cloned, download the skdconfig file from this [link](https://nube.altermundi.net/s/3arPqaHxs763pmB/download?path=%2F&files=sdkconfig) and save it in 'firmwareESP32' folder then it should be compiled with :
 
 ```bash
+git pull
 make menuconfig  
 ```
 
@@ -57,7 +58,10 @@ from the 'build' folder run:
 
 ```bash
 esptool --chip esp32 --port /dev/ttyUSB0 --baud 921600 --before default_reset --after hard_reset write_flash -z --flash_mode dio --flash_freq 80m --flash_size detect 0x1000 bootloader/bootloader.bin 0x10000 NodeMCU.bin 0x8000 partitions.bin
-
+```
+or
+```bash
+make flash
 ```
 
 ## Load the Lua scripts
