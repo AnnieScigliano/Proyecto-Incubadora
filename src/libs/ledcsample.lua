@@ -8,7 +8,7 @@ myChannel = ledc.newChannel({
     duty=4096
   });
 
-  value=4096
+value=4096
 function changeduty()
     print("seteando duty a ", value)
     myChannel:setduty(value)
