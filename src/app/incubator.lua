@@ -4,9 +4,13 @@
 --  below the control temperature. It also suposes tha when you turn on actuators
 --  variables change.
 --
---  javier jorge
+-- Copyright (c) 2023  Javier Jorge <jjorge@inti.gob.ar>
+-- todo: add jere annie santi ... 
+-- Copyright (c) 2023  Instituto Nacional de Tecnología Industrial
+-- Copyright (C) 2023  Asociación Civil Altermundi <info@altermundi.net>
 --
---  License:
+--  SPDX-License-Identifier: AGPL-3.0-only
+
 -----------------------------------------------------------------------------
 
 dofile('credentials.lua')

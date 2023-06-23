@@ -1,3 +1,6 @@
 [submodule "src/test/busted"]
 	path = src/test/busted
 	url = https://github.com/lunarmodules/busted.git
+[submodule "src/libs/Lua-Arduino-PID-Library"]
+	path = src/libs/Lua-Arduino-PID-Library
+	url = https://github.com/javierbrk/Lua-Arduino-PID-Library.git

@@ -29,7 +29,7 @@ sigma_delta.setup(0, outpin)
 
 --if sensor.init(14,15,true) then
 while true do
-    node.sleep({ secs = 1 })   --print (sensor.read()) -- default sampling
+    //node.sleep({ secs = 1 })   --print (sensor.read()) -- default sampling
     --temperature_read = sensor.temperature / 100
     ---Next we calculate the error between the setpoint and the real value
     PID_error = set_temperature - temperature_read;
@@ -64,7 +64,7 @@ while true do
     end
     ---Now we can write the PWM signal to the mosfet on digital pin D3
     print("pid value ".. PID_value);
-    sigma_delta.setduty(0, 0)
+    sigma_delta.setduty(0, PID_value)
     previous_error = PID_error;     --Remember to store the previous error for next loop.
 
 end
