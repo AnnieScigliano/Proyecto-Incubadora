@@ -1,4 +1,4 @@
-#Fri Jun 16 16:19:46 ART 2023
-base.0=/home/annie/Proyecto-Incubadora/src/test/flutter/app/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
+#Mon Jun 26 22:20:44 ART 2023
+base.0=/home/annie/Documentos/flutter/app/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
 renamed.0=classes.dex
 path.0=classes.dex
