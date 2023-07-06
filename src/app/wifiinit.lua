@@ -124,7 +124,6 @@ function wifi_disconnect_event (ev, info)
 	print("\nWiFi connection to AP(" .. info.ssid .. ") has failed!")
 
 <<<<<<< HEAD
-<<<<<<< HEAD
   if disconnect_ct == nil then
     disconnect_ct = 1
   else
