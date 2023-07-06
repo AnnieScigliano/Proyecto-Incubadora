@@ -68,6 +68,14 @@ class _HomeState extends State<Home> {
                           Text('Versión:'),
                           Text(_verModel!.version.toString()),
                           Text(_verModel!.message),
+                          Flexible(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'Enter a search term',
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(
