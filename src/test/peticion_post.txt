@@ -1,0 +1,1 @@
+curl  -d '{"maxtemp":39}' http://10.5.0.18/maxtemp -v
