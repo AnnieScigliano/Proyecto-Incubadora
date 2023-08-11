@@ -6,7 +6,7 @@ String maxTempToJson(MaxTemp data) => json.encode(data.toJson());
 
 class MaxTemp {
   String message;
-  int? maxtemp;
+  int maxtemp;
 
   MaxTemp({
     required this.message,

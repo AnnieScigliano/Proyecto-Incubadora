@@ -1,0 +1,11 @@
+/home/ninj4/Documentos/repositorios/Proyecto-Incubadora/src/test/flutter/app/build/linux/x64/debug/bundle/app
+/home/ninj4/Documentos/repositorios/Proyecto-Incubadora/src/test/flutter/app/build/linux/x64/debug/bundle/data/icudtl.dat
+/home/ninj4/Documentos/repositorios/Proyecto-Incubadora/src/test/flutter/app/build/linux/x64/debug/bundle/lib/libflutter_linux_gtk.so
+/home/ninj4/Documentos/repositorios/Proyecto-Incubadora/src/test/flutter/app/build/linux/x64/debug/bundle/data/flutter_assets/NOTICES.Z
+/home/ninj4/Documentos/repositorios/Proyecto-Incubadora/src/test/flutter/app/build/linux/x64/debug/bundle/data/flutter_assets/version.json
+/home/ninj4/Documentos/repositorios/Proyecto-Incubadora/src/test/flutter/app/build/linux/x64/debug/bundle/data/flutter_assets/fonts/MaterialIcons-Regular.otf
+/home/ninj4/Documentos/repositorios/Proyecto-Incubadora/src/test/flutter/app/build/linux/x64/debug/bundle/data/flutter_assets/kernel_blob.bin
+/home/ninj4/Documentos/repositorios/Proyecto-Incubadora/src/test/flutter/app/build/linux/x64/debug/bundle/data/flutter_assets/shaders/ink_sparkle.frag
+/home/ninj4/Documentos/repositorios/Proyecto-Incubadora/src/test/flutter/app/build/linux/x64/debug/bundle/data/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf
+/home/ninj4/Documentos/repositorios/Proyecto-Incubadora/src/test/flutter/app/build/linux/x64/debug/bundle/data/flutter_assets/FontManifest.json
+/home/ninj4/Documentos/repositorios/Proyecto-Incubadora/src/test/flutter/app/build/linux/x64/debug/bundle/data/flutter_assets/AssetManifest.json
