@@ -51,12 +51,6 @@ class _HomeState extends State<Home> {
     print(_maxModel?.maxtemp.toString());
     print(_minModel?.mintemp.toString());
 
-    // _list_Models.add(_minModel);
-    // _list_Models.add(_verModel);
-
-    //print(_minModel!.mintemp.toString());
-    // print(_verModel!.version.toString());
-
     Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
   }
 
@@ -113,6 +107,7 @@ class _HomeState extends State<Home> {
               title: const Text("Actualizar parametros"),
               content: const Text("¿desea actualizar los parametros?"),
               actions: [
+                const TextField(),
                 ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
