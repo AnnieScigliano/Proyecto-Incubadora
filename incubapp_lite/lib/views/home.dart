@@ -18,11 +18,28 @@ class _HomeState extends State<Home> {
   late Maxtemp? _maxModel = null;
   late Mintemp? _minModel = null;
   late Version? _verModel = null;
+  late TextEditingController _newMaxTempController;
+  late TextEditingController _newMinTempController;
+
+  var _newMaxTemp;
+  var _newMinTemp;
 
   @override
   void initState() {
     super.initState();
+    _newMaxTempController = TextEditingController();
+    _newMinTempController = TextEditingController();
+
     _getData();
+
+    _newMaxTempController.addListener(_updateTemp);
+  }
+
+  void _updateTemp() {
+    setState(() {
+      _newMaxTemp = _newMaxTempController.text;
+      _newMinTemp = _newMinTempController.text;
+    });
   }
 
   void _getData() async {
@@ -54,38 +71,62 @@ class _HomeState extends State<Home> {
                     ),
                     Text('${_maxModel!.maxtemp} °C'),
                     //Text(_maxModel!.message.toString()),
-                    const Flexible(
+                    Flexible(
                         child: Padding(
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 20,
                         vertical: 10,
                       ),
                       child: TextField(
-                        decoration: InputDecoration(
+                        controller: _newMaxTempController,
+                        decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            hintText: 'nueva temp'),
+                            hintText: 'nueva temperatura maxima'),
                       ),
                     )),
                     ElevatedButton(
-                        onPressed: () => print('blabla'), child: Text('Set')),
+                        onPressed: () => print(
+                            'La temperatura maxima elegida es: ${_newMaxTempController.text}'),
+                        child: Text('Set')),
                   ],
                 ),
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Temperatura minima:'),
+                    const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      child: Text("Temperatura Minima"),
+                    ),
                     Text('${_minModel!.mintemp} °C'),
-                    Text(_minModel!.message.toString()),
+                    //Text(_maxModel!.message.toString()),
+                    Flexible(
+                        child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      child: TextField(
+                        controller: _newMinTempController,
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'nueva temperatura minima'),
+                      ),
+                    )),
+                    ElevatedButton(
+                        onPressed: () => print(
+                            'La temperatura minima elegida es: ${_newMinTempController.text}'),
+                        child: Text('Set')),
                   ],
                 ),
-                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Version:'),
-                    Text(_verModel!.version.toString()),
-                    Text(_verModel!.message.toString()),
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Text('Version: ${_verModel!.version}'),
+                    ),
                   ],
                 )
               ]),
