@@ -278,7 +278,7 @@ function rotation_time_post(req)
     }
   end
 end
---* start local server
+--* start local serversss
 
 httpd.start({ webroot = "web", auto_index = httpd.INDEX_ALL})
 
