@@ -3,4 +3,5 @@ class ApiConstants {
   static String maxTempEndPoint = '/maxtemp';
   static String minTempEndPoint = '/mintemp';
   static String versionEndPoint = '/version';
+  static String rotationEndPoint= '/rotation';
 }
