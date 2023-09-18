@@ -31,11 +31,27 @@ then reboot.
 ```bash
 git clone --branch dev-esp32 --depth=1 --shallow-submodules --recurse-submodules https://github.com/nodemcu/nodemcu-firmware.git firmwareESP32 
 ```
- Once cloned, download the skdconfig file from this [link](https://nube.altermundi.net/s/3arPqaHxs763pmB/download?path=%2F&files=sdkconfig) and save it in 'firmwareESP32' folder then it should be compiled with :
+ Once cloned enter the downloaded file with:
 
 ```bash
-make
+ cd firmwareESP32
 ```
+then download the sdkmanager file to be able to compile the firmware:
+
+```bash
+ wget -c https://cutt.ly/QwjY9Sdt --output-document sdkconfig --show-progress
+```
+
+```bash
+git pull
+make menuconfig  
+```
+
+```bash
+make -j4  
+```
+
+
 ## Burn Firmware with ESPTool
 
 __Installation of ESPTool__
@@ -51,16 +67,21 @@ from the 'build' folder run:
 
 ```bash
 esptool --chip esp32 --port /dev/ttyUSB0 --baud 921600 --before default_reset --after hard_reset write_flash -z --flash_mode dio --flash_freq 80m --flash_size detect 0x1000 bootloader/bootloader.bin 0x10000 NodeMCU.bin 0x8000 partitions.bin
-
+```
+or
+```bash
+make flash
 ```
 
 ## Load the Lua scripts
 
-To load the scripts we have 3 options:
+To load the scripts we have 2 options:
 * [EspLorer](https://github.com/4refr0nt/ESPlorer)
 * [nodemcu-uploader](https://pypi.org/project/nodemcu-uploader/)
-* [ZeroBrane](https://studio.zerobrane.com/)
 
+## Editing Lua scripts
+* [ZeroBrane](https://studio.zerobrane.com/)
+* VSCodium... remember to install sumneko's Lua package, then using the open addon manager install esp32 definitions. 
 
 
 ## Option 1 (ESPlorer)
