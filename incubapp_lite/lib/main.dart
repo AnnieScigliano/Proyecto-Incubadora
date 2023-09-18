@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:incubapp_lite/views/home.dart';
+import 'package:incubapp_lite/views/initial_home.dart';
 
 void main() => runApp(const MyApp());
 
@@ -8,9 +9,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Incuapp Lite',
-      home: Home(),
+      home: IHome(),
     );
   }
 }

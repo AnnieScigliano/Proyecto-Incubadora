@@ -43,7 +43,7 @@ class ApiService {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.rotationEndPoint);
       var response = await http.get(url);
       if (response.statusCode == 200) {
-        Rotation model = rotationToJson(response.body);
+        Rotation model = rotationFromJson(response.body);
         return model;
       }
     } catch (e) {

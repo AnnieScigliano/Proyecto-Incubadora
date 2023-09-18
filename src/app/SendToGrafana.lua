@@ -31,7 +31,7 @@ function send_data_grafana(temperature,humidity,pressure,INICIALES)
 				["Authorization"] = "Basic " .. token_grafana
 		}
 		http.post(url, {headers = headers}, data,
-			function(code_return, data_return) 
+			function(code_return) 
 				print("HTTP POST return " .. code_return)
 			
 		end) -- function end
