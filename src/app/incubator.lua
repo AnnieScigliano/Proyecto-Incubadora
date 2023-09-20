@@ -36,7 +36,7 @@ local is_simulate_temp_local = false
 local is_sensorok = false
 
 function M.init_values()
-	if sensor.init(GPIO_BME_SDA, GPIO_BME_SCL, true) then
+	if sensor.init(15, 14, true) then
 		is_sensorok = true
 	end -- end if
 	gpio.config( { gpio={GPIO_BME_SDA,GPIO_BME_SCL,GPIO_RELAY_1,GPIO_RELAY_2}, dir=gpio.OUT })

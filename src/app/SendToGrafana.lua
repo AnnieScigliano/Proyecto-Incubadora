@@ -1,6 +1,6 @@
 -- ! Modules 
 --dofile('wifiinit.lua')
---dofile('credentials.lua')
+dofile('credentials.lua')
 
 -- ! Local Variables 
 local token_grafana = "token:e98697797a6a592e6c886277041e6b95"
