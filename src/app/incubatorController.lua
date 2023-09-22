@@ -286,8 +286,7 @@ end
 
 function actual_ht(a_temperature,a_humidity)
 
-	 a_temperature = M.temperature
-	 a_humidity = M.humidify
+	a_temperature, a_humidity, _ = incubator.get_values()
 
 	local body_data = {
 		a_temperature = tostring(a_temperature),
