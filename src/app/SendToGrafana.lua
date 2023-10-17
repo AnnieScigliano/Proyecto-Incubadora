@@ -52,7 +52,7 @@ function send_data_grafana(temperature,humidity,pressure,INICIALES)
 		local data = "mediciones,device=" .. INICIALES .. " temp=" ..
 									temperature .. ",hum=" .. humidity .. ",press=" .. pressure
 		--todo: add time source 
-		local data = create_grafana_message(temperature,humidity,pressure,INICIALES, string.format("%.0f", ((time.get() - 120) *1000000000))) 
+		local data = create_grafana_message(temperature,humidity,pressure,INICIALES, string.format("%.0f", (time.get() *1000000000))) 
 
 		print(data)
 
