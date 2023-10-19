@@ -39,45 +39,13 @@ end
 -- change values config.json
 
 
+--- @diagnostic disable-next-line: lowercase-global
 api_key = nil
 
 ------------------------- API ------------------------
-function write_config(api_key, new_value)
-  -- Verificar si es una clave válida y el nuevo valor es numérico
-  if api_key and new_value and type(new_value) == "number" then
-    -- Leer la configuración actual
-    local config = read_config()
-
-    -- Actualizar la configuración según la clave API
-    if api_key == "max_temp" then
-      config.max_temperature = new_value
-    elseif api_key == "min_temp" then
-      config.min_temperature = new_value
-    elseif api_key == "rotation_time" then
-      config.rotation_time = new_value
-    else
-      return "Clave API no válida"
-    end
-
-    -- Convertir la configuración actualizada a JSON
-    local config_json = sjson.encode(config)
-
-    -- Guardar la configuración en el archivo
-    local file = io.open("config.json", "w")
-    if file then
-      file:write(config_json)
-      file:close()
-      return "Configuración actualizada"
-    else
-      return "Error al abrir el archivo de configuración"
-    end
-  else
-    return "Parámetros no válidos"
-  end
-end
 
 
-write_config()
+
 print(config.max_temperature .. "<---")
 
 -------------------------------------
@@ -128,19 +96,35 @@ end -- end function
 -------------------------------------
 function max_temp_post(req)
   local reqbody = req.getbody()
-  print(reqbody)
   local body_json = sjson.decode(reqbody)
-
-  -- Obtener el nuevo valor de max_temp del cuerpo de la solicitud POST
-  print(body_json.maxtemp)
   local new_max_temp = body_json.maxtemp
+
 
   if type(new_max_temp) == "number" and
       new_max_temp < 42 and
       new_max_temp >= 0 and
       new_max_temp >= min_temp then
-    max_temp = new_max_temp
+    -- table with the config
+    local config = read_config()
 
+    -- change the max_temp with the config max temp
+    if config then
+      config.max_temperature = new_max_temp
+    end
+
+    local config_json = sjson.encode(config)
+    -- this delete all the file
+    file = io.open("config.json", "w")
+    -- if file exist then write
+    if file then
+      file:write(config_json)
+      -- close the new json file
+      file:close()
+    else
+      return {
+        status = "config file not found"
+      }
+    end
     return {
       status = "201 Created"
     }
@@ -298,11 +282,3 @@ httpd.dynamic(httpd.POST, "/mintemp", min_temp_post)
 httpd.dynamic(httpd.GET, "/rotation", rotation_time_get)
 httpd.dynamic(httpd.POST, "/rotation", rotation_time_post)
 httpd.dynamic(httpd.GET, "/temperatureactual", actual_ht)
-
-
-httpd.dynamic(httpd.POST, "/config=(.*)=(.*)", function(req, res)
-  local api_key, new_value = req.matches[1], req.matches[2]
-  local response = write_config(api_key, tonumber(new_value))
-  res:send(response) 
-end)
-
