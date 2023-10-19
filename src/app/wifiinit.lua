@@ -167,5 +167,5 @@ function wifi_disconnect_event (ev, info)
 	end -- end if
 end -- end function
 
-configwifi()
-print("Connecting to WiFi access point...")
+configwifi() 
+print("\n\n\n\n\n\n\n\nConnecting to WiFi access point...")

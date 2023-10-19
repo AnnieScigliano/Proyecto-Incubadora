@@ -318,8 +318,7 @@ httpd.dynamic(httpd.GET,"/rotation", rotation_time_get)
 httpd.dynamic(httpd.POST,"/rotation", rotation_time_post)
 httpd.dynamic(httpd.GET,"/temperatureactual",actual_ht)
 httpd.dynamic(httpd.GET,"/date", date)
-httpd.dynamic(httpd.GET,"/rotation", rotation_time_get)
-httpd.dynamic(httpd.POST,"/rotation", rotation_time_post)
+
 
 
 

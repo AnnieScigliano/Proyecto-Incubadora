@@ -1,8 +1,8 @@
 -- This file is only a placeholder.
 -- Put your credentials here, and 
 -- rename the file to remove the underscore.
-SSID = "fabrica"
-PASSWORD = "comunidad2023"
+SSID = "quintana.libre.org.ar"
+PASSWORD = ""
 
 IP_ADDR = "0.0.0.0"         -- static IP
 NETMASK = "255.255.255.0"   -- your subnet
@@ -13,7 +13,7 @@ GPIOBMESCL = 0
 
 GPIODHT22 = 2
 
-INICIALES = "ff"
+INICIALES = "JC"
 SERVER="http://grafana.altermundi.net:8086/write?db=cto"
 --SERVER="http://192.168.43.26:8080/"
 --FileView done.
