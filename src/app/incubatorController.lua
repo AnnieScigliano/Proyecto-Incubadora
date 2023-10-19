@@ -6,6 +6,7 @@
 --
 --  License:
 -----------------------------------------------------------------------------
+
 incubator = require("incubator")
 require("SendToGrafana")
 dofile('credentials.lua')
@@ -16,6 +17,7 @@ dofile('credentials.lua')
 -- ! @param min_temp 							 temperature at which the resistor turns on
 -- ! @param,max_temp 							 temperature at which the resistor turns off
 ------------------------------------------------------------------------------------
+
 min_temp = 37.5
 max_temp = 38
 r_time = 3600000
@@ -124,10 +126,12 @@ function min_temp_get(req)
  
 end -- end function
 
+-------------------------------------
 --! @function maxtemp   print the current temperature
 --
 --!	@param req  				server request
 -------------------------------------
+
 function max_temp_post(req)    
   local reqbody = req.getbody()
     print(reqbody)
@@ -151,10 +155,13 @@ function max_temp_post(req)
     }
   end
 end
+
+-------------------------------------
 --! @function maxtemp   print the current temperature
 --
 --!	@param req  				server request
 -------------------------------------
+
 function min_temp_post(req)    
   
     local reqbody = req.getbody()
@@ -181,6 +188,7 @@ function min_temp_post(req)
   
   end
 end
+
 -------------------------------------
 --! @function date   		print the current date
 --
@@ -202,15 +210,12 @@ function date(req)
 
 end -- end function
 
--------------------------------------
 
 -------------------------------------
 --! @function version   print the current version
 --
 --!	@param req  				server request 
 -------------------------------------
-
-
 
 
 function version(req)
@@ -232,7 +237,7 @@ end -- end function
 
 
 -------------------------------------
---! @function max_temp   print the current temperature
+--! @function max_temp   print the current rotation time
 --
 --!	@param req  				server request
 -------------------------------------
@@ -278,12 +283,97 @@ function rotation_time_post(req)
     }
   end
 end
---* start local serversss
+
+-------------------------------------
+--! @function wifi_scan_get   print the current avaliables networks
+--
+--!	@param req  		      		server request
+-------------------------------------
+
+function wifi_scan_get(req)
+  wifi.sta.scan({ hidden = 1 }, function(err, arr)
+      if err then
+          local response_data = {
+              message = "error",
+              error_message = err
+          }
+      else
+          local networks = {}
+          for i, ap in ipairs(arr) do
+              local network_info = {
+                  ssid = ap.ssid,
+                  rssi = ap.rssi
+              }
+              table.insert(networks, network_info)
+          end
+          local response_data = {
+              message = "success",
+              networks = networks
+          }
+      end
+
+      local response_json = json.encode(response_data)
+
+      return {
+          status = "200 OK",
+          type = "application/json",
+          body = response_json
+      }
+  end)
+end
+
+function wifi_scan_post(req)
+  
+  local data = json.decode(req.body)
+
+  local response_data = {}
+
+  if data and data.action == "scan" then
+      wifi.sta.scan({ hidden = 1 }, function(err, arr)
+          if err then
+              response_data = {
+                  message = "error",
+                  error_message = err
+              }
+          else
+              local networks = {}
+              for i, ap in ipairs(arr) do
+                  local network_info = {
+                      ssid = ap.ssid,
+                      rssi = ap.rssi
+                  }
+                  table.insert(networks, network_info)
+              end
+              response_data = {
+                  message = "success",
+                  networks = networks
+              }
+          end
+      end)
+  else
+      response_data = {
+          message = "invalid_request",
+          error_message = "Invalid request."
+      }
+  end
+
+  local response_json = json.encode(response_data)
+
+  return {
+      status = "200 OK",
+      type = "application/json",
+      body = response_json
+  }
+end
+
+
+
+-- start local servers
 
 httpd.start({ webroot = "web", auto_index = httpd.INDEX_ALL})
 
 
---* dynamic routes to serve
+-- dynamic routes to serve
 
 httpd.dynamic(httpd.GET,"/version", version)
 httpd.dynamic(httpd.GET,"/maxtemp", max_temp_get)
@@ -293,7 +383,5 @@ httpd.dynamic(httpd.POST,"/mintemp", min_temp_post)
 httpd.dynamic(httpd.GET,"/date", date)
 httpd.dynamic(httpd.GET,"/rotation", rotation_time_get)
 httpd.dynamic(httpd.POST,"/rotation", rotation_time_post)
-
-
-
-
+httpd.dynamic(httpd.GET,"/wifi", wifi_scan_get)
+httpd.dynamic(httpd.POST,"/wifi", wifi_scan_post)
