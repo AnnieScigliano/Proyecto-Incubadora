@@ -290,41 +290,60 @@ end
 --!	@param req  		      		server request
 -------------------------------------
 
-function wifi_scan_get(req)
-  wifi.sta.scan({ hidden = 1 }, function(err, arr)
-      if err then
-          local response_data = {
-              message = "error",
-              error_message = err
-          }
-      else
-          local networks = {}
-          for i, ap in ipairs(arr) do
-              local network_info = {
-                  ssid = ap.ssid,
-                  rssi = ap.rssi
-              }
-              table.insert(networks, network_info)
-          end
-          local response_data = {
-              message = "success",
-              networks = networks
-          }
-      end
+local response_data = {
+  message = "error",
+  error_message = err
+}
 
-      local response_json = json.encode(response_data)
-
-      return {
-          status = "200 OK",
-          type = "application/json",
-          body = response_json
+function scan_callback(err, arr)
+   
+  print("Iniciooooooooooooooooooooo")
+  if err then
+    print("error")  
+    response_data = {
+          message = "error",
+          error_message = err
       }
-  end)
+  else
+      print("no error")
+      local networks = {}
+      for i, ap in ipairs(arr) do
+          local network_info = {
+              ssid = ap.ssid,
+              rssi = ap.rssi
+          }
+          table.insert(networks, network_info)
+      end
+      response_data = {
+          message = "success",
+          networks = networks
+      }
+  end
+
+end
+
+
+  
+function wifi_scan_get(req)
+
+  wifi.sta.scan({ hidden = 1 }, scan_callback)
+  
+  local response_json = sjson.encode(response_data)
+
+  print("aaaaaaaaaaaaaaaaaaaa")
+  
+  
+  return {
+    status = "200 OK",
+    type = "application/json",
+    body = response_json
+    }
+
 end
 
 function wifi_scan_post(req)
   
-  local data = json.decode(req.body)
+  local data = sjson.decode(req.body)
 
   local response_data = {}
 
@@ -357,7 +376,7 @@ function wifi_scan_post(req)
       }
   end
 
-  local response_json = json.encode(response_data)
+  local response_json = sjson.encode(response_data)
 
   return {
       status = "200 OK",
@@ -375,12 +394,10 @@ httpd.start({ webroot = "web", auto_index = httpd.INDEX_ALL})
 
 -- dynamic routes to serve
 
-httpd.dynamic(httpd.GET,"/version", version)
 httpd.dynamic(httpd.GET,"/maxtemp", max_temp_get)
 httpd.dynamic(httpd.POST,"/maxtemp", max_temp_post)
 httpd.dynamic(httpd.GET,"/mintemp", min_temp_get)
 httpd.dynamic(httpd.POST,"/mintemp", min_temp_post)
-httpd.dynamic(httpd.GET,"/date", date)
 httpd.dynamic(httpd.GET,"/rotation", rotation_time_get)
 httpd.dynamic(httpd.POST,"/rotation", rotation_time_post)
 httpd.dynamic(httpd.GET,"/wifi", wifi_scan_get)
