@@ -46,7 +46,7 @@ function configwifi()
 	station_cfg = {}
 	station_cfg.ssid = SSID
 	station_cfg.pwd = PASSWORD
-	wifi.sta.config(station_cfg)
+	wifi.sta.config(station_cfg,true)
 	wifi.sta.connect()
 end -- end function
 
@@ -133,7 +133,8 @@ function wifi_disconnect_event (ev, info)
 	else
 		disconnect_ct = disconnect_ct + 1
 	end -- end if
-	
+	wifi.sta.connect()
+
 	if disconnect_ct < total_tries then
 		print("Retrying connection...(attempt " .. (disconnect_ct + 1) .. " of " .. total_tries .. ")")
 	else

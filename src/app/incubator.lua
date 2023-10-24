@@ -20,13 +20,15 @@ local M = {
 	model         = nil, -- M model:
 	resistor      = true,
 	humidifier    = false,
-	temperature   = 29, -- integer value of temperature [0.01 C]
+	rotation	  = false,
+	temperature   = 0, -- integer value of temperature [0.01 C]
 	pressure      = 0, -- integer value of preassure [Pa]=[0.01 hPa]
 	humidity      = 0, -- integer value of rel.humidity [0.01 %]
 	is_testing    = false,
 	testing_max_tem = 0,
 	testing_min_tem = 0,
-	
+	max_temp = 38,
+	min_temp = 37.5
 }
 
 _G[M.name]=M
@@ -39,14 +41,14 @@ function M.init_values()
 	if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then
 		is_sensorok = true
 	end -- end if
-	gpio.config( { gpio={14,15,13,12}, dir=gpio.OUT })
+	gpio.config( { gpio={GPIOVOLTEO,GPIORESISTOR,13,12}, dir=gpio.OUT })
 	gpio.set_drive(13, gpio.DRIVE_3)
-	gpio.set_drive(14, gpio.DRIVE_3)
-	gpio.set_drive(15, gpio.DRIVE_3)
+	gpio.set_drive(GPIOVOLTEO, gpio.DRIVE_3)
+	gpio.set_drive(GPIORESISTOR, gpio.DRIVE_3)
     gpio.set_drive(12, gpio.DRIVE_3)
     gpio.write(13, 1)
-    gpio.write(14, 1)
-    gpio.write(15, 1)
+    gpio.write(GPIOVOLTEO, 1)
+    gpio.write(GPIORESISTOR, 1)
     gpio.write(12, 1)
     
 end -- end function
@@ -57,11 +59,9 @@ end -- end function
 -- @param min 								is equal to the minimum temperature to test
 -- @param max 								is equal to the maximum temperature to test
 -------------------------------------
-function M.enable_testing(min, max,simulatetemp)
+function M.enable_testing(simulatetemp)
 	M.is_testing = true;
 	is_simulate_temp_local= simulatetemp
-	M.testing_max_tem = max
-	M.testing_min_tem = min
 end --end function
 
 -------------------------------------
@@ -74,7 +74,7 @@ function M.get_values()
 		if M.resistor then
 			M.temperature = (M.temperature + 1)
 		else
-			M.temperature = (M.temperature - math.random(1, 4))
+			M.temperature = (M.temperature - math.random(1, 15))
 		end --end if
 
 		if M.humidifier then
@@ -100,46 +100,62 @@ function M.get_values()
 end --end function
 
 -------------------------------------
--- @function heater 					Activates or deactivates temperature control
+-- @function heater 					Activates or deactivates heater
 --
--- @param status "true" 			increments temperature, "false" temp decrements randomly
+-- @param status "true" 			increments temperature, "false" temp "decrements"
 -------------------------------------
 function M.heater(status --[[bool]])
 	M.resistor = status
 	if status then
-		gpio.write(12, 0)
+		gpio.write(GPIORESISTOR, 0)
 	else
-		gpio.write(12, 1)
+		gpio.write(GPIORESISTOR, 1)
 	end
 	print(status)
 	M.assert_conditions()
 end --end function
 
 function M.assert_conditions()
-	print(M.temperature, M.testing_max_tem, M.testing_min_tem, M.resistor)
+	print("temp actual ", M.temperature,", max ", M.testing_max_tem, ",min ", M.testing_min_tem, ",resitor status ", M.resistor)
 	if M.is_testing then
-		if (M.temperature > M.testing_max_tem) then
+		if (M.temperature > M.max_temp) then
 			assert(not M.resistor)
 		end --if end 
-		if (M.temperature < M.testing_min_tem) then
+		if (M.temperature < M.min_temp) then
 			assert(M.resistor)
 		end --if end 
 	end -- if is_testing
 end   --end fucition
 
 -------------------------------------
--- @function humidifier 			Activates or deactivates humidity control
+-- @function humidifier 			Activates or deactivates humidifier
 --
--- @param status "true" 		  increments humidity, "false" humidity decrements randomly
+-- @param status "true" 		  increments humidity, "false" humidity "decrements"
 -------------------------------------
 function M.humidifier(status)
 	humidifier = status
 	if status then
-		gpio.write(13, 0)
+		gpio.write(14, 0)
 	else
-		gpio.write(13, 1)
+		gpio.write(14, 1)
 	end -- if end 
-	print(status)
+	print("humidifier ",status)
+end -- function end 
+
+-------------------------------------
+-- @function rotation 			Activates or deactivates rotation
+--
+-- @param status "true" activates rotation, "false" stops rotation
+-------------------------------------
+function M.rotation(status)
+	rotation = status
+	if status then
+		gpio.write(GPIOVOLTEO, 0)
+	else
+		gpio.write(GPIOVOLTEO, 1)
+	end -- if end 
+	--todo: implement logger for debug 
+	print("rotation ",status)
 end -- function end 
 
 return M
