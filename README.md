@@ -31,7 +31,16 @@ then reboot.
 ```bash
 git clone --branch dev-esp32 --depth=1 --shallow-submodules --recurse-submodules https://github.com/nodemcu/nodemcu-firmware.git firmwareESP32 
 ```
- Once cloned, download the skdconfig file from this [link](https://nube.altermundi.net/s/3arPqaHxs763pmB/download?path=%2F&files=sdkconfig) and save it in 'firmwareESP32' folder then it should be compiled with :
+ Once cloned enter the downloaded file with:
+
+```bash
+ cd firmwareESP32
+```
+then download the sdkmanager file to be able to compile the firmware:
+
+```bash
+ wget -c https://cutt.ly/QwjY9Sdt --output-document sdkconfig --show-progress
+```
 
 ```bash
 git pull
