@@ -1,8 +1,8 @@
 -- This file is only a placeholder.
 -- Put your credentials here, and 
 -- rename the file to remove the underscore.
-SSID = "TP-LINK_0582C0"
-PASSWORD = "123456789"
+SSID = "quintana.libre.org.ar"
+PASSWORD = ""
 
 IP_ADDR = "0.0.0.0"         -- static IP
 NETMASK = "255.255.255.0"   -- your subnet
