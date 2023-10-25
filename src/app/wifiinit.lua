@@ -92,7 +92,9 @@ function wifi_got_ip_event (ev, info)
 	print("Startup will resume momentarily, you have 3 seconds to abort.")
 	print("Waiting...")
 	print(time.get(), " hora vieja")
-	time.initntp("pool.ntp.org")
+	if(not time.ntpenabled())then
+		time.initntp("pool.ntp.org")
+	end
 	print(time.get(), " hora nueva")
 
 end -- end function
