@@ -1,7 +1,8 @@
 import 'package:incubapp_lite/models/wifi_model.dart';
+import 'package:incubapp_lite/views/initial_home.dart';
+import 'package:incubapp_lite/services/api_services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:incubapp_lite/views/initial_home.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WHome extends StatefulWidget {
@@ -30,7 +31,7 @@ class _WHomeState extends State<WHome> {
       appBar: AppBar(
         title: const Text('REDES DIPONIBLES'),
       ),
-      body: _maxModel == null || _minModel == null || _verModel == null
+      body: _wifiModel == null
           ? const Center(
               child: CircularProgressIndicator(),
             )
@@ -39,7 +40,7 @@ class _WHomeState extends State<WHome> {
               itemBuilder: (context, index) {
                 return Card(
                   child: Column(
-                    child: [
+                    children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [

@@ -101,7 +101,7 @@ class _IHomeState extends State<IHome> {
           ),
         ),
       )
-    ] 
+      ]) 
     );
   }
 }
