@@ -78,25 +78,30 @@ class _IHomeState extends State<IHome> {
           )),
         ),
         Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              children: [
-                FloatingActionButton(
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Home()));
-                    },
-                    child: const Icon(FontAwesomeIcons.gear)),
-                FloatingActionButton(
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => WifiHome()));
-                    },
-                    child: const Icon(FontAwesomeIcons.wifi)),
-              ],
-            )),
-      ]),
+        alignment: Alignment.bottomRight,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => WHome()));
+                },
+                child: const Icon(FontAwesomeIcons.wifi),
+              ),
+              SizedBox(width: 16),
+              FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+                },
+                child: const Icon(FontAwesomeIcons.gear),
+              ),
+            ],
+          ),
+        ),
+      )
+    ] 
     );
   }
 }

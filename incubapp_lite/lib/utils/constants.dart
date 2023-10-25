@@ -4,4 +4,5 @@ class ApiConstants {
   static String minTempEndPoint = '/mintemp';
   static String versionEndPoint = '/version';
   static String rotationEndPoint = '/rotation';
+  static String wifiEndPoint = '/wifi';
 }
