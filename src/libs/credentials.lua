@@ -1,7 +1,7 @@
 -- This file is only a placeholder.
 -- Put your credentials here, and 
 -- rename the file to remove the underscore.
-SSID = "quintana.libre.org.ar"
+SSID = "unc-libre 2.4GHz"
 PASSWORD = ""
 
 IP_ADDR = "0.0.0.0"         -- static IP
