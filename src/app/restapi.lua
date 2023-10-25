@@ -7,7 +7,7 @@ function restapi.add(a, b)
 end
 
 function restapi.init(a)
-    print(a )
+    print(a)
 end
 -------------------------------------
 -- ! @function max_temp   print the current temperature
@@ -58,14 +58,14 @@ end -- end function
 -------------------------------------
 function restapi.max_temp_post(req)
     local reqbody = req.getbody()
-    print(reqbody)
+    print(reqbody,"max_temp_post")
     local body_json = sjson.decode(reqbody)
 
     -- Obtener el nuevo valor de max_temp del cuerpo de la solicitud POST
     print(body_json.maxtemp)
     local new_max_temp = body_json.maxtemp
 
-    if type(new_max_temp) == "number" and new_max_temp < 42 and new_max_temp >= 0 and new_max_temp >= min_temp then
+    if type(new_max_temp) == "number" and new_max_temp < 42 and new_max_temp >= 0 and new_max_temp >= restapi.incubator.min_temp then
 
         restapi.incubator.max_temp = new_max_temp
 
@@ -94,19 +94,20 @@ function restapi.min_temp_post(req)
     -- Obtener el nuevo valor de max_temp del cuerpo de la solicitud POST
     print(body_json.mintemp)
     local new_min_temp = body_json.mintemp
+    if (type(new_min_temp) == "number") then
+        if new_min_temp >= 0 and new_min_temp <= restapi.incubator.max_temp then
 
-    if new_min_temp >= 0 and new_min_temp <= max_temp and type(new_min_temp) == "number" then
+            restapi.incubator.min_temp = new_min_temp
+            return {
+                status = "201 Created"
+            }
 
-        restapi.incubator.min_temp = new_min_temp
-        return {
-            status = "201 Created"
-        }
+        else
+            return {
+                status = "400 Bad Request"
+            }
 
-    else
-        return {
-            status = "400 Bad Request"
-        }
-
+        end
     end
 end
 -------------------------------------
@@ -158,7 +159,7 @@ end -- end function
 function restapi.init_module(incubator_object)
     -- * start local server
     restapi.incubator = incubator_object
-    print("starting server .. fyi maxtemp "..restapi.incubator.max_temp)
+    print("starting server .. fyi maxtemp " .. restapi.incubator.max_temp)
     httpd.start({
         webroot = "web",
         auto_index = httpd.INDEX_ALL
