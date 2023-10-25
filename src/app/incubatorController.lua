@@ -55,7 +55,7 @@ end
 
 incubator.init_values()
 apiserver.init_module(incubator)
-incubator.enable_testing(min_temp,max_temp,false)
+incubator.enable_testing(false)
 
 local send_data_timer = tmr.create()
 send_data_timer:register(3000, tmr.ALARM_AUTO, read_and_send_data)

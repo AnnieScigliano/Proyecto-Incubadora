@@ -25,8 +25,6 @@ local M = {
 	pressure      = 0, -- integer value of preassure [Pa]=[0.01 hPa]
 	humidity      = 0, -- integer value of rel.humidity [0.01 %]
 	is_testing    = false,
-	testing_max_tem = 0,
-	testing_min_tem = 0,
 	max_temp = 38,
 	min_temp = 37.5
 }
@@ -116,7 +114,7 @@ function M.heater(status --[[bool]])
 end --end function
 
 function M.assert_conditions()
-	print("temp actual ", M.temperature,", max ", M.testing_max_tem, ",min ", M.testing_min_tem, ",resitor status ", M.resistor)
+	print("temp actual ", M.temperature,", max ", M.max_temp, ",min ", M.min_temp, ",resitor status ", M.resistor)
 	if M.is_testing then
 		if (M.temperature > M.max_temp) then
 			assert(not M.resistor)
