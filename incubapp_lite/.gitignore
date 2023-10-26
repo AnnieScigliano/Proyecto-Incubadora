@@ -1,0 +1,41 @@
+# Flutter/Dart-specific files
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+
+# Android build
+/build/
+/android/app/build/
+/android/app/gradle.properties
+/android/gradle/
+/android/local.properties
+/android/gradlew
+/android/gradlew.bat
+/android/*.iml
+
+# iOS build
+/Pods/
+/ios/Podfile.lock
+/ios/Pods/
+/ios/Runner.xcodeproj/project.xcworkspace/xcuserdata/
+/ios/Runner.xcworkspace/xcshareddata/
+/ios/Runner.xcodeproj/xcuserdata/
+
+# macOS build
+.DS_Store
+
+# Visual Studio Code
+.vscode/
+
+# Android Studio
+.idea/
+*.iml
+
+# Other
+*.log
+*.log.*
+*.tmp
+*.swp
