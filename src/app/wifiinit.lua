@@ -60,7 +60,7 @@ end -- end function
 ------------------------------------------------------------------------------------
 
 function wifi_connect_event (ev, info)
-	print("Connection to AP(" .. info.ssid .. ") established!")
+	print(string.format("conecction to AP %s established!", tostring(info.ssid)))
 	print("Waiting for IP address...")
 	
 	if disconnect_ct ~= nil then 
