@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:incubapp_lite/views/home.dart';
 import 'package:incubapp_lite/views/initial_home.dart';
+import 'package:incubapp_lite/views/wifi_home.dart';
 
 void main() => runApp(const MyApp());
 

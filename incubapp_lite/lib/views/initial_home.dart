@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:incubapp_lite/models/max_temp_model.dart';
-
 import 'package:incubapp_lite/views/home.dart';
+import 'package:incubapp_lite/views/wifi_home.dart';
 import 'package:incubapp_lite/services/api_services.dart';
 
 void main() => runApp(MaterialApp(
@@ -34,64 +34,74 @@ class _IHomeState extends State<IHome> {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.blueAccent, Colors.blue])),
-            child: Center(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  FontAwesomeIcons.temperatureHalf,
-                  color: Colors.white,
-                  size: 40.0,
-                ),
-                SizedBox(
-                  height: size.height * 0.03,
-                ),
-                temperatureTitle(size),
-                const SizedBox(
-                  height: 30.0,
-                ),
-                temperatureValue(size, maxTemp),
-                const SizedBox(
-                  height: 30.0,
-                ),
-                const Icon(
-                  FontAwesomeIcons.droplet,
-                  color: Colors.white,
-                  size: 40.0,
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                humidityTitle(size),
-                SizedBox(
-                  height: size.height * 0.05,
-                ),
-                humidityValue(size, humidity),
-              ],
-            )),
+      body: Stack(children: [
+        Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.blueAccent, Colors.blue])),
+          child: Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                FontAwesomeIcons.temperatureHalf,
+                color: Colors.white,
+                size: 40.0,
+              ),
+              SizedBox(
+                height: size.height * 0.03,
+              ),
+              temperatureTitle(size),
+              const SizedBox(
+                height: 30.0,
+              ),
+              temperatureValue(size, maxTemp),
+              const SizedBox(
+                height: 30.0,
+              ),
+              const Icon(
+                FontAwesomeIcons.droplet,
+                color: Colors.white,
+                size: 40.0,
+              ),
+              const SizedBox(
+                height: 10.0,
+              ),
+              humidityTitle(size),
+              SizedBox(
+                height: size.height * 0.05,
+              ),
+              humidityValue(size, humidity),
+            ],
+          )),
+        ),
+        Align(
+        alignment: Alignment.bottomRight,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => WHome()));
+                },
+                child: const Icon(FontAwesomeIcons.wifi),
+              ),
+              SizedBox(width: 16),
+              FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+                },
+                child: const Icon(FontAwesomeIcons.gear),
+              ),
+            ],
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Home()));
-                  },
-                  child: const Icon(FontAwesomeIcons.gear)),
-            ),
-          )
-        ],
-      ),
+        ),
+      )
+      ]) 
     );
   }
 }
