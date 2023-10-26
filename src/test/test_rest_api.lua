@@ -7,7 +7,7 @@ local ltn12 = require("ltn12")
 describe("Api REST test", function()
 	items = {
 
-		{ ["category"] = "config_param", ["name"] = "maxtemp", ["value"] = 50,  ["comparator"] = "=" },
+		{ ["category"] = "config_param", ["name"] = "maxtemp", ["value"] = 40,  ["comparator"] = "=" },
 		{ ["category"] = "config_param", ["name"] = "mintemp", ["value"] = 20,  ["comparator"] = "=" },
 		{ ["category"] = "geters",       ["name"] = "version", ["value"] = "0.0.1", ["comparator"] = "=" },
 		--get the actual date and assert that the date from the device is in the future
@@ -94,7 +94,7 @@ describe("Api REST test", function()
 			source = ltn12.source.string(value),
 		}
 		print(2,code, status, body, headers, atribute, value)
-		--assert.are_equal(201, code)
+		assert.are_equal(201, code)
 		return body
 	end
 
@@ -107,7 +107,6 @@ describe("Api REST test", function()
 					body            = get_and_assert_200(v["name"])
 					local lua_value = JSON:decode(body) -- decode example
 					assert.are_equal(lua_value.message, "success")
-					print(v["name"],v["value"])
 					print(lua_value[v["name"]],"successsssssssssssssssssss")
 					if v["comparator"] == "<" then
 						print(tonumber(v["value"]),"  ",tonumber(lua_value[v["name"]]))
