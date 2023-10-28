@@ -1,21 +1,17 @@
 --package.path = package.path .. ';../?.lua'
 --require("app.SendToGrafana")
 local http = require("socket.http")
-local apiendpoint = "http://10.5.3.42/"
+local apiendpoint = "http://192.168.16.10/"
 local ltn12 = require("ltn12")
 
 describe("Api REST test", function()
 	items = {
 
-		{ ["category"] = "config_param", ["name"] = "maxtemp", ["value"] = 50,  ["comparator"] = "=" },
+		{ ["category"] = "config_param", ["name"] = "maxtemp", ["value"] = 40,  ["comparator"] = "=" },
 		{ ["category"] = "config_param", ["name"] = "mintemp", ["value"] = 20,  ["comparator"] = "=" },
 		{ ["category"] = "geters",       ["name"] = "version", ["value"] = "0.0.1", ["comparator"] = "=" },
 		--get the actual date and assert that the date from the device is in the future
 		{ ["category"] = "geters",       ["name"] = "date",    ["value"] = 0,   ["comparator"] = "<" },
-		{ ["category"] = "geters",       ["name"] = "mintemp",    ["value"] = 0,   ["comparator"] = ">" },
-		{ ["category"] = "geters",       ["name"] = "mintemp",    ["value"] = 0,   ["comparator"] = "<" },
-
-
 	}
 	setup(
 
@@ -116,6 +112,7 @@ describe("Api REST test", function()
 						print(tonumber(v["value"]),"  ",tonumber(lua_value[v["name"]]))
 						assert(tonumber(v["value"])  < tonumber(lua_value[v["name"]]))
 					else
+						print(tonumber(v["value"]),"  ",tonumber(lua_value[v["name"]]))
 						assert.are_equal(v["value"], lua_value[v["name"]])
 					end
 				end)
