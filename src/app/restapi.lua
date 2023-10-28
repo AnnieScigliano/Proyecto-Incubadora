@@ -2,13 +2,6 @@ local restapi = {
     incubator = nil
 }
 
-function restapi.add(a, b)
-    print(a + b)
-end
-
-function restapi.init(a)
-    print(a)
-end
 -------------------------------------
 -- ! @function max_temp   print the current temperature
 --
@@ -156,6 +149,102 @@ function restapi.version(req)
 
 end -- end function
 
+-------------------------------------
+--! @function wifi_scan_get   print the current avaliables networks
+--
+--!	@param req  		      		server request
+-------------------------------------
+
+local response_data = {
+    message = "error",
+    error_message = err
+}
+  
+function restapi.scan_callback(err, arr)
+    
+
+    if err then
+        response_data = {
+        message = "error",
+        error_message = err
+        }
+    else
+        local networks = {}
+        for i, ap in ipairs(arr) do
+            local network_info = {
+                ssid = ap.ssid,
+                rssi = ap.rssi
+            }
+            table.insert(networks, network_info)
+        end
+        response_data = {
+            message = "success",
+            networks = networks
+        }
+    end
+
+end
+
+
+    
+function restapi.wifi_scan_get(req)
+
+    wifi.sta.scan({ hidden = 1 }, restapi.scan_callback)
+    
+    local response_json = sjson.encode(response_data)
+
+    return {
+    status = "200 OK",
+    type = "application/json",
+    body = response_json
+    }
+
+end
+
+function restapi.wifi_scan_post(req)
+    
+    local data = sjson.decode(req.body)
+
+    local response_data = {}
+
+    if data and data.action == "scan" then
+        wifi.sta.scan({ hidden = 1 }, function(err, arr)
+            if err then
+                response_data = {
+                message = "error",
+                error_message = err
+                }
+            else
+                local networks = {}
+                for i, ap in ipairs(arr) do
+                    local network_info = {
+                        ssid = ap.ssid,
+                        rssi = ap.rssi
+                    }
+                    table.insert(networks, network_info)
+                end
+                response_data = {
+                    message = "success",
+                    networks = networks
+                }
+            end
+        end)
+    else
+        response_data = {
+            message = "invalid_request",
+            error_message = "Invalid request."
+        }
+    end
+
+    local response_json = sjson.encode(response_data)
+
+    return {
+        status = "200 OK",
+        type = "application/json",
+        body = response_json
+    }
+end
+
 function restapi.init_module(incubator_object)
     -- * start local server
     restapi.incubator = incubator_object
@@ -166,12 +255,12 @@ function restapi.init_module(incubator_object)
     })
 
     -- * dynamic routes to serve
-    httpd.dynamic(httpd.GET, "/version", restapi.version)
     httpd.dynamic(httpd.GET, "/maxtemp", restapi.max_temp_get)
     httpd.dynamic(httpd.POST, "/maxtemp", restapi.max_temp_post)
     httpd.dynamic(httpd.GET, "/mintemp", restapi.min_temp_get)
     httpd.dynamic(httpd.POST, "/mintemp", restapi.min_temp_post)
-    httpd.dynamic(httpd.GET, "/date", restapi.date)
+    httpd.dynamic(httpd.GET, "/wifi", restapi.wifi_scan_get)
+    httpd.dynamic(httpd.POST, "/wifi", restapi.wifi_scan_post)
 end
 
 return restapi
