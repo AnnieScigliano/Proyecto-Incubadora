@@ -88,7 +88,7 @@ function M.get_values()
 	else
 		if M.is_sensorok then
 			sensor.read()
-			if sensor.temperature < -40 or sensor.temperature > 86 then
+			if (sensor.temperature / 100)< -40 or (sensor.temperature / 100) > 86 then
 				M.temperature = 99.9
 				M.humidity = 99.9
 				M.pressure = 99.9
