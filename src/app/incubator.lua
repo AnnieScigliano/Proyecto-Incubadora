@@ -35,7 +35,7 @@ _G[M.name]=M
 
 local sensor = require('bme280')
 
-function startbme()
+function M.startbme()
 	if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then
 		M.is_sensorok = true
 	else
@@ -44,7 +44,7 @@ function startbme()
 end
 
 function M.init_values()
-	startbme()
+	M.startbme()
 	gpio.config( { gpio={GPIOVOLTEO,GPIORESISTOR,13,12}, dir=gpio.OUT })
 	gpio.set_drive(13, gpio.DRIVE_3)
 	gpio.set_drive(GPIOVOLTEO, gpio.DRIVE_3)
@@ -98,7 +98,7 @@ function M.get_values()
 			M.pressure = 99.9
 			print('[!] Failed to start bme')
 			--try to restart bme
-			startbme()
+			M.startbme()
 		end -- end if
 	end --if end 
 
