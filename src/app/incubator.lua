@@ -21,24 +21,30 @@ local M = {
 	resistor      = true,
 	humidifier    = false,
 	rotation	  = false,
-	temperature   = 0, -- integer value of temperature [0.01 C]
+	temperature   = 99.9, -- integer value of temperature [0.01 C]
 	pressure      = 0, -- integer value of preassure [Pa]=[0.01 hPa]
 	humidity      = 0, -- integer value of rel.humidity [0.01 %]
 	is_testing    = false,
 	max_temp = 38,
-	min_temp = 37.5
+	min_temp = 37.5,
+	is_sensorok = false
 }
 
 _G[M.name]=M
 
 local sensor = require('bme280')
 local is_simulate_temp_local = false
-local is_sensorok = false
+
+function startbme()
+	if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then
+		M.is_sensorok = true
+	else
+		M.is_sensorok=false
+	end 
+end
 
 function M.init_values()
-	if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then
-		is_sensorok = true
-	end -- end if
+-- end if
 	gpio.config( { gpio={GPIOVOLTEO,GPIORESISTOR,13,12}, dir=gpio.OUT })
 	gpio.set_drive(13, gpio.DRIVE_3)
 	gpio.set_drive(GPIOVOLTEO, gpio.DRIVE_3)
@@ -87,9 +93,9 @@ function M.get_values()
 			M.humidity = (sensor.humidity / 100)
 			M.pressure = math.floor(sensor.pressure) / 100
 		else
-			M.pressure = 0
-			M.pressure = 0
-			M.pressure = 0
+			M.temperature = 99.9
+			M.humidity = 99.9
+			M.pressure = 99.9
 			print('[!] Failed to start bme')
 		end -- end if
 	end --if end 
