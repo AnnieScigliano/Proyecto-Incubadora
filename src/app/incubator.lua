@@ -87,7 +87,7 @@ function M.get_values()
 			M.humidity = (M.humidity - math.random(1, 4))
 		end --end if
 	else
-		if is_sensorok then
+		if M.is_sensorok then
 			sensor.read()
 			M.temperature = (sensor.temperature / 100)
 			M.humidity = (sensor.humidity / 100)
