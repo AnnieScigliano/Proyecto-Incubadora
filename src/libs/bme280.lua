@@ -133,7 +133,7 @@ function M.init(SDA,SCL,volatile,...)
   i2c.setup(0,SDA,SCL,i2c.SLOW)
 
 -- M.init suceeded after/when read calibration coeff.
-  init=(next(T)~=nil)and(next(P)~=nil)and(next(H)~=nil)
+  init=false
 
   if not init then
     local found,c
