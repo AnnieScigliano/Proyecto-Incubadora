@@ -86,15 +86,16 @@ function M.get_values()
 			M.humidity = (M.humidity - math.random(1, 4))
 		end --end if
 	else
+		M.startbme()
 		if M.is_sensorok then
 			sensor.read()
+			print(sensor.temperature / 100)
 			if (sensor.temperature / 100)< -40 or (sensor.temperature / 100) > 86 then
 				M.temperature = 99.9
 				M.humidity = 99.9
 				M.pressure = 99.9
 				print('[!] Failed to read bme')
 				--try to restart bme
-				M.startbme()
 			else
 				M.temperature = (sensor.temperature / 100)
 				M.humidity = (sensor.humidity / 100)
@@ -105,8 +106,6 @@ function M.get_values()
 			M.humidity = 99.9
 			M.pressure = 99.9
 			print('[!] Failed to start bme')
-			--try to restart bme
-			M.startbme()
 		end -- end if
 	end --if end
 
