@@ -22,7 +22,7 @@ function alerts.send_alert_to_grafana(message)
 	alerts.alers_counter = alerts.alers_counter+1
 
 	local alert_string = "alertas,device=" .. INICIALES .. " count=" ..
-	alerts.alers_counter .. ",message=" .. message .. " " .. string.format("%.0f", ((time.get()) *1000000000))
+	alerts.alers_counter .. ",message=\"" .. message .. "\" " .. string.format("%.0f", ((time.get()) *1000000000))
 	alerts.add_message_to_the_queue({time.get(),message,alerts.alers_counter})
 
 	print(alert_string)
