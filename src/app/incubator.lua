@@ -13,7 +13,7 @@
 
 -----------------------------------------------------------------------------
 
-dofile('credentials.lua')
+require('credentials')
 
 local M = {
 	name                   = ..., -- module name, upvalue from require('module-name')
@@ -89,22 +89,24 @@ function M.get_values()
 		M.startbme()
 		if M.is_sensorok then
 			sensor.read()
-			print(sensor.temperature / 100)
+			print("temp ", sensor.temperature)
 			if (sensor.temperature / 100)< -40 or (sensor.temperature / 100) > 86 then
 				M.temperature = 99.9
 				M.humidity = 99.9
 				M.pressure = 99.9
 				print('[!] Failed to read bme')
+				alerts.send_alert_to_grafana("[!] Failed to read bme")
 				--try to restart bme
 			else
 				M.temperature = (sensor.temperature / 100)
 				M.humidity = (sensor.humidity / 100)
-				M.pressure = math.floor(sensor.pressure) / 100
+				M.pressure = (sensor.pressure) / 100
 			end
 		else
 			M.temperature = 99.9
 			M.humidity = 99.9
 			M.pressure = 99.9
+			alerts.send_alert_to_grafana("[!] Failed to start bme")
 			print('[!] Failed to start bme')
 		end -- end if
 	end --if end
@@ -131,11 +133,13 @@ end --end function
 function M.assert_conditions()
 	print("temp actual ", M.temperature, ", max ", M.max_temp, ",min ", M.min_temp, ",resitor status ", M.resistor)
 	if M.is_testing then
-		if (M.temperature > M.max_temp) then
-			assert(not M.resistor)
+		if (M.temperature > M.max_temp and M.resistor) then
+			alerts.send_alert_to_grafana("temperature > max_temp and resistor is on")
+			--assert(not M.resistor)
 		end --if end
-		if (M.temperature < M.min_temp) then
-			assert(M.resistor)
+		if (M.temperature < M.min_temp and not M.resistor) then
+			alerts.send_alert_to_grafana("temperature < M.min_temp and resistor is off")
+			--assert(M.resistor)
 		end --if end
 	end -- if is_testing
 end   --end fucition
