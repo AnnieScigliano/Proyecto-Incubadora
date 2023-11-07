@@ -25,22 +25,24 @@ local last_temps_queue = deque.new()
 function is_temp_changing(temperature)
     last_temps_queue:push_right(temperature)
     if last_temps_queue:length() < 10  then
-        print ("les than 9 elements in the queue")
+        ---les than 9 elements in the queue
         return true
     end
     if last_temps_queue:length() > 10 then
-        print ("remove one item")
+        -- remove one item
         last_temps_queue:pop_left()
     end
     local vant = nil
-    last_temps_queue:length()
+   
     for i,v in ipairs(last_temps_queue:contents()) do
         print ("val:", i, v,vant)
         if vant ~= nil and vant ~= v then
+            --everything is fine... 
             return true
         end
         vant = v
     end
+    --temp is not changin
     return false
 end
 
