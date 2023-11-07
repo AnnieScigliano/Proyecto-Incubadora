@@ -33,7 +33,8 @@ local M={
   mode=0x03,      -- default sampling: 0=sleep, 1&2=forced(on demand), 3:normal(continious)
   temperature=nil,-- integer value of temperature [0.01 C]
   pressure   =nil,-- integer value of preassure [Pa]=[0.01 hPa]
-  humidity   =nil -- integer value of rel.humidity [0.01 %]
+  humidity   =nil,
+  ADDR = {0x76,0x77} -- integer value of rel.humidity [0.01 %]
 }
 _G[M.name]=M
 
@@ -138,10 +139,10 @@ function M.init(SDA,SCL,volatile,...)
   if not init then
     local found,c
 -- verify device address
-    for c=1,#ADDR do
-      found=i2c_write(ADDR[c])
+    for c=1,#M.ADDR do
+      found=i2c_write(M.ADDR[c])
       if found then
-        ADDR=ADDR[c]
+        ADDR=M.ADDR[c]
         break
       end
     end
