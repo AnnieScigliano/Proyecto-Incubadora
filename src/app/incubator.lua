@@ -73,7 +73,7 @@ end --end function
 -- @returns temperature, humidity, pressure
 -------------------------------------
 function M.get_values()
-	if is_simulate_temp_local then
+	if M.is_simulate_temp_local then
 		if M.resistor then
 			M.temperature = (M.temperature + 1)
 		else
