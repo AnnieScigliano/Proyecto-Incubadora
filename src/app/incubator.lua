@@ -5,7 +5,7 @@
 --  variables change.
 --
 -- Copyright (c) 2023  Javier Jorge <jjorge@inti.gob.ar>
--- todo: add jere annie santi ... 
+-- todo: add jere annie santi ...
 -- Copyright (c) 2023  Instituto Nacional de Tecnología Industrial
 -- Copyright (C) 2023  Asociación Civil Altermundi <info@altermundi.net>
 --
@@ -13,42 +13,47 @@
 
 -----------------------------------------------------------------------------
 
-dofile('credentials.lua')
+require('credentials')
 
 local M = {
-	name          = ..., -- module name, upvalue from require('module-name')
-	model         = nil, -- M model:
-	resistor      = true,
-	humidifier    = false,
-	rotation	  = false,
-	temperature   = 0, -- integer value of temperature [0.01 C]
-	pressure      = 0, -- integer value of preassure [Pa]=[0.01 hPa]
-	humidity      = 0, -- integer value of rel.humidity [0.01 %]
-	is_testing    = false,
-	max_temp = 38,
-	min_temp = 37.5
+	name                   = ..., -- module name, upvalue from require('module-name')
+	model                  = nil, -- M model:
+	resistor               = false,
+	humidifier             = false,
+	rotation               = false,
+	temperature            = 99.9, -- integer value of temperature [0.01 C]
+	pressure               = 0, -- integer value of preassure [Pa]=[0.01 hPa]
+	humidity               = 0, -- integer value of rel.humidity [0.01 %]
+	is_testing             = false,
+	max_temp               = 38,
+	min_temp               = 37.5,
+	is_sensorok            = false,
+	is_simulate_temp_local = false
 }
 
-_G[M.name]=M
+_G[M.name] = M
 
 local sensor = require('bme280')
-local is_simulate_temp_local = false
-local is_sensorok = false
+
+function M.startbme()
+	if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then
+		M.is_sensorok = true
+	else
+		M.is_sensorok = false
+	end
+end
 
 function M.init_values()
-	if sensor.init(GPIOBMESDA, GPIOBMESCL, true) then
-		is_sensorok = true
-	end -- end if
-	gpio.config( { gpio={GPIOVOLTEO,GPIORESISTOR,13,12}, dir=gpio.OUT })
+	M.startbme()
+	gpio.config({ gpio = { GPIOVOLTEO, GPIORESISTOR, 13, 12 }, dir = gpio.OUT })
 	gpio.set_drive(13, gpio.DRIVE_3)
 	gpio.set_drive(GPIOVOLTEO, gpio.DRIVE_3)
 	gpio.set_drive(GPIORESISTOR, gpio.DRIVE_3)
-    gpio.set_drive(12, gpio.DRIVE_3)
-    gpio.write(13, 1)
-    gpio.write(GPIOVOLTEO, 1)
-    gpio.write(GPIORESISTOR, 1)
-    gpio.write(12, 1)
-    
+	gpio.set_drive(12, gpio.DRIVE_3)
+	gpio.write(13, 1)
+	gpio.write(GPIOVOLTEO, 1)
+	gpio.write(GPIORESISTOR, 1)
+	gpio.write(12, 1)
 end -- end function
 
 -------------------------------------
@@ -59,7 +64,7 @@ end -- end function
 -------------------------------------
 function M.enable_testing(simulatetemp)
 	M.is_testing = true;
-	is_simulate_temp_local= simulatetemp
+	M.is_simulate_temp_local = simulatetemp
 end --end function
 
 -------------------------------------
@@ -68,7 +73,7 @@ end --end function
 -- @returns temperature, humidity, pressure
 -------------------------------------
 function M.get_values()
-	if is_simulate_temp_local then
+	if M.is_simulate_temp_local then
 		if M.resistor then
 			M.temperature = (M.temperature + 1)
 		else
@@ -81,18 +86,30 @@ function M.get_values()
 			M.humidity = (M.humidity - math.random(1, 4))
 		end --end if
 	else
-		if is_sensorok then
+		M.startbme()
+		if M.is_sensorok then
 			sensor.read()
-			M.temperature = (sensor.temperature / 100)
-			M.humidity = (sensor.humidity / 100)
-			M.pressure = math.floor(sensor.pressure) / 100
+			print("temp ", sensor.temperature)
+			if (sensor.temperature / 100)< -40 or (sensor.temperature / 100) > 86 then
+				M.temperature = 99.9
+				M.humidity = 99.9
+				M.pressure = 99.9
+				print('[!] Failed to read bme')
+				alerts.send_alert_to_grafana("[!] Failed to read bme")
+				--try to restart bme
+			else
+				M.temperature = (sensor.temperature / 100)
+				M.humidity = (sensor.humidity / 100)
+				M.pressure = (sensor.pressure) / 100
+			end
 		else
-			M.pressure = 0
-			M.pressure = 0
-			M.pressure = 0
+			M.temperature = 99.9
+			M.humidity = 99.9
+			M.pressure = 99.9
+			alerts.send_alert_to_grafana("[!] Failed to start bme")
 			print('[!] Failed to start bme')
 		end -- end if
-	end --if end 
+	end --if end
 
 	return M.temperature, M.humidity, M.pressure
 end --end function
@@ -114,14 +131,16 @@ function M.heater(status --[[bool]])
 end --end function
 
 function M.assert_conditions()
-	print("temp actual ", M.temperature,", max ", M.max_temp, ",min ", M.min_temp, ",resitor status ", M.resistor)
+	print("temp actual ", M.temperature, ", max ", M.max_temp, ",min ", M.min_temp, ",resitor status ", M.resistor)
 	if M.is_testing then
-		if (M.temperature > M.max_temp) then
-			assert(not M.resistor)
-		end --if end 
-		if (M.temperature < M.min_temp) then
-			assert(M.resistor)
-		end --if end 
+		if (M.temperature > M.max_temp and M.resistor) then
+			alerts.send_alert_to_grafana("temperature > max_temp and resistor is on")
+			--assert(not M.resistor)
+		end --if end
+		if (M.temperature < M.min_temp and not M.resistor) then
+			alerts.send_alert_to_grafana("temperature < M.min_temp and resistor is off")
+			--assert(M.resistor)
+		end --if end
 	end -- if is_testing
 end   --end fucition
 
@@ -136,9 +155,9 @@ function M.humidifier(status)
 		gpio.write(14, 0)
 	else
 		gpio.write(14, 1)
-	end -- if end 
-	print("humidifier ",status)
-end -- function end 
+	end -- if end
+	print("humidifier ", status)
+end  -- function end
 
 -------------------------------------
 -- @function rotation 			Activates or deactivates rotation
@@ -151,9 +170,9 @@ function M.rotation(status)
 		gpio.write(GPIOVOLTEO, 0)
 	else
 		gpio.write(GPIOVOLTEO, 1)
-	end -- if end 
-	--todo: implement logger for debug 
-	print("rotation ",status)
-end -- function end 
+	end -- if end
+	--todo: implement logger for debug
+	print("rotation ", status)
+end -- function end
 
 return M

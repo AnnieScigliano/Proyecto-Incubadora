@@ -6,14 +6,49 @@
 --
 --  License:
 -----------------------------------------------------------------------------
-dofile("credentials.lua")
+require('credentials')
+require("SendToGrafana")
+alerts = require("alerts")
 incubator = require("incubator")
 apiserver = require("restapi")
-require("SendToGrafana")
-dofile('credentials.lua')
+deque = require ('deque')
 
 
+--holds the last 10 values 
+local last_temps_queue = deque.new()
+
+
+-----------------------------------------------------------------------------------
+-- ! @function is_temp_changing 	     verifies if temperature is changing 
+-- ! @param temperature						 actual temperature
 ------------------------------------------------------------------------------------
+function is_temp_changing(temperature)
+    last_temps_queue:push_right(temperature)
+    if last_temps_queue:length() < 10  then
+        ---les than 9 elements in the queue
+        return true
+    end
+    if last_temps_queue:length() > 10 then
+        -- remove one item
+        last_temps_queue:pop_left()
+    end
+    local vant = nil
+   
+    for i,v in ipairs(last_temps_queue:contents()) do
+        print ("val:", i, v,vant)
+        if vant ~= nil and vant ~= v then
+            --everything is fine... 
+            return true
+        end
+        vant = v
+    end
+    --temp is not changin
+    return false
+end
+
+
+
+-----------------------------------------------------------------------------------
 -- ! @function temp_control 	     handles temperature control
 -- ! @param temperature						 overall temperature
 -- ! @param min_temp 							 temperature at which the resistor turns on
@@ -21,7 +56,13 @@ dofile('credentials.lua')
 ------------------------------------------------------------------------------------
 function temp_control(temperature, min_temp, max_temp)    
     if temperature <= min_temp then
-        incubator.heater(true)
+        if is_temp_changing(temperature) then
+            print("temp is changing")
+            incubator.heater(true)
+        else
+            alerts.send_alert_to_grafana("temperature is not changing")
+            incubator.heater(false)
+        end
     elseif temperature >= max_temp then
         incubator.heater(false)
     end -- end if

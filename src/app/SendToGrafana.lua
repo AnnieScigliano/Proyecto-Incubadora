@@ -1,6 +1,7 @@
 -- ! Modules 
 --dofile('wifiinit.lua')
---dofile('credentials.lua')
+--dofilerequire('credentials.lua')
+require('credentials')
 
 -- ! Local Variables 
 local token_grafana = "token:e98697797a6a592e6c886277041e6b95"
@@ -27,6 +28,7 @@ local url = SERVER
 function create_grafana_message(temperature,humidity,pressure,INICIALES,time)
 	local data = "mediciones,device=" .. INICIALES .. " temp=" ..
 									temperature .. ",hum=" .. humidity .. ",press=" .. pressure .." " .. time
+	print(data)
 	return data
 end
 
@@ -51,9 +53,6 @@ function send_data_grafana(temperature,humidity,pressure,INICIALES)
 
 		--todo: add time source 
 		local data = create_grafana_message(temperature,humidity,pressure,INICIALES, string.format("%.0f", ((time.get()) *1000000000))) 
-
-		print(data)
-
 		local headers = {
 				["Content-Type"] = "text/plain",
 				["Authorization"] = "Basic " .. token_grafana
