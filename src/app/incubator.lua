@@ -170,6 +170,7 @@ function M.rotation(status)
 		gpio.write(GPIOVOLTEO, 0)
 	else
 		gpio.write(GPIOVOLTEO, 1)
+		print("[!] Rotation is not occurring")
 	end -- if end
 	--todo: implement logger for debug
 	print("rotation ", status)
