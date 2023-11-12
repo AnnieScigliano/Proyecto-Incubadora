@@ -94,8 +94,8 @@ function M.get_values()
 				M.temperature = 99.9
 				M.humidity = 99.9
 				M.pressure = 99.9
-				print('[!] Failed to read bme')
-				alerts.send_alert_to_grafana("[!] Failed to read bme")
+				print('[!] Failed to read bme, Please check the cables and connections. ')
+				alerts.send_alert_to_grafana("[!] Failed to read bme,Please check the cables and connections. ")
 				--try to restart bme
 			else
 				M.temperature = (sensor.temperature / 100)
