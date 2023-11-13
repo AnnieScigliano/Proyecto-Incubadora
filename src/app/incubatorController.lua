@@ -99,7 +99,7 @@ apiserver.init_module(incubator)
 incubator.enable_testing(false)
 
 local send_data_timer = tmr.create()
-send_data_timer:register(1000, tmr.ALARM_AUTO, read_and_send_data)
+send_data_timer:register(10000, tmr.ALARM_AUTO, read_and_send_data)
 send_data_timer:start()
 
 local temp_control_timer = tmr.create()
