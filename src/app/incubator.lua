@@ -107,7 +107,7 @@ function M.get_values()
 			M.humidity = 99.9
 			M.pressure = 99.9
 			alerts.send_alert_to_grafana("[!] Failed to start bme, Please check the cables and connections.")
-			print("[!] Failed to read bme, Please check the cables and connections.")
+			print("[!] Failed to start bme, Please check the cables and connections.")
 		end -- end if
 	end --if end
 
