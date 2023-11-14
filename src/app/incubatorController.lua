@@ -107,7 +107,7 @@ temp_control_timer:register(3000, tmr.ALARM_AUTO, read_and_control)
 temp_control_timer:start()
 
 local rotation = tmr.create()
-rotation:register(20000, tmr.ALARM_AUTO, rotate)
---rotation:register(3600000, tmr.ALARM_AUTO, rotate)
+--rotation:register(20000, tmr.ALARM_AUTO, rotate)
+rotation:register(3600000, tmr.ALARM_AUTO, rotate)
 rotation:start()
 
