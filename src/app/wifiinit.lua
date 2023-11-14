@@ -41,12 +41,26 @@ function configwifi()
 	wifi.sta.on("got_ip", wifi_got_ip_event)
 	wifi.sta.on("connected", wifi_connect_event)
 	wifi.sta.on("disconnected", wifi_disconnect_event)
-	wifi.mode(wifi.STATION)
+	wifi.mode(wifi.STATIONAP)
+	sta_cfg={}
+	sta_cfg.ip='192.168.16.10'
+	sta_cfg.netmask='255.255.255.0'
+	sta_cfg.gateway='192.168.16.1'
+	sta_cfg.dns='8.8.8.8'
+	wifi.ap.setip(sta_cfg)
+	wifi.ap.config({
+		ssid = "incubator",
+		pwd = "12345678",
+		auth=wifi.AUTH_WPA2_PSK
+	},true)
+	wifi.ap.on("sta_connected", function(event, info) print("MAC_id"..info.mac,"Name"..info.id) end)
 	wifi.start()
 	station_cfg = {}
 	station_cfg.ssid = SSID
 	station_cfg.pwd = PASSWORD
+	station_cfg.scan_method = all
 	wifi.sta.config(station_cfg,true)
+    wifi.sta.sethostname(INICIALES.."-ESP32")
 	wifi.sta.connect()
 end -- end function
 
@@ -60,7 +74,7 @@ end -- end function
 ------------------------------------------------------------------------------------
 
 function wifi_connect_event (ev, info)
-	print("Connection to AP(" .. info.ssid .. ") established!")
+	print(string.format("conecction to AP %s established!", tostring(info.ssid)))
 	print("Waiting for IP address...")
 	
 	if disconnect_ct ~= nil then 
