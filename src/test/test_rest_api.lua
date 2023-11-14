@@ -1,152 +1,110 @@
 --package.path = package.path .. ';../?.lua'
 --require("app.SendToGrafana")
-local http = require("socket.http")
-local apiendpoint = "http://192.168.16.10/"
-local ltn12 = require("ltn12")
+local http        = require("socket.http")
+local apiendpoint = "http://10.5.3.94/"
+local JSON        = require("JSON")
+local inspect     = require("inspect")
+local ltn12       = require("ltn12")
 
-describe("Api REST test", function()
-	items = {
+-- it("json playground", function()
+-- 	local raw_json_text    = "[1,2,[3,4]]"
 
-		{ ["category"] = "config_param", ["name"] = "maxtemp", ["value"] = 40,  ["comparator"] = "=" },
-		{ ["category"] = "config_param", ["name"] = "mintemp", ["value"] = 20,  ["comparator"] = "=" },
-		{ ["category"] = "geters",       ["name"] = "version", ["value"] = "0.0.1", ["comparator"] = "=" },
-		--get the actual date and assert that the date from the device is in the future
-		{ ["category"] = "geters",       ["name"] = "date",    ["value"] = 0,   ["comparator"] = "<" },
-	}
-	setup(
+-- 	local lua_value        = JSON:decode(raw_json_text) -- decode example
+-- 	local raw_json_text    = JSON:encode(lua_value)  -- encode example
+-- 	local pretty_json_text = JSON:encode_pretty(lua_value) -- "pretty printed" version
 
-		function()
-			http.TIMEOUT = 100
-			print("setup")
-			JSON              = require("JSON")
-			inspect           = require("inspect")
-			items[4]["value"] = os.time(os.date("!*t"))- 20000
-			counter           = 0
-		end
-	)
+-- 	print(inspect(lua_value))
+-- 	print(inspect(raw_json_text))
+-- 	print(inspect(pretty_json_text))
+-- 	print("it 1 .........")
+-- 	-- obj2 is reset thanks to the before_each
+-- 	r, c = http.request {
+-- 		url = "http://www.google.com",
+-- 		headers = {  ["content-Type"] = 'application/json' },
+-- 		body = 87
+-- 	}
+-- 	print("it 2 .........")
 
-	teardown(
-		function()
-			print("teardown")
-		end)
+-- 	print(r,c)
+-- 	print("it 3 .........")
 
-	before_each(
-		function()
+-- end)
 
-		end)
 
-	it("get space station location", function()
-		local body, code, headers, status = http.request("http://api.open-notify.org/iss-now.json")
-		print(code, status, body)
-		local lua_value = JSON:decode(body) -- decode example
-		print(lua_value.message)
-		assert.are_equal(lua_value.message, "success")
-	end)
-
-	it("json playground", function()
-		local raw_json_text    = "[1,2,[3,4]]"
-
-		local lua_value        = JSON:decode(raw_json_text) -- decode example
-		local raw_json_text    = JSON:encode(lua_value)  -- encode example
-		local pretty_json_text = JSON:encode_pretty(lua_value) -- "pretty printed" version
-
-		print(inspect(lua_value))
-		print(inspect(raw_json_text))
-		print(inspect(pretty_json_text))
-		print("it 1 .........")
-		-- obj2 is reset thanks to the before_each
-		r, c = http.request {
-			url = "http://www.google.com",
-			headers = {  ["content-Type"] = 'application/json' },
-			body = 87
-		}
-		print("it 2 .........")
-
-		print(r,c)
-		print("it 3 .........")
-
-	end)
-
-	local function get_and_assert_200(atribute)
-		local body, code, headers, status = http.request(apiendpoint .. atribute)
-		print(code, status, body, headers, atribute)
-		assert.are_equal(code, 200)
-		return body
-	end
-
-	local function post_and_assert_201(atribute, value)
-		h = {
-			--   date = "Tue, 18 Sep 2001 20:42:21 GMT",
-			--   server = "Apache/1.3.12 (Unix)  (Red Hat/Linux)",
-			--   ["last-modified"] = "Wed, 05 Sep 2001 06:11:20 GMT",
-			--   ["content-length"] = 15652,
-			--   ["connection"] = "close",
-			 ["content-Type"] = 'application/json'
-			 }
-			
-		--In that case, if a body is provided as a string, the function will perform a POST method in the url.
-		body, code, headers, status = http.request {
-			url = apiendpoint .. atribute,
-			headers = { ["content-Type"] = 'application/json',
-						["Accept"]='application/json',
-						["content-length"] = tostring(#value) },
-			method = "POST",
-			source = ltn12.source.string(value),
-		}
-		print(2,code, status, body, headers, atribute, value)
-		assert.are_equal(201, code)
-		return body
-	end
-
-	describe("parametrized geters", function()
-		pending("get time and version ... ")
-		for k, v in pairs(items) do
-			if v["category"] == "geters" then
-				it("get and check " .. v["name"] .. " ", function()
-					--get the actual max
-					body            = get_and_assert_200(v["name"])
-					local lua_value = JSON:decode(body) -- decode example
-					assert.are_equal(lua_value.message, "success")
-					print(lua_value[v["name"]],"successsssssssssssssssssss")
-					if v["comparator"] == "<" then
-						print(tonumber(v["value"]),"  ",tonumber(lua_value[v["name"]]))
-						assert(tonumber(v["value"])  < tonumber(lua_value[v["name"]]))
-					else
-						print(tonumber(v["value"]),"  ",tonumber(lua_value[v["name"]]))
-						assert.are_equal(v["value"], lua_value[v["name"]])
-					end
-				end)
-			end
-			
-			if v["category"] == "config_param" then
-				it("get and set " .. v["name"] .. " ", function()
-					--get the actual max
-					body            = get_and_assert_200(v["name"])
-					local lua_value = JSON:decode(body) -- decode example
-					assert.are_equal(lua_value.message, "success")
-					print(lua_value[v["name"]])
-					assert.is_number(lua_value[v["name"]])
-					local actual_val = lua_value[v["name"]]
-					local new_val = v["value"]
-					--assert.are_not_equal(actual_val, new_val)
-					--set the new max
-					post_and_assert_201(v["name"], '{"'.. v["name"]..'":'.. new_val..'}' )
-					--get the new max
-					body            = get_and_assert_200(v["name"])
-					local lua_value = JSON:decode(body) -- decode example
-					assert.are_equal(lua_value.message, "success")
-					print(lua_value[v["name"]])
-					assert.is_number(lua_value[v["name"]])
-					assert.are_equal(new_val, lua_value[v["name"]])
-					--restore the old value
-					post_and_assert_201(v["name"], '{"'.. v["name"]..'":'.. actual_val..'}' )
-					body = get_and_assert_200(v["name"])
-					lua_value = JSON:decode(body) -- decode example
-					assert.are_equal(actual_val, lua_value[v["name"]])
-
-					
-				end)
-			end
-		end
-	end)
+it("get space station location", function()
+	local body, code, headers, status, message = http.request("http://api.open-notify.org/iss-now.json")
+	print(code, status, body)
+	local lua_value = JSON:decode(body) -- decode example
+	print(lua_value.message)
+	assert.are_equal(lua_value.message, "success")
 end)
+
+it("get config", function()
+	local body, code, headers, status = http.request(apiendpoint .. "config")
+	inspect(print("\nBody de la peticion GET: \n " .. body))
+	assert.are_equal(code, 200)
+	print("[+] La peticíon GET de la configuracion fué exitosa.\n\n")
+end)
+
+it("get actual temperature and humidity", function()
+	local body, code, headers, status, message = http.request(apiendpoint .. "temperatureactual")
+	inspect(print("\nBody de la peticion GET: \n " .. body))
+	assert.are_equal(code, 200)
+	print("[+] La peticíon GET de la temperatura y humedad actual fué exitosa.\n\n")
+end)
+
+it("get actual wifi's", function()
+	local body, code, headers, status, message = http.request(apiendpoint .. "wifi")
+	inspect(print("\nBody de la peticion GET: \n " .. body))
+	assert.are_equal(code, 200)
+	print("[+] La peticíon GET de las redes disponibles fué exitosa.\n\n")
+end)
+
+
+local function get_and_assert_200(atribute)
+	local body, code, headers, status = http.request(apiendpoint .. atribute)
+	print(code, status, body, headers, atribute)
+	assert.are_equal(code, 200)
+	return body
+end
+
+-- local http = require("socket.http")
+
+-- -- URL de destino
+-- local url = "http://ejemplo.com/api/endpoint"
+
+-- -- Datos en formato JSON
+-- local postData = '{"parametro1":"valor1","parametro2":"valor2"}'
+
+-- -- Variables para almacenar los valores de retorno
+-- local response, statusCode, headers, statusLine = http.request{
+-- 		url = url,
+-- 		method = "POST",
+-- 		headers = {
+-- 				["Content-Type"] = "application/json",
+-- 				["Content-Length"] = #postData
+-- 		},
+-- 		source = ltn12.source.string(postData)
+-- }
+
+-- -- Imprimir el código de estado y la respuesta del servidor
+-- print("Código de Estado:", statusCode)
+-- print("Cuerpo de la Respuesta:", response)
+
+function config_post()
+	print("[+] La peticíon POST fué exitosa.\n\n")
+	local post_data = '{"rotation_time":3600000,"min_temperature":40,"max_temperature":50}'
+
+	local response, code, headers, status = http.request {
+		url = apiendpoint .. "config",
+		method = 'POST',
+		headers = {
+			["Content-Type"] = "application/json",
+			["Content-Length"] = #post_data
+		},
+		source = ltn12.source.string(post_data)
+	}
+	assert.are_equal(code, 200)
+	assert.are_equal(message, "Json updated successfully")
+	
+end
