@@ -1,4 +1,4 @@
-local restapi = {incubator = require("incubator")}
+local restapi = {incubator = nil}
 
 -------------------------------------
 -- ! @function change config   modify the current config.json file
@@ -169,9 +169,15 @@ function restapi.wifi_scan_post(req)
     return {status = "200 OK", type = "application/json", body = response_json}
 end
 
--- * start local serve
-httpd.start({webroot = "web", auto_index = httpd.INDEX_ALL})
-
+function restapi.init_module(incubator_object)
+    -- * start local server
+    restapi.incubator = incubator_object
+    print("starting server .. fyi maxtemp " .. restapi.incubator.max_temp)
+    httpd.start({
+        webroot = "web",
+        auto_index = httpd.INDEX_ALL
+    })
+    
 -- * dynamic routes to serve
 httpd.dynamic(httpd.GET, "/config", restapi.config_get)
 httpd.dynamic(httpd.POST, "/config", restapi.change_config)
@@ -179,3 +185,6 @@ httpd.dynamic(httpd.GET, "/wifi", restapi.wifi_scan_get)
 httpd.dynamic(httpd.POST, "/wifi", restapi.wifi_scan_post)
 httpd.dynamic(httpd.GET, "/temperatureactual", restapi.actual_ht)
 
+end
+
+return restapi
