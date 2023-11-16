@@ -25,8 +25,8 @@ local M = {
 	pressure               = 0, -- integer value of preassure [Pa]=[0.01 hPa]
 	humidity               = 0, -- integer value of rel.humidity [0.01 %]
 	is_testing             = false,
-	max_temp               = 38,
-	min_temp               = 37.5,
+	max_temp               = 37.8,
+	min_temp               = 37.3,
 	is_sensorok            = false,
 	is_simulate_temp_local = false
 }
