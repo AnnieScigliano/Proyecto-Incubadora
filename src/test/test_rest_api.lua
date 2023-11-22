@@ -1,101 +1,73 @@
---package.path = package.path .. ';../?.lua'
---require("app.SendToGrafana")
 local http        = require("socket.http")
-local apiendpoint = "http://10.5.3.94/"
 local JSON        = require("JSON")
 local inspect     = require("inspect")
 local ltn12       = require("ltn12")
 
--- it("json playground", function()
--- 	local raw_json_text    = "[1,2,[3,4]]"
+-- First connect to the incubator's own Wi-Fi to perform unit tests (ssid : incubator | passwd : 12345678)
+local apiendpoint = "http://192.168.16.10/"
 
--- 	local lua_value        = JSON:decode(raw_json_text) -- decode example
--- 	local raw_json_text    = JSON:encode(lua_value)  -- encode example
--- 	local pretty_json_text = JSON:encode_pretty(lua_value) -- "pretty printed" version
-
--- 	print(inspect(lua_value))
--- 	print(inspect(raw_json_text))
--- 	print(inspect(pretty_json_text))
--- 	print("it 1 .........")
--- 	-- obj2 is reset thanks to the before_each
--- 	r, c = http.request {
--- 		url = "http://www.google.com",
--- 		headers = {  ["content-Type"] = 'application/json' },
--- 		body = 87
--- 	}
--- 	print("it 2 .........")
-
--- 	print(r,c)
--- 	print("it 3 .........")
-
--- end)
 
 
 it("get space station location", function()
-	local body, code, headers, status, message = http.request("http://api.open-notify.org/iss-now.json")
+	local body, code, _, status, _ = http.request("http://api.open-notify.org/iss-now.json")
 	print(code, status, body)
 	local lua_value = JSON:decode(body) -- decode example
 	print(lua_value.message)
 	assert.are_equal(lua_value.message, "success")
+	print("\n\n\n[+] La peticíon GET de la estacíon espacial fué exitosa.\n\n\n")
 end)
+
 
 it("get config", function()
-	local body, code, headers, status = http.request(apiendpoint .. "config")
-	inspect(print("\nBody de la peticion GET: \n " .. body))
+	local body, code, _, _ = http.request(apiendpoint .. "config")
 	assert.are_equal(code, 200)
-	print("[+] La peticíon GET de la configuracion fué exitosa.\n\n")
+	print("[+] La peticíon GET de la configuracion fué exitosa.\n\n\n")
+	local body_table = JSON:decode(body)
+	assert.are_equal(type(body_table.max_temperature) == "number", true)
+	assert.are_equal(type(body_table.min_temperature) == "number", true)
+	local pretty_json = JSON:encode_pretty(body_table)
+	inspect(print("\n\n\nbody de la peticion GET: \n\n\n" .. pretty_json .. "\n\n\n"))
 end)
+
 
 it("get actual temperature and humidity", function()
-	local body, code, headers, status, message = http.request(apiendpoint .. "temperatureactual")
-	inspect(print("\nBody de la peticion GET: \n " .. body))
+	print("[+] La peticíon GET de la temperatura y humedad actual fué exitosa.")
+	local body, code, _, _, _ = http.request(apiendpoint .. "temperatureactual")
+	local decode_body = JSON:decode(body)
+	local pretty_json = JSON:encode_pretty(decode_body)
+	inspect(print("\n\n\nbody de la peticion GET: \n\n\n" .. pretty_json .. "\n\n\n"))
 	assert.are_equal(code, 200)
-	print("[+] La peticíon GET de la temperatura y humedad actual fué exitosa.\n\n")
+	local body_table = JSON:decode(body)
+
+	assert.are_equal(tonumber(body_table.a_temperature) > -40, true)
+	assert.are_equal(tonumber(body_table.a_temperature) < 100, true)
+	assert.are_equal(tonumber(body_table.a_humidity) > 0, true)
+	assert.are_equal(tonumber(body_table.a_humidity) < 100, true)
 end)
 
-it("get actual wifi's", function()
+function timer_for_wifi(segundos)
+	print("[!] Esperando el escaneo de redes: ")
+	os.execute("sleep " .. segundos)
+	local body_table = JSON:decode(body)
+	local pretty_json = JSON:encode_pretty(body_table)
+	inspect(print("\n\n\n Redes disponibles: \n\n\n" .. pretty_json .. "\n\n\n"))
+end
+
+it("Obtener redes disponibles", function()
 	local body, code, headers, status, message = http.request(apiendpoint .. "wifi")
 	inspect(print("\nBody de la peticion GET: \n " .. body))
 	assert.are_equal(code, 200)
+	timer_for_wifi(5)
+
 	print("[+] La peticíon GET de las redes disponibles fué exitosa.\n\n")
 end)
 
 
-local function get_and_assert_200(atribute)
-	local body, code, headers, status = http.request(apiendpoint .. atribute)
-	print(code, status, body, headers, atribute)
-	assert.are_equal(code, 200)
-	return body
-end
 
--- local http = require("socket.http")
-
--- -- URL de destino
--- local url = "http://ejemplo.com/api/endpoint"
-
--- -- Datos en formato JSON
--- local postData = '{"parametro1":"valor1","parametro2":"valor2"}'
-
--- -- Variables para almacenar los valores de retorno
--- local response, statusCode, headers, statusLine = http.request{
--- 		url = url,
--- 		method = "POST",
--- 		headers = {
--- 				["Content-Type"] = "application/json",
--- 				["Content-Length"] = #postData
--- 		},
--- 		source = ltn12.source.string(postData)
--- }
-
--- -- Imprimir el código de estado y la respuesta del servidor
--- print("Código de Estado:", statusCode)
--- print("Cuerpo de la Respuesta:", response)
-
-function config_post()
-	print("[+] La peticíon POST fué exitosa.\n\n")
+it("POST peticion", function()
 	local post_data = '{"rotation_time":3600000,"min_temperature":40,"max_temperature":50}'
 
-	local response, code, headers, status = http.request {
+	local _, code, _, _ = http.request {
 		url = apiendpoint .. "config",
 		method = 'POST',
 		headers = {
@@ -103,8 +75,48 @@ function config_post()
 			["Content-Length"] = #post_data
 		},
 		source = ltn12.source.string(post_data)
+
 	}
+	inspect(print("\n\n\n peticion POST exítosa: \n\n\n"))
 	assert.are_equal(code, 200)
-	assert.are_equal(message, "Json updated successfully")
-	
-end
+end)
+
+
+it("POST validacion", function()
+	local body, code, _, _ = http.request(apiendpoint .. "config")
+	print("[+] Verificando que el archivo config.json cambió.\n\n\n")
+	local body_table = JSON:decode(body)
+	local pretty_json = JSON:encode_pretty(body_table)
+	inspect(print("\n\n\n Nuevo archivo de configuracion: \n\n\n" .. pretty_json .. "\n\n\n"))
+	assert.are_equal(code, 200)
+end)
+
+
+
+
+it("Segunda peticíon POST", function()
+	local post_data = '{"rotation_time":3600000,"min_temperature":30,"max_temperature":40}'
+
+	local _, code, _, _ = http.request {
+		url = apiendpoint .. "config",
+		method = 'POST',
+		headers = {
+			["Content-Type"] = "application/json",
+			["Content-Length"] = #post_data
+		},
+		source = ltn12.source.string(post_data)
+
+	}
+	inspect(print("\n\n\n peticion POST exítosa: \n\n\n"))
+	assert.are_equal(code, 200)
+end)
+
+it("Validar los cambios", function()
+	local body, code, _, _ = http.request(apiendpoint .. "config")
+	print("[+] Verificando que el archivo config.json cambió por segunda vez.\n\n\n")
+	local body_table = JSON:decode(body)
+	local pretty_json = JSON:encode_pretty(body_table)
+	inspect(print("\n\n\n Nuevo archivo de configuracion: \n\n\n" .. pretty_json .. "\n\n\n"))
+
+	assert.are_equal(code, 200)
+end)

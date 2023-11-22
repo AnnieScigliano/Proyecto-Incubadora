@@ -175,4 +175,13 @@ function M.rotation(status)
 	print("rotation ", status)
 end -- function end
 
+-------------------------------------
+-- @function set_max_temp	modify the actual max_temp from API 
+--
+-- @param new_max_temp"	comes from json received from API
+-------------------------------------
+function M.set_max_temp(new_max_temp)
+	M.max_temp = tonumber(new_max_temp)
+end
+
 return M
