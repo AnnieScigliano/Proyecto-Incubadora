@@ -7,16 +7,19 @@ PASSWORD = "anaenzo123"
 IP_ADDR = ""         -- static IP
 NETMASK = ""   -- your subnet
 GATEWAY = ""     -- your gateway
-
-GPIOBMESDA = 16
-GPIOBMESCL = 0
+--16mb board
+GPIOBMESDA = 21
+GPIOBMESCL = 22
+--old board
+--GPIOBMESDA = 16
+--GPIOBMESCL = 0
 
 GPIODHT22 = 2
 
 GPIORESISTOR=15
 GPIOVOLTEO=14
 
-INICIALES = "JJ"
+INICIALES = "JJ-RIO4"
 SERVER="http://grafana.altermundi.net:8086/write?db=cto"
 --SERVER="http://192.168.43.26:8080/"
 --FileView done.
