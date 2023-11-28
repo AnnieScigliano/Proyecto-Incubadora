@@ -89,13 +89,13 @@ function M.get_values()
 		M.startbme()
 		if M.is_sensorok then
 			sensor.read()
-			print("temp ", sensor.temperature)
 			if (sensor.temperature / 100)< -40 or (sensor.temperature / 100) > 86 then
 				M.temperature = 99.9
 				M.humidity = 99.9
 				M.pressure = 99.9
 				print("[!] Failed to read bme, Please check the cables and connections.")
 				alerts.send_alert_to_grafana("[!] Failed to read bme, Please check the cables and connections.")
+				log.error("temperature is not changing")
 				--try to restart bme
 			else
 				M.temperature = (sensor.temperature / 100)
@@ -106,6 +106,7 @@ function M.get_values()
 			M.temperature = 99.9
 			M.humidity = 99.9
 			M.pressure = 99.9
+			log.error("Failed to start bme, Please check the cables and connections.")
 			alerts.send_alert_to_grafana("[!] Failed to start bme, Please check the cables and connections.")
 			print("[!] Failed to start bme, Please check the cables and connections.")
 		end -- end if
@@ -126,19 +127,20 @@ function M.heater(status --[[bool]])
 	else
 		gpio.write(GPIORESISTOR, 1)
 	end
-	print(status)
 	M.assert_conditions()
 end --end function
 
 function M.assert_conditions()
-	print("temp actual ", M.temperature, ", max ", M.max_temp, ",min ", M.min_temp, ",resitor status ", M.resistor)
+	log.trace("temp actual ", M.temperature, ", max ", M.max_temp, ",min ", M.min_temp, ",resitor status ", M.resistor)
 	if M.is_testing then
 		if (M.temperature > M.max_temp and M.resistor) then
 			alerts.send_alert_to_grafana("temperature > max_temp and resistor is on")
+			log.error("temperature > max_temp and resistor is on")
 			--assert(not M.resistor)
 		end --if end
 		if (M.temperature < M.min_temp and not M.resistor) then
 			alerts.send_alert_to_grafana("temperature < M.min_temp and resistor is off")
+			log.error("temperature < M.min_temp and resistor is off")
 			--assert(M.resistor)
 		end --if end
 	end -- if is_testing
@@ -156,7 +158,6 @@ function M.humidifier(status)
 	else
 		gpio.write(14, 1)
 	end -- if end
-	print("humidifier ", status)
 end  -- function end
 
 -------------------------------------
@@ -172,7 +173,6 @@ function M.rotation(status)
 		gpio.write(GPIOVOLTEO, 1)
 	end -- if end
 	--todo: implement logger for debug
-	print("rotation ", status)
 end -- function end
 
 return M

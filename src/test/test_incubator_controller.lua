@@ -1,9 +1,10 @@
-package.path = package.path .. ";/home/jjorge/Desktop/incubadora/repo/src/app/?.lua".. ";/home/jjorge/Desktop/incubadora/repo/src/libs/?.lua"
+package.path = package.path .. ";/home/jjorge/Desktop/incubadora/repo/src/app/?.lua".. ";/home/jjorge/Desktop/incubadora/repo/src/libs/?.lua" .. ";/home/jjorge/Desktop/incubadora/repo/src/libs/loglua/?.lua"
 
 --require ("incubatorController")
 
 _G.http = {
     post = function(url, options, body, callback) 
+        print(body)
         print(body)
     end
 }
@@ -75,6 +76,8 @@ _G.time = {
 require("SendToGrafana")
 require("incubatorController")
 
+log.x86=true
+
 describe('send to grafana tests', function()
     before_each(
 		function()
@@ -88,13 +91,15 @@ describe('send to grafana tests', function()
         spy.on(http, "post")
         spy.on(_G, "print")
         --invoke the method with the desired paramters 
+        print("        --invoke the method with the desired paramters  invoke the method with the desired paramters      --invoke the method with the desired paramters "   )
         create_grafana_message(29,60,800,"XX-bme280", "1676515676854775806")
         send_data_grafana(29,60,800,"XX-bme280", "1676515676854775806")
         assert.spy(http.post).was.called()
         --verify that moked function was called and printed the desired output.
-        assert.spy(_G.print).was.called_with("mediciones,device=XX-bme280 temp=29,hum=60,press=800 1676515676854775806")
+        assert.spy(_G.print).was.called_with("mediciones,device=XX-bme280 temp=29,hum=60,press=800 1676515676854775805946888192")
 
         http.post:revert() -- reverts the stub
+        print("        --invoke the method with the desired paramters  invoke the method with the desired paramters      --invoke the method with the desired paramters "   )
     end)
 end)
 
