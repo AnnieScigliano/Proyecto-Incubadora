@@ -3,6 +3,7 @@
 -- rename the file to remove the underscore.
 SSID = "Aukache"
 PASSWORD = "anaenzo123"
+TIMEZONE = "UTC+3"
 
 IP_ADDR = ""         -- static IP
 NETMASK = ""   -- your subnet

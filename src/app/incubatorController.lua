@@ -12,6 +12,10 @@ alerts = require("alerts")
 incubator = require("incubator")
 apiserver = require("restapi")
 deque = require ('deque')
+log = require ('log')
+
+--log.level = "debug"
+--log.usecolor=false
 
 
 --holds the last 10 values 
@@ -35,7 +39,7 @@ function is_temp_changing(temperature)
     local vant = nil
    
     for i,v in ipairs(last_temps_queue:contents()) do
-        print ("val:", i, v,vant)
+        log.trace("val:", i, v,vant)
         if vant ~= nil and vant ~= v then
             --everything is fine... 
             return true
@@ -54,23 +58,30 @@ end
 -- ! @param min_temp 							 temperature at which the resistor turns on
 -- ! @param,max_temp 							 temperature at which the resistor turns off
 ------------------------------------------------------------------------------------
-function temp_control(temperature, min_temp, max_temp)    
+function temp_control(temperature, min_temp, max_temp)   
+    log.trace(" temp "..temperature.." min:".. min_temp .." max:".. max_temp)
+
     if temperature <= min_temp then
         if is_temp_changing(temperature) then
-            print("temp is changing")
+            log.trace("temperature is changing")
+            log.trace("trun resistor on")
             incubator.heater(true)
         else
+            log.error("temperature is not changing")
             alerts.send_alert_to_grafana("temperature is not changing")
+            log.trace("trun resistor off")
             incubator.heater(false)
         end
     elseif temperature >= max_temp then
         incubator.heater(false)
+        log.trace("trun resistor off")
     end -- end if
 
 end -- end function
 
 function read_and_control()
 	temp,hum,pres=incubator.get_values()
+    log.trace(" t:"..temp.." h:"..hum.." p:"..pres)
 	temp_control(temp, incubator.min_temp , incubator.max_temp)
 end -- end function 
 
@@ -85,10 +96,13 @@ end -- read_and_send_data end
 
 function stop_rot()
     incubator.rotation(false)
+    log.trace("trun rotation off")
+
 end
 
 function rotate()
     incubator.rotation(true)
+    log.trace("trun rotation on")
     stoprotation = tmr.create()
     stoprotation:register(5000, tmr.ALARM_SINGLE, stop_rot)
     stoprotation:start()

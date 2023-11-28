@@ -110,6 +110,7 @@ function wifi_got_ip_event (ev, info)
 		time.initntp("pool.ntp.org")
 	end
 	print(time.get(), " hora nueva")
+	time.settimezone(TIMEZONE)
 
 end -- end function
 
