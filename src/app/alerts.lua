@@ -24,9 +24,6 @@ function alerts.send_alert_to_grafana(message)
 	local alert_string = "alertas,device=" .. INICIALES .. " count=" ..
 	alerts.alers_counter .. ",message=\"" .. message .. "\" " .. string.format("%.0f", ((time.get()) *1000000000))
 	alerts.add_message_to_the_queue({time.get(),message,alerts.alers_counter})
-
-	print(alert_string)
-
 	local token_grafana = "token:e98697797a6a592e6c886277041e6b95"
 	local url = SERVER 
 
@@ -36,7 +33,10 @@ function alerts.send_alert_to_grafana(message)
 	}
 	
 	http.post(url, {headers = headers}, alert_string,
-		function(code_return, data_return) print("HTTP POST return " .. code_return)
+		function(code_return, data_return)
+			if (code_return ~= 204) then
+				print(" " .. code_return)
+			end
 	end) -- * post function end
 end -- * send_data_grafana end
 

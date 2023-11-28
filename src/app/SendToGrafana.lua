@@ -28,7 +28,6 @@ local url = SERVER
 function create_grafana_message(temperature,humidity,pressure,INICIALES,time)
 	local data = "mediciones,device=" .. INICIALES .. " temp=" ..
 									temperature .. ",hum=" .. humidity .. ",press=" .. pressure .." " .. time
-	print(data)
 	return data
 end
 
@@ -59,7 +58,11 @@ function send_data_grafana(temperature,humidity,pressure,INICIALES)
 		}
 		http.post(url, {headers = headers}, data,
 			
-			function(code_return, data_return) print("HTTP POST return " .. code_return)
+			function(code_return, data_return) 
+				
+				if (code_return ~= 204) then
+					print(" " .. code_return)
+				end
 			
 		end) -- * post function end
 end -- * send_data_grafana end
