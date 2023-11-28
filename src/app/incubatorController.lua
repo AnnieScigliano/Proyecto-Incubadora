@@ -12,7 +12,7 @@ alerts = require("alerts")
 incubator = require("incubator")
 apiserver = require("restapi")
 deque = require ('deque')
-
+local rotation_time = 3600000
 
 --holds the last 10 values 
 local last_temps_queue = deque.new()
@@ -108,6 +108,6 @@ temp_control_timer:start()
 
 local rotation = tmr.create()
 --rotation:register(20000, tmr.ALARM_AUTO, rotate)
-rotation:register(3600000, tmr.ALARM_AUTO, rotate)
+rotation:register(rotation_time, tmr.ALARM_AUTO, rotate)
 rotation:start()
 

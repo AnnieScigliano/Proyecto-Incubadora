@@ -29,7 +29,7 @@ sigma_delta.setup(0, outpin)
 
 --if sensor.init(14,15,true) then
 while true do
-    //node.sleep({ secs = 1 })   --print (sensor.read()) -- default sampling
+    -- node.sleep({ secs = 1 })   --print (sensor.read()) -- default sampling
     --temperature_read = sensor.temperature / 100
     ---Next we calculate the error between the setpoint and the real value
     PID_error = set_temperature - temperature_read;
@@ -56,7 +56,7 @@ while true do
     --Final total PID value is the sum of P + I + D
     PID_value = PID_p + PID_i + PID_d;
 
-    //We define PWM range between 0 and 255
+    -- //We define PWM range between 0 and 255
     if PID_value < 0 then
         PID_value = 0
     elseif PID_value > 127  then

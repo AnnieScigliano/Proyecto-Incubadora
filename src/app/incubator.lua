@@ -12,7 +12,7 @@
 --  SPDX-License-Identifier: AGPL-3.0-only
 
 -----------------------------------------------------------------------------
-
+-- local incubator_controller = require('incubatorController')
 require('credentials')
 
 local M = {
@@ -22,8 +22,8 @@ local M = {
 	humidifier             = false,
 	rotation               = false,
 	temperature            = 99.9, -- integer value of temperature [0.01 C]
-	pressure               = 0, -- integer value of preassure [Pa]=[0.01 hPa]
-	humidity               = 0, -- integer value of rel.humidity [0.01 %]
+	pressure               = 0,   -- integer value of preassure [Pa]=[0.01 hPa]
+	humidity               = 0,   -- integer value of rel.humidity [0.01 %]
 	is_testing             = false,
 	max_temp               = 37.8,
 	min_temp               = 37.3,
@@ -90,7 +90,7 @@ function M.get_values()
 		if M.is_sensorok then
 			sensor.read()
 			print("temp ", sensor.temperature)
-			if (sensor.temperature / 100)< -40 or (sensor.temperature / 100) > 86 then
+			if (sensor.temperature / 100) < -40 or (sensor.temperature / 100) > 86 then
 				M.temperature = 99.9
 				M.humidity = 99.9
 				M.pressure = 99.9
@@ -176,12 +176,44 @@ function M.rotation(status)
 end -- function end
 
 -------------------------------------
--- @function set_max_temp	modify the actual max_temp from API 
+-- @function set_max_temp	modify the actual max_temp from API
 --
 -- @param new_max_temp"	comes from json received from API
 -------------------------------------
 function M.set_max_temp(new_max_temp)
-	M.max_temp = tonumber(new_max_temp)
+	if new_max_temp ~= nil and new_max_temp ~= M.max_temp then
+		M.max_temp = new_max_temp
+		return true
+	else
+		return false
+	end
+end
+-------------------------------------
+-- @function set_min_temp	modify the actual min_temp from API
+--
+-- @param new_min_temp"	comes from json received from API
+-------------------------------------
+function M.set_min_temp(new_min_temp)
+	local incubator_controler = require("incubatorController")
+	if new_min_temp ~= nil and new_min_temp ~= M.min_temp then
+		M.min_temp = new_min_temp
+		return true
+	else
+		return false
+	end
+end
+-------------------------------------
+-- @function set_rotation_time	modify the actual rotation time from API
+--
+-- @param new_rot_time"	comes from json received from API
+-------------------------------------
+function M.set_rotation_time(new_rot_time)
+	if new_rot_time ~= nil and new_rot_time ~= incubator_controller.rotation_time then
+		incubator_controller.rotation_time = new_rot_time
+		return true
+	else
+		return false
+	end
 end
 
 return M
