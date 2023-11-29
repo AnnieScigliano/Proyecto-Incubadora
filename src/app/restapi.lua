@@ -151,4 +151,4 @@ httpd.start({ webroot = "web", auto_index = httpd.INDEX_ALL })
 -- * dynamic routes to serve
 httpd.dynamic(httpd.GET, "/config", restapi.config_get)
 httpd.dynamic(httpd.POST, "/config", restapi.change_config)
-httpd.dynamic(httpd.GET, "/temperatureactual", restapi.actual_ht)
+httpd.dynamic(httpd.GET, "/actual", restapi.actual_ht)

@@ -13,6 +13,7 @@ incubator = require("incubator")
 apiserver = require("restapi")
 deque = require ('deque')
 log = require ('log')
+local rotation_time = 3600000
 
 --log.level = "debug"
 --log.usecolor=false
