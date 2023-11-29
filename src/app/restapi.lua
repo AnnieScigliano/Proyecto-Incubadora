@@ -19,8 +19,11 @@ function restapi.read_config()
 		local config_data = sjson.decode(config_json)
 		return config_data
 	else
-		print("[!] Failed to read JSON file")
-		return nil
+		print("[!] Failed to read JSON file, creating a new one")
+		new_file = io.open("config.json", "w" )
+		new_file:write('"rotation_time":3600000,"min_temperature":37.3,"max_temperature":37.8')
+		new_file:close()
+		print("[+] the file was created successfully")
 	end -- if end
 end  -- function end
 
@@ -106,10 +109,8 @@ function restapi.change_config(req)
 		config_file:write(json_config_file)
 		config_file:close()
 		return success_response
-	else
-		print("Failed to open the config file for writing. Error: " ..
-			tostring(err))
-		return error_response
+	else 
+		return { status = "400", type = "application/json", body = sjson:encode(err) }
 	end
 end
 
