@@ -1,4 +1,4 @@
-local restapi = { incubator = require("incubator") }
+local restapi = { incubator = nil }
 
 -------------------------------------
 -- ! @function change config   modify the current config.json file
@@ -6,7 +6,7 @@ local restapi = { incubator = require("incubator") }
 -- !	@param req  		      		server request
 -------------------------------------
 
-function restapi.read_config()
+function restapi.read_config_file()
 	-- open file with read permission
 	local file = io.open("config.json", "r")
 
@@ -20,7 +20,7 @@ function restapi.read_config()
 		return config_data
 	else
 		print("[!] Failed to read JSON file, creating a new one")
-		new_file = io.open("config.json", "w" )
+		new_file = io.open("config.json", "w")
 		new_file:write('"rotation_time":3600000,"min_temperature":37.3,"max_temperature":37.8')
 		new_file:close()
 		print("[+] the file was created successfully")
@@ -33,7 +33,7 @@ end  -- function end
 -- !	@param req  		      		server request
 -------------------------------------
 function restapi.change_config(req)
-	-- RESPONSES 
+	-- RESPONSES
 	local error_changing_config =
 	{
 		status = "400 Bad Request",
@@ -109,9 +109,10 @@ function restapi.change_config(req)
 		config_file:write(json_config_file)
 		config_file:close()
 		return success_response
-	else 
+	else
 		return { status = "400", type = "application/json", body = sjson:encode(err) }
 	end
+	
 end
 
 -------------------------------------
@@ -121,9 +122,11 @@ end
 -------------------------------------
 
 function restapi.config_get()
-	local body_data = restapi.read_config()
+	local body_data = restapi.read_config_file()
 	local body_json = sjson.encode(body_data)
-
+	if body_data == nil then
+		return error_bad_request
+	end
 	return { status = "200 OK", type = "application/json", body = body_json }
 end
 
@@ -142,14 +145,22 @@ function restapi.actual_ht(a_temperature, a_humidity, a_pressure)
 	}
 
 	local body_json = sjson.encode(body_data)
-
 	return { status = "200 OK", type = "application/json", body = body_json }
 end
 
--- * start local serve
-httpd.start({ webroot = "web", auto_index = httpd.INDEX_ALL })
+function restapi.init_module(incubator_object)
+	-- * start local server
+	restapi.incubator = incubator_object
+	print("starting server .. fyi maxtemp " .. restapi.incubator.max_temp)
+	httpd.start({
+		webroot = "web",
+		auto_index = httpd.INDEX_ALL
+	})
 
--- * dynamic routes to serve
-httpd.dynamic(httpd.GET, "/config", restapi.config_get)
-httpd.dynamic(httpd.POST, "/config", restapi.change_config)
-httpd.dynamic(httpd.GET, "/actual", restapi.actual_ht)
+	-- * dynamic routes to serve
+	httpd.dynamic(httpd.GET, "/config", restapi.config_get)
+	httpd.dynamic(httpd.POST, "/config", restapi.change_config)
+	httpd.dynamic(httpd.GET, "/actual", restapi.actual_ht)
+end
+
+return restapi

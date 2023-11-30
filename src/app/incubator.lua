@@ -174,7 +174,7 @@ function M.rotation(status)
 		gpio.write(GPIOVOLTEO, 1)
 	end -- if end
 	--todo: implement logger for debug
-end -- function end
+end  -- function end
 
 -------------------------------------
 -- @function set_max_temp	modify the actual max_temp from API
@@ -182,39 +182,46 @@ end -- function end
 -- @param new_max_temp"	comes from json received from API
 -------------------------------------
 function M.set_max_temp(new_max_temp)
-	if new_max_temp ~= nil and new_max_temp ~= M.max_temp then
+	if new_max_temp ~= nil and new_max_temp ~= M.max_temp and new_max_temp < 42
+			and new_max_temp >= 0 and new_max_temp >= M.min_temp then
 		M.max_temp = new_max_temp
 		return true
 	else
 		return false
 	end
 end
+
 -------------------------------------
 -- @function set_min_temp	modify the actual min_temp from API
 --
 -- @param new_min_temp"	comes from json received from API
 -------------------------------------
 function M.set_min_temp(new_min_temp)
-	local incubator_controler = require("incubatorController")
-	if new_min_temp ~= nil and new_min_temp ~= M.min_temp then
+	if new_min_temp ~= nil and new_min_temp ~= M.min_temp and new_min_temp <= 0
+			and new_min_temp <= M.max_temp then
 		M.min_temp = new_min_temp
 		return true
 	else
 		return false
 	end
 end
+
 -------------------------------------
 -- @function set_rotation_time	modify the actual rotation time from API
 --
 -- @param new_rot_time"	comes from json received from API
 -------------------------------------
-function M.set_rotation_time(new_rot_time)
-	if new_rot_time ~= nil and new_rot_time ~= incubator_controller.rotation_time then
-		incubator_controller.rotation_time = new_rot_time
+function M.set_rotation_period(new_period_time)
+	local incubator_controller = require("incubatorController")
+	if new_period_time ~= nil and new_period_time ~= incubator_controller.rotation_time and
+			new_period_time > 0 and new_period_time >= 5000 and
+			new_period_time >= incubator_controller.rotation_period then
+		incubator_controller.rotation_period = new_period_time
 		return true
 	else
 		return false
 	end
 end
 
+-- todo : add rotation duration 
 return M
