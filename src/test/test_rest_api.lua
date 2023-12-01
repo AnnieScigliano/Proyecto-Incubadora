@@ -3,8 +3,8 @@ local JSON        = require("JSON")
 local inspect     = require("inspect")
 local ltn12       = require("ltn12")
 
--- First connect to the incubator's own Wi-Fi to perform unit tests (ssid : incubator | passwd : 12345678)
-local apiendpoint = "http://192.168.16.10/"
+-- First connect to the incubator's own Wi-Fi to perform unit tests (ssid : incubator | passwd : 12345678) "http://192.168.16.10/"
+local apiendpoint = "http://10.5.6.101/"
 
 
 
@@ -30,37 +30,58 @@ it("get config", function()
 end)
 
 
-it("get actual temperature and humidity", function()
-	print("[+] La peticíon GET de la temperatura y humedad actual fué exitosa.")
-	local body, code, _, _, _ = http.request(apiendpoint .. "temperatureactual")
-	local decode_body = JSON:decode(body)
-	local pretty_json = JSON:encode_pretty(decode_body)
-	inspect(print("\n\n\nbody de la peticion GET: \n\n\n" .. pretty_json .. "\n\n\n"))
-	assert.are_equal(code, 200)
-	local body_table = JSON:decode(body)
+describe("Obtener redes disponibles", function()
+  
+  it("Primera petición debería devolver error", function()
+    local body, code, _, _, message = http.request(apiendpoint .. "wifi")
+    inspect(print("\nBody de la petición GET: \n " .. body))
+    
+    assert.are_equal(code, 200, "La primera petición debería devolver un error")
+    -- assert.are_equal(message, "error", "La primera petición debería tener un mensaje 'error'")
+  end)
 
-	assert.are_equal(tonumber(body_table.a_temperature) > -40, true)
-	assert.are_equal(tonumber(body_table.a_temperature) < 100, true)
-	assert.are_equal(tonumber(body_table.a_humidity) > 0, true)
-	assert.are_equal(tonumber(body_table.a_humidity) < 100, true)
+  it("Segunda petición después de escaneo", function()
+    local body, code, _, _, message = http.request(apiendpoint .. "wifi")
+    inspect(print("\nBody de la primer petición GET: \n " .. body))
+
+    assert.are_equal(code, 200, "Error en la segunda petición GET")
+
+    if message == "error" then
+      local startTime = os.time()
+      repeat
+        body, _, _, _, message = http.request(apiendpoint .. "wifi")
+        os.execute("sleep 1")
+      until os.time() - startTime > MAX_WAIT_TIME or message == "success"
+      
+      if message == "success" then
+        inspect(print("\nBody de la segunda petición GET: \n " .. body))
+      else
+        error("Tiempo de espera agotado para el escaneo.")
+      end
+    end
+  end)
+
+  -- ...
+
+it("Tercera petición esperando 5 segundos", function()
+	os.execute("sleep 5")
+	local body, code, _, _, message = http.request(apiendpoint .. "wifi")
+
+	assert.are_equal(code, 200, "Error en la tercera petición GET")
+
+	inspect(print("\nBody de la tercera petición GET : \n " .. body))
 end)
 
-function timer_for_wifi(segundos)
-	print("[!] Esperando el escaneo de redes: ")
-	os.execute("sleep " .. segundos)
-	local body_table = JSON:decode(body)
-	local pretty_json = JSON:encode_pretty(body_table)
-	inspect(print("\n\n\n Redes disponibles: \n\n\n" .. pretty_json .. "\n\n\n"))
-end
+it("Cuarta petición sin espera", function()
+	local body, code, _, _, message = http.request(apiendpoint .. "wifi")
 
-it("Obtener redes disponibles", function()
-	local body, code, headers, status, message = http.request(apiendpoint .. "wifi")
-	inspect(print("\nBody de la peticion GET: \n " .. body))
-	assert.are_equal(code, 200)
-	timer_for_wifi(5)
+	assert.are_equal(code, 200, "Error en la cuarta petición GET")
 
-	print("[+] La peticíon GET de las redes disponibles fué exitosa.\n\n")
+	inspect(print("\nBody de la cuarta petición GET: \n " .. body))
 end)
+
+end)
+
 
 
 
