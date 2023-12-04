@@ -12,7 +12,6 @@
 --  SPDX-License-Identifier: AGPL-3.0-only
 
 -----------------------------------------------------------------------------
--- local incubator_controller = require('incubatorController')
 require('credentials')
 
 local M = {
@@ -28,7 +27,9 @@ local M = {
 	max_temp               = 37.8,
 	min_temp               = 37.3,
 	is_sensorok            = false,
-	is_simulate_temp_local = false
+	is_simulate_temp_local = false,
+	rotation_duration        = 3600000, -- time in ms
+	rotation_period      = 5000, -- time in ms
 }
 
 _G[M.name] = M
@@ -99,9 +100,9 @@ function M.get_values()
 				log.error("temperature is not changing")
 				--try to restart bme
 			else
-				M.temperature = (sensor.temperature / 100)
-				M.humidity = (sensor.humidity / 100)
-				M.pressure = (sensor.pressure) / 100
+				M.temperature = (tonumber(sensor.temperature) / 100)
+				M.humidity = (tonumber(sensor.humidity) / 100)
+				M.pressure = (tonumber(sensor.pressure)) / 100
 			end
 		else
 			M.temperature = 99.9
@@ -207,21 +208,32 @@ function M.set_min_temp(new_min_temp)
 end
 
 -------------------------------------
--- @function set_rotation_time	modify the actual rotation time from API
+-- @function set_rotation_period	modify the actual period time from API
 --
--- @param new_rot_time"	comes from json received from API
+-- @param new_period_time"	comes from json received from API
 -------------------------------------
 function M.set_rotation_period(new_period_time)
-	local incubator_controller = require("incubatorController")
-	if new_period_time ~= nil and new_period_time ~= incubator_controller.rotation_time and
-			new_period_time > 0 and new_period_time >= 5000 and
-			new_period_time >= incubator_controller.rotation_period then
-		incubator_controller.rotation_period = new_period_time
+	if new_period_time ~= nil and new_period_time > 0
+			and new_period_time >= 5000 and
+			new_period_time >= M.rotation_period then
+		M.rotation_period = new_period_time
+		return true
+	else
+		return false
+	end
+end
+-------------------------------------
+-- @function set_rotation_duration	modify the actual duration time from API
+--
+-- @param new_rotation_time"	comes from json received from API
+-------------------------------------
+function M.set_rotation_duration(new_rotation_duration)
+	if new_rotation_duration ~= nil and new_rotation_duration > 0 then
+		M.rotation_duration = new_rotation_duration
 		return true
 	else
 		return false
 	end
 end
 
--- todo : add rotation duration 
 return M

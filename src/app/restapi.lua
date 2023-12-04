@@ -21,7 +21,7 @@ function restapi.read_config_file()
 	else
 		print("[!] Failed to read JSON file, creating a new one")
 		new_file = io.open("config.json", "w")
-		new_file:write('"rotation_time":3600000,"min_temperature":37.3,"max_temperature":37.8')
+		new_file:write('"rotation_duration":3600000,"min_temperature":37.3,"max_temperature":37.8')
 		new_file:close()
 		print("[+] the file was created successfully")
 	end -- if end
@@ -46,9 +46,9 @@ function restapi.change_config(req)
 
 	local success_response =
 	{
-		status = "200 OK",
+		status = "201 Created",
 		type = "application/json",
-		body = sjson.encode({ message = "Json updated successfully" })
+		body = sjson.encode({ message = "JSON updated successfully" })
 	}
 
 	local error_response =
@@ -57,6 +57,8 @@ function restapi.change_config(req)
 		type = "application/json",
 		body = sjson.encode({ message = "Failed to update JSON file" })
 	}
+
+	-- JSON example: {"rotation_duration":3500000,"rotation_period":5000,"min_temperature":37.3,"max_temperature":37.8}
 
 	-- Local Variables
 	local request_body_json = req.getbody()
@@ -72,7 +74,8 @@ function restapi.change_config(req)
 		if req_change_max_temp == true then
 			return success_response
 		else
-			return error_changing_config
+			return --error_changing_config
+			{ status = "400", type = "application/json", body = "Error en max_temp" }
 		end
 	end
 
@@ -85,20 +88,36 @@ function restapi.change_config(req)
 		if req_change_min_temp == true then
 			return success_response
 		else
-			return error_changing_config
+			return --error_changing_config
+			{ status = "400", type = "application/json", body = "Error en min_temp" }
 		end
 	end
 
-	if body_table.rotation_time then
-		body_table.rotation_time = tonumber(body_table.rotation_time)
+	if body_table.rotation_period then
+		body_table.rotation_period = tonumber(body_table.rotation_period)
 
-		local req_change_rotation_time =
-				restapi.incubator.set_rotation_time(body_table.rotation_time)
+		local req_change_rotation_period =
+				restapi.incubator.set_rotation_period(body_table.rotation_period)
 
-		if req_change_rotation_time == true then
+		if req_change_rotation_period == true then
 			return success_response
 		else
-			return error_changing_config
+			return -- error_changing_config
+			{ status = "400", type = "application/json", body = "Error en rotation_period" }
+		end
+	end
+
+	if body_table.rotation_duration then
+		body_table.rotation_duration = tonumber(body_table.rotation_duration)
+
+		local req_change_rotation_duration =
+				restapi.incubator.set_rotation_time(body_table.rotation_duration)
+
+		if req_change_rotation_duration == true then
+			return success_response
+		else
+			return -- error_changing_config
+			{ status = "400", type = "application/json", body = "Error en rotation_duration" }
 		end
 	end
 
@@ -112,7 +131,6 @@ function restapi.change_config(req)
 	else
 		return { status = "400", type = "application/json", body = sjson:encode(err) }
 	end
-	
 end
 
 -------------------------------------
@@ -139,9 +157,9 @@ function restapi.actual_ht(a_temperature, a_humidity, a_pressure)
 	a_temperature, a_humidity, a_pressure = restapi.incubator.get_values()
 
 	local body_data = {
-		a_temperature = tonumber(a_temperature),
-		a_humidity = tonumber(a_humidity),
-		a_pressure = tonumber(a_pressure)
+		a_temperature = string.format("%.2f", a_temperature),
+		a_humidity = string.format("%.2f", a_humidity),
+		a_pressure = string.format("%.2f", a_pressure)
 	}
 
 	local body_json = sjson.encode(body_data)

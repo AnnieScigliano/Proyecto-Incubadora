@@ -13,8 +13,7 @@ incubator = require("incubator")
 apiserver = require("restapi")
 deque = require ('deque')
 log = require ('log')
-local rotation_period = 3600000
-local rotation_duration = 5000
+
 
 --log.level = "debug"
 --log.usecolor=false
@@ -106,7 +105,7 @@ function rotate()
     incubator.rotation(true)
     log.trace("turn rotation on")
     stoprotation = tmr.create()
-    stoprotation:register(rotation_duration, tmr.ALARM_SINGLE, stop_rot)
+    stoprotation:register(incubator.rotation_duration, tmr.ALARM_SINGLE, stop_rot)
     stoprotation:start()
 end
 
@@ -124,6 +123,6 @@ temp_control_timer:start()
 
 local rotation = tmr.create()
 --rotation:register(20000, tmr.ALARM_AUTO, rotate)
-rotation:register(rotation_period, tmr.ALARM_AUTO, rotate)
+rotation:register(incubator.rotation_period, tmr.ALARM_AUTO, rotate)
 rotation:start()
 
