@@ -30,6 +30,8 @@ local M = {
 	is_simulate_temp_local = false,
 	rotation_duration        = 3600000, -- time in ms
 	rotation_period      = 5000, -- time in ms
+	-- ssid = nil, 
+	-- passwd = nil
 }
 
 _G[M.name] = M
@@ -100,9 +102,9 @@ function M.get_values()
 				log.error("temperature is not changing")
 				--try to restart bme
 			else
-				M.temperature = (tonumber(sensor.temperature) / 100)
-				M.humidity = (tonumber(sensor.humidity) / 100)
-				M.pressure = (tonumber(sensor.pressure)) / 100
+				M.temperature = (sensor.temperature / 100)
+				M.humidity = (sensor.humidity / 100)
+				M.pressure = (sensor.pressure / 100)
 			end
 		else
 			M.temperature = 99.9
@@ -236,4 +238,31 @@ function M.set_rotation_duration(new_rotation_duration)
 	end
 end
 
+
+-------------------------------------
+-- @function set_new_ssid	modify the actual ssid WiFi from API
+--
+-- @param	new_ssid comes from json received from API
+-------------------------------------
+-- function M.set_new_ssid(new_ssid)
+-- 	if new_ssid ~= nil and type(new_ssid) == string then
+-- 		M.ssid = new_ssid
+-- 		return true
+-- 	else
+-- 		return false
+-- 	end
+-- end
+-------------------------------------
+-- @function set_passwd	modify the actual ssid WiFi from API
+--
+-- @param	new_passwd comes from json received from API
+-------------------------------------
+-- function M.set_passwd(new_passwd)
+-- 	if new_passwd ~= nil  then
+-- 		M.passwd = new_passwd
+-- 		return true
+-- 	else
+-- 		return false
+-- 	end
+-- end
 return M

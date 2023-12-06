@@ -4,7 +4,7 @@ local inspect     = require("inspect")
 local ltn12       = require("ltn12")
 
 -- First connect to the incubator's own Wi-Fi to perform unit tests (ssid : incubator | passwd : 12345678) default url: "http://192.168.16.10/"
-local apiendpoint = "http://192.168.16.10/"
+local apiendpoint = "http://10.5.6.101/"
 
 
 
@@ -30,7 +30,7 @@ it("get config", function()
 end)
 
 it("get actual temperature and humidity", function()
-	local body, code, headers, status, message = http.request(apiendpoint .. "temperatureactual")
+	local body, code, headers, status, message = http.request(apiendpoint .. "actual")
 	inspect(print("\nBody de la peticion GET: \n " .. body))
 	assert.are_equal(code, 200)
 	print("[+] La peticíon GET de la temperatura y humedad actual fué exitosa.\n\n")
@@ -133,9 +133,9 @@ end
 local function assert_defconfig()
 	local body = get_and_assert_200("config")
 	local default_config = JSON:decode(body)
-	assert.are_equal(default_config.max_temperature, tonumber(37.8))
-	assert.are_equal(default_config.min_temperature, tonumber(37.3))
-	assert.are_equal(default_config.min_temperature, tonumber(3600000))
+	assert.are_equal(default_config.max_temperature, 40)
+	assert.are_equal(default_config.min_temperature, 30)
+	assert.are_equal(default_config.rotation_time, 3600000)
 	return default_config
 end
 
@@ -146,9 +146,9 @@ it("set configuration ok", function()
 	local config_40_50 = '{"rotation_time":3500000,"min_temperature":40,"max_temperature":50}'
 	post_and_assert_201("config", config_40_50)
 	local new_config = get_and_assert_200("config")
-	assert.are_equal(new_config.max_temperature, tonumber(50))
-	assert.are_equal(new_config.min_temperature, tonumber(40))
-	assert.are_equal(new_config.min_temperature, tonumber(3500000))
+	assert.are_equal(new_config.max_temperature, 50)
+	assert.are_equal(new_config.min_temperature, 40)
+	assert.are_equal(new_config.rotation_time, 3500000)
 	-- volver a poner la configuracion por defecto
 	post_and_assert_201("config", default_config)
 	assert_defconfig()
@@ -211,3 +211,6 @@ it("just brek the hole json", function()
 
 end)
 end)
+
+-- agregar una prueba con un json que le falte un elemento
+-- agregar una prueba con un pedazo de json ... ver que no rompa el json ...

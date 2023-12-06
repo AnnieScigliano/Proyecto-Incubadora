@@ -1,5 +1,5 @@
 local restapi = { incubator = nil }
-
+local variableparahaceelpush = nil
 -------------------------------------
 -- ! @function change config   modify the current config.json file
 --
@@ -120,6 +120,32 @@ function restapi.change_config(req)
 			{ status = "400", type = "application/json", body = "Error en rotation_duration" }
 		end
 	end
+	
+	-- if body_table.ssid then
+	-- 	body_table.ssid = tostring(body_table.ssid)
+
+	-- 	local req_change_ssid = restapi.incubator.set_passwd(body_table.ssid)
+
+	-- 	if req_change_ssid == true then
+	-- 		return success_response
+	-- 	else
+	-- 		return -- error_changing_config
+	-- 		{ status = "400", type = "application/json", body = "Error en el ssid" }
+	-- 	end
+	-- end
+
+	-- if body_table.passwd then
+	-- 	body_table.passwd = body_table.passwd
+
+	-- 	local req_change_passwd = restapi.incubator.set_passwd(body_table.passwd)
+
+	-- 	if req_change_passwd == true then
+	-- 		return success_response
+	-- 	else
+	-- 		return -- error_changing_config
+	-- 		{ status = "400", type = "application/json", body = "Error en passwd" }
+	-- 	end
+	-- end
 
 	local json_config_file = sjson.encode(body_table)
 
