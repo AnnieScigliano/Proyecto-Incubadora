@@ -4,7 +4,7 @@ local inspect     = require("inspect")
 local ltn12       = require("ltn12")
 
 -- First connect to the incubator's own Wi-Fi to perform unit tests (ssid : incubator | passwd : 12345678) default url: "http://192.168.16.10/"
-local apiendpoint = "http://10.5.6.101/"
+local apiendpoint = "http://192.168.16.10/"
 
 
 
