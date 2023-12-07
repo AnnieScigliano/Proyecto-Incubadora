@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:incubapp_lite/models/actual_model.dart';
 import 'package:incubapp_lite/views/home.dart';
-import 'package:incubapp_lite/views/login.dart';
+//import 'package:incubapp_lite/views/login.dart';
 import 'package:incubapp_lite/views/wifi_home.dart';
 import 'package:incubapp_lite/services/api_services.dart';
 
@@ -107,7 +107,7 @@ class _IHomeState extends State<IHome> {
                 SizedBox(width: 16),
                 FloatingActionButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
                   },
                   backgroundColor: Color.fromARGB(150, 255, 255, 255), 
                   child: const Icon(FontAwesomeIcons.gear),

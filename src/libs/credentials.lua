@@ -1,8 +1,9 @@
 -- This file is only a placeholder.
 -- Put your credentials here, and 
 -- rename the file to remove the underscore.
-SSID = "Aukache"
-PASSWORD = "anaenzo123"
+SSID = "fabrica"
+PASSWORD = "comunidad2023"
+TIMEZONE = "UTC+3"
 
 IP_ADDR = ""         -- static IP
 NETMASK = ""   -- your subnet
