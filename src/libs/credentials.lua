@@ -16,7 +16,7 @@ GPIODHT22 = 2
 GPIORESISTOR=15
 GPIOVOLTEO=14
 
-INICIALES = "JJ"
+INICIALES = "AS"
 SERVER="http://grafana.altermundi.net:8086/write?db=cto"
 --SERVER="http://192.168.43.26:8080/"
 --FileView done.
