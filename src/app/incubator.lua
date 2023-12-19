@@ -185,8 +185,11 @@ end  -- function end
 -- @param new_max_temp"	comes from json received from API
 -------------------------------------
 function M.set_max_temp(new_max_temp)
-	if new_max_temp ~= nil and new_max_temp ~= M.max_temp and new_max_temp < 42
-			and new_max_temp >= 0 and new_max_temp >= M.min_temp then
+	if new_max_temp ~= nil and new_max_temp < 60 
+	and tostring(new_max_temp):sub(1, 1) ~= '-'
+	and type(new_max_temp) == "number"
+	and new_max_temp >= 0  then
+		
 		M.max_temp = new_max_temp
 		return true
 	else
@@ -200,9 +203,12 @@ end
 -- @param new_min_temp"	comes from json received from API
 -------------------------------------
 function M.set_min_temp(new_min_temp)
-	if new_min_temp ~= nil and new_min_temp ~= M.min_temp and new_min_temp <= 0
-			and new_min_temp <= M.max_temp then
-		M.min_temp = new_min_temp
+	if new_min_temp ~= nil and new_min_temp >= 0
+	and new_min_temp <= M.max_temp 
+	and  tostring(new_min_temp):sub(1, 1) ~= '-'
+	and type(new_min_temp) == "number" then
+
+ 		M.min_temp = new_min_temp
 		return true
 	else
 		return false
@@ -215,9 +221,11 @@ end
 -- @param new_period_time"	comes from json received from API
 -------------------------------------
 function M.set_rotation_period(new_period_time)
-	if new_period_time ~= nil and new_period_time > 0
-			and new_period_time >= 5000 and
-			new_period_time >= M.rotation_period then
+	if new_period_time ~= nil and new_period_time >= 0
+		and new_period_time >= 5000 
+		and tostring(new_period_time):sub(1, 1) ~= '-' 
+		and type(new_period_time) == "number" then
+
 		M.rotation_period = new_period_time
 		return true
 	else
@@ -230,7 +238,10 @@ end
 -- @param new_rotation_time"	comes from json received from API
 -------------------------------------
 function M.set_rotation_duration(new_rotation_duration)
-	if new_rotation_duration ~= nil and new_rotation_duration > 0 then
+	if new_rotation_duration ~= nil and new_rotation_duration >= 900000 
+	and tostring(new_rotation_duration):sub(1, 1) ~= '-'  
+	and type(new_rotation_duration) == "number" then
+
 		M.rotation_duration = new_rotation_duration
 		return true
 	else
