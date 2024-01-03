@@ -1,9 +1,7 @@
 local restapi = { incubator = nil }
-local variableparahaceelpush = nil
+
 -------------------------------------
--- ! @function change config   modify the current config.json file
---
--- !	@param req  		      		server request
+-- ! @function read config   read the current config.json file
 -------------------------------------
 
 function restapi.read_config_file()
@@ -32,18 +30,8 @@ end  -- function end
 --
 -- !	@param req  		      		server request
 -------------------------------------
-function restapi.change_config(req)
+function restapi.change_config_file(req)
 	-- RESPONSES
-	
-	local error_changing_config =
-	{
-		status = "400 Bad Request",
-		type = "application/json",
-		body = sjson.encode({
-			message =
-			"Error: It cannot be nil or equal to the existing value."
-		})
-	}
 
 	local success_response =
 	{
@@ -52,19 +40,12 @@ function restapi.change_config(req)
 		body = sjson.encode({ message = "JSON updated successfully" })
 	}
 
-	local error_response =
-	{
-		status = "500 Internal Server Error",
-		type = "application/json",
-		body = sjson.encode({ message = "Failed to update JSON file" })
-	}
-
 	-- JSON example: {"rotation_duration":3500000,"rotation_period":5000,"min_temperature":37.3,"max_temperature":37.8}
 
 	-- Local Variables
 	local request_body_json = req.getbody()
 	local body_table = sjson.decode(request_body_json)
-	
+
 	success, body_table = pcall(sjson.decode, request_body_json)
 
 	if not success or type(body_table) ~= "table" then
@@ -72,9 +53,9 @@ function restapi.change_config(req)
 			status = "400 Bad Request",
 			type = "application/json",
 			body = sjson.encode({
-					message = "Error: The request body is not a valid JSON."
+				message = "Error: The request body is not a valid JSON."
 			})
-	}
+		}
 	end
 
 	-- Update the configuration values from the request body
@@ -85,10 +66,8 @@ function restapi.change_config(req)
 				restapi.incubator.set_max_temp(body_table.max_temperature)
 
 		if req_change_max_temp == true then
-			--return success_response
 		else
-			return --error_changing_config
-			{ status = "400", type = "application/json", body = "Error in max_temp" }
+			return { status = "400", type = "application/json", body = "Error in max_temp" }
 		end
 	end
 
@@ -99,10 +78,9 @@ function restapi.change_config(req)
 				restapi.incubator.set_min_temp(body_table.min_temperature)
 
 		if req_change_min_temp == true then
-			--return success_response
+
 		else
-			return --error_changing_config
-			{ status = "400", type = "application/json", body = "Error in min_temp" }
+			return { status = "400", type = "application/json", body = "Error in min_temp" }
 		end
 	end
 
@@ -110,13 +88,12 @@ function restapi.change_config(req)
 		body_table.rotation_period = tonumber(body_table.rotation_period)
 
 		local req_change_rotation_period =
-				restapi.incubator.set_rotation_period(body_table.rotation_period)
+			restapi.incubator.set_rotation_period(body_table.rotation_period)
 
 		if req_change_rotation_period == true then
-			--return success_response
+
 		else
-			return -- error_changing_config
-			{ status = "400", type = "application/json", body = "Error in rotation_period" }
+			return { status = "400", type = "application/json", body = "Error in rotation_period" }
 		end
 	end
 
@@ -127,13 +104,12 @@ function restapi.change_config(req)
 				restapi.incubator.set_rotation_duration(body_table.rotation_duration)
 
 		if req_change_rotation_duration == true then
-			--return success_response
+
 		else
-			return -- error_changing_config
-			{ status = "400", type = "application/json", body = "Error in rotation_duration" }
+			return { status = "400", type = "application/json", body = "Error in rotation_duration" }
 		end
 	end
-	
+
 	-- if body_table.ssid then
 	-- 	body_table.ssid = tostring(body_table.ssid)
 
@@ -173,9 +149,7 @@ function restapi.change_config(req)
 end
 
 -------------------------------------
--- ! @function change_file   get the current config.json parameters
---
--- !	@param req  		      		server request
+-- ! @function config_get   get the current config.json parameters
 -------------------------------------
 
 function restapi.config_get()
@@ -188,9 +162,12 @@ function restapi.config_get()
 end
 
 -------------------------------------
--- ! @function wifi_scan_get   get the current humidity and temperature
+-- ! @functiona actual_ht   get the current humidity and temperature
 --
--- !	@param req  		      		server request
+-- !	@param a_temperature get the current temperature
+-- !	@param a_humidity		 get the current humidity
+-- !	@param a_pressure		 get the current pressure
+
 -------------------------------------
 function restapi.actual_ht(a_temperature, a_humidity, a_pressure)
 	a_temperature, a_humidity, a_pressure = restapi.incubator.get_values()
@@ -216,7 +193,7 @@ function restapi.init_module(incubator_object)
 
 	-- * dynamic routes to serve
 	httpd.dynamic(httpd.GET, "/config", restapi.config_get)
-	httpd.dynamic(httpd.POST, "/config", restapi.change_config)
+	httpd.dynamic(httpd.POST, "/config", restapi.change_config_file)
 	httpd.dynamic(httpd.GET, "/actual", restapi.actual_ht)
 end
 
