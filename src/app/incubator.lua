@@ -123,9 +123,9 @@ end --end function
 function M.heater(status --[[bool]])
 	M.resistor = status
 	if status then
-		gpio.write(GPIORESISTOR, 0)
-	else
 		gpio.write(GPIORESISTOR, 1)
+	else
+		gpio.write(GPIORESISTOR, 0)
 	end
 	M.assert_conditions()
 end --end function
