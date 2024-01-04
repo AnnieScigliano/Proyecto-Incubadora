@@ -63,13 +63,25 @@ class _WHomeState extends State<WHome> {
           title: Text('Ingrese la contraseña:'),
           content: Column(
             children: [
+              SingleChildScrollView(
+                child: ListBody(
+                  children: networkSSIDs.map((ssid) {
+                    return ListTile(
+                      title: Text(ssid),
+                      onTap: () {
+                        Navigator.pop(context, ssid);
+                      },
+                    );
+                  }).toList(),
+                ),
+              ),
               TextField(
                 onChanged: (value) {
                   password = value;
                 },
                 obscureText: true,
                 decoration: InputDecoration(
-                  labelText: 'Contraseña',
+                  labelText: 'Contraseña'
                 ),
               ),
             ],
