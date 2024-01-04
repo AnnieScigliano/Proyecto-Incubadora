@@ -60,21 +60,9 @@ class _WHomeState extends State<WHome> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Selecciona una red Wi-Fi'),
+          title: Text('Ingrese la contraseña:'),
           content: Column(
             children: [
-              SingleChildScrollView(
-                child: ListBody(
-                  children: networkSSIDs.map((ssid) {
-                    return ListTile(
-                      title: Text(ssid),
-                      onTap: () {
-                        Navigator.pop(context, ssid);
-                      },
-                    );
-                  }).toList(),
-                ),
-              ),
               TextField(
                 onChanged: (value) {
                   password = value;

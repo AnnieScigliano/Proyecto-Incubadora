@@ -1,5 +1,5 @@
 class ApiConstants {
-  static String baseUrl = 'http://192.168.1.118';
+  static String baseUrl = 'http://192.168.43.171';
   static String maxTempEndPoint = '/maxtemp';
   static String minTempEndPoint = '/mintemp';
   static String versionEndPoint = '/version';

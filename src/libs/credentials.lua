@@ -1,8 +1,8 @@
 -- This file is only a placeholder.
 -- Put your credentials here, and 
 -- rename the file to remove the underscore.
-SSID = "fabrica"
-PASSWORD = "comunidad2023"
+SSID = "Aukache"
+PASSWORD = "anaenzo123"
 TIMEZONE = "UTC+3"
 
 IP_ADDR = ""         -- static IP
