@@ -69,6 +69,8 @@ function restapi.change_config_file(req)
 		else
 			return { status = "400", type = "application/json", body = "Error in max_temp" }
 		end
+	else
+		return { status = "400", type = "application/json", body = "Error missing max_temp" }
 	end
 
 	if body_table.min_temperature then
@@ -82,21 +84,25 @@ function restapi.change_config_file(req)
 		else
 			return { status = "400", type = "application/json", body = "Error in min_temp" }
 		end
+	else
+		return { status = "400", type = "application/json", body = "Error missing min_temp" }
 	end
 
 	if body_table.rotation_period then
 		body_table.rotation_period = tonumber(body_table.rotation_period)
 
 		local req_change_rotation_period =
-			restapi.incubator.set_rotation_period(body_table.rotation_period)
+				restapi.incubator.set_rotation_period(body_table.rotation_period)
 
 		if req_change_rotation_period == true then
 
 		else
 			return { status = "400", type = "application/json", body = "Error in rotation_period" }
 		end
+	else
+		return { status = "400", type = "application/json", body = "Error missing rotation_period" }
 	end
-
+	-- poner else con un  return que devuelva un error 400
 	if body_table.rotation_duration then
 		body_table.rotation_duration = tonumber(body_table.rotation_duration)
 
@@ -108,6 +114,8 @@ function restapi.change_config_file(req)
 		else
 			return { status = "400", type = "application/json", body = "Error in rotation_duration" }
 		end
+	else
+		return { status = "400", type = "application/json", body = "Error missing rotation_duration" }
 	end
 
 	-- if body_table.ssid then
