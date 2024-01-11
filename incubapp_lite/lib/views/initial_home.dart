@@ -19,11 +19,10 @@ class IHome extends StatefulWidget {
 }
 
 class _IHomeState extends State<IHome> {
-
   late Actual? _actualModel = Actual(aHumidity: 60, aTemperature: 37.5);
+  int _selectedIndex = 0;
 
   @override
-
   void initState() {
     super.initState();
     _getData();
@@ -36,16 +35,41 @@ class _IHomeState extends State<IHome> {
 
   @override
   Widget build(BuildContext context) {
-
     double temperature = _actualModel?.aTemperature ?? 0.0;
     double humidity = _actualModel?.aHumidity ?? 0.0;
-
 
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(children: [
+      body: _buildBody(size, temperature, humidity),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        backgroundColor: const Color.fromARGB(65, 65, 65, 1),
+        selectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.white,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.wifi),
+            label: 'Conexion',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Configuraciones',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBody(Size size, double temperature, double humidity) {
+    return Stack(
+      children: [
         Container(
           decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -53,40 +77,41 @@ class _IHomeState extends State<IHome> {
                   end: Alignment.bottomCenter,
                   colors: [Color.fromRGBO(65, 65, 65, 1), Color.fromRGBO(65, 65, 65, 1)])),
           child: Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                FontAwesomeIcons.temperatureHalf,
-                color: Color.fromARGB(255, 255, 255, 255),
-                size: 40.0,
-              ),
-              SizedBox(
-                height: size.height * 0.03,
-              ),
-              temperatureTitle(size),
-              const SizedBox(
-                height: 30.0,
-              ),
-              temperatureValue(size, temperature),
-              const SizedBox(
-                height: 30.0,
-              ),
-              const Icon(
-                FontAwesomeIcons.droplet,
-                color: Color.fromARGB(255, 255, 255, 255),
-                size: 40.0,
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              humidityTitle(size),
-              SizedBox(
-                height: size.height * 0.05,
-              ),
-              humidityValue(size, humidity),
-            ],
-          )),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  FontAwesomeIcons.temperatureHalf,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  size: 40.0,
+                ),
+                SizedBox(
+                  height: size.height * 0.03,
+                ),
+                temperatureTitle(size),
+                const SizedBox(
+                  height: 30.0,
+                ),
+                temperatureValue(size, temperature),
+                const SizedBox(
+                  height: 30.0,
+                ),
+                const Icon(
+                  FontAwesomeIcons.droplet,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  size: 40.0,
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                humidityTitle(size),
+                SizedBox(
+                  height: size.height * 0.05,
+                ),
+                humidityValue(size, humidity),
+              ],
+            ),
+          ),
         ),
         Align(
           alignment: Alignment.bottomRight,
@@ -94,30 +119,29 @@ class _IHomeState extends State<IHome> {
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => WHome()));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(150, 255, 255, 255), 
-                  ),
-                  child: const Icon(FontAwesomeIcons.wifi),
-                ),
-                SizedBox(width: 16),
-                FloatingActionButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
-                  },
-                  backgroundColor: Color.fromARGB(150, 255, 255, 255), 
-                  child: const Icon(FontAwesomeIcons.gear),
-                ),
-              ],
             ),
           ),
         )
-      ]) 
+      ],
     );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        // Navegar a la pantalla de inicio
+        break;
+      case 1:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => WHome()));
+        break;
+      case 2:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+        break;
+    }
   }
 }
 
