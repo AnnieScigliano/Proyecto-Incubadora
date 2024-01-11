@@ -12,7 +12,6 @@
 --  SPDX-License-Identifier: AGPL-3.0-only
 
 -----------------------------------------------------------------------------
-
 require('credentials')
 
 local M = {
@@ -22,13 +21,17 @@ local M = {
 	humidifier             = false,
 	rotation               = false,
 	temperature            = 99.9, -- integer value of temperature [0.01 C]
-	pressure               = 0, -- integer value of preassure [Pa]=[0.01 hPa]
-	humidity               = 0, -- integer value of rel.humidity [0.01 %]
+	pressure               = 0,   -- integer value of preassure [Pa]=[0.01 hPa]
+	humidity               = 0,   -- integer value of rel.humidity [0.01 %]
 	is_testing             = false,
 	max_temp               = 37.8,
 	min_temp               = 37.3,
 	is_sensorok            = false,
-	is_simulate_temp_local = false
+	is_simulate_temp_local = false,
+	rotation_duration        = 3600000, -- time in ms
+	rotation_period      = 5000, -- time in ms
+	-- ssid = nil, 
+	-- passwd = nil
 }
 
 _G[M.name] = M
@@ -89,7 +92,8 @@ function M.get_values()
 		M.startbme()
 		if M.is_sensorok then
 			sensor.read()
-			if (sensor.temperature / 100)< -40 or (sensor.temperature / 100) > 86 then
+			print("temp ", sensor.temperature)
+			if (sensor.temperature / 100) < -40 or (sensor.temperature / 100) > 86 then
 				M.temperature = 99.9
 				M.humidity = 99.9
 				M.pressure = 99.9
@@ -100,7 +104,7 @@ function M.get_values()
 			else
 				M.temperature = (sensor.temperature / 100)
 				M.humidity = (sensor.humidity / 100)
-				M.pressure = (sensor.pressure) / 100
+				M.pressure = (sensor.pressure / 100)
 			end
 		else
 			M.temperature = 99.9
@@ -173,6 +177,103 @@ function M.rotation(status)
 		gpio.write(GPIOVOLTEO, 1)
 	end -- if end
 	--todo: implement logger for debug
-end -- function end
+end  -- function end
 
+-------------------------------------
+-- @function set_max_temp	modify the actual max_temp from API
+--
+-- @param new_max_temp"	comes from json received from API
+-------------------------------------
+function M.set_max_temp(new_max_temp)
+	if new_max_temp ~= nil and new_max_temp < 60 
+	and tostring(new_max_temp):sub(1, 1) ~= '-'
+	and type(new_max_temp) == "number"
+	and new_max_temp >= 0  then
+		
+		M.max_temp = new_max_temp
+		return true
+	else
+		return false
+	end
+end
+
+-------------------------------------
+-- @function set_min_temp	modify the actual min_temp from API
+--
+-- @param new_min_temp"	comes from json received from API
+-------------------------------------
+function M.set_min_temp(new_min_temp)
+	if new_min_temp ~= nil and new_min_temp >= 0
+	and new_min_temp <= M.max_temp 
+	and  tostring(new_min_temp):sub(1, 1) ~= '-'
+	and type(new_min_temp) == "number" then
+
+ 		M.min_temp = new_min_temp
+		return true
+	else
+		return false
+	end
+end
+
+-------------------------------------
+-- @function set_rotation_period	modify the actual period time from API
+--
+-- @param new_period_time"	comes from json received from API
+-------------------------------------
+function M.set_rotation_period(new_period_time)
+	if new_period_time ~= nil and new_period_time >= 0
+		and new_period_time >= 5000 
+		and tostring(new_period_time):sub(1, 1) ~= '-' 
+		and type(new_period_time) == "number" then
+
+		M.rotation_period = new_period_time
+		return true
+	else
+		return false
+	end
+end
+-------------------------------------
+-- @function set_rotation_duration	modify the actual duration time from API
+--
+-- @param new_rotation_time"	comes from json received from API
+-------------------------------------
+function M.set_rotation_duration(new_rotation_duration)
+	if new_rotation_duration ~= nil and new_rotation_duration >= 900000 
+	and tostring(new_rotation_duration):sub(1, 1) ~= '-'  
+	and type(new_rotation_duration) == "number" then
+
+		M.rotation_duration = new_rotation_duration
+		return true
+	else
+		return false
+	end
+end
+
+
+-------------------------------------
+-- @function set_new_ssid	modify the actual ssid WiFi from API
+--
+-- @param	new_ssid comes from json received from API
+-------------------------------------
+-- function M.set_new_ssid(new_ssid)
+-- 	if new_ssid ~= nil and type(new_ssid) == string then
+-- 		M.ssid = new_ssid
+-- 		return true
+-- 	else
+-- 		return false
+-- 	end
+-- end
+-------------------------------------
+-- @function set_passwd	modify the actual ssid WiFi from API
+--
+-- @param	new_passwd comes from json received from API
+-------------------------------------
+-- function M.set_passwd(new_passwd)
+-- 	if new_passwd ~= nil  then
+-- 		M.passwd = new_passwd
+-- 		return true
+-- 	else
+-- 		return false
+-- 	end
+-- end
 return M

@@ -1,266 +1,208 @@
-local restapi = {
-    incubator = nil
-}
+local restapi = { incubator = nil }
 
 -------------------------------------
--- ! @function max_temp   print the current temperature
+-- ! @function read config   read the current config.json file
+-------------------------------------
+
+function restapi.read_config_file()
+	-- open file with read permission
+	local file = io.open("config.json", "r")
+
+	if file ~= nil then
+		-- "*a" read all the file
+		local config_json = file:read("*a")
+		-- then close the file
+		file:close()
+
+		local config_data = sjson.decode(config_json)
+		return config_data
+	else
+		print("[!] Failed to read JSON file, creating a new one")
+		new_file = io.open("config.json", "w")
+		new_file:write('"rotation_duration":360000,"min_temperature":37.3,"max_temperature":37.8')
+		new_file:close()
+		print("[+] the file was created successfully")
+	end -- if end
+end  -- function end
+
+-------------------------------------
+-- ! @function change config   modify the current config.json file
 --
--- !	@param req  				server request
+-- !	@param req  		      		server request
 -------------------------------------
-function restapi.max_temp_get(req)
+function restapi.change_config_file(req)
+	-- RESPONSES
 
-    local body_data = {
-        message = "success",
-        maxtemp = restapi.incubator.max_temp
-    }
+	local success_response =
+	{
+		status = "201 Created",
+		type = "application/json",
+		body = sjson.encode({ message = "JSON updated successfully" })
+	}
 
-    local body_json = sjson.encode(body_data)
+	-- JSON example: {"rotation_duration":3500000,"rotation_period":5000,"min_temperature":37.3,"max_temperature":37.8}
 
-    return {
-        status = "200 OK",
-        type = "application/json",
-        body = body_json
-    }
+	-- Local Variables
+	local request_body_json = req.getbody()
+	local body_table = sjson.decode(request_body_json)
 
-end -- end function
+	success, body_table = pcall(sjson.decode, request_body_json)
 
--------------------------------------
--- ! @function min_temp   print the current temperature
---
--- !	@param req  				server request
--------------------------------------
-function restapi.min_temp_get(req)
-    local body_data = {
-        message = "success",
-        mintemp = restapi.incubator.min_temp
-    }
+	if not success or type(body_table) ~= "table" then
+		return {
+			status = "400 Bad Request",
+			type = "application/json",
+			body = sjson.encode({
+				message = "Error: The request body is not a valid JSON."
+			})
+		}
+	end
 
-    local body_json = sjson.encode(body_data)
+	-- Update the configuration values from the request body
+	if body_table.max_temperature then
+		body_table.max_temperature = tonumber(body_table.max_temperature)
 
-    return {
-        status = "200 OK",
-        type = "application/json",
-        body = body_json
-    }
+		local req_change_max_temp =
+				restapi.incubator.set_max_temp(body_table.max_temperature)
 
-end -- end function
+		if req_change_max_temp == true then
+		else
+			return { status = "400", type = "application/json", body = "Error in max_temp" }
+		end
+	else
+		return { status = "400", type = "application/json", body = "Error missing max_temp" }
+	end
 
--- ! @function maxtemp   print the current temperature
---
--- !	@param req  				server request
--------------------------------------
-function restapi.max_temp_post(req)
-    local reqbody = req.getbody()
-    print(reqbody,"max_temp_post")
-    local body_json = sjson.decode(reqbody)
+	if body_table.min_temperature then
+		body_table.min_temperature = tonumber(body_table.min_temperature)
 
-    -- Obtener el nuevo valor de max_temp del cuerpo de la solicitud POST
-    print(body_json.maxtemp)
-    local new_max_temp = body_json.maxtemp
+		local req_change_min_temp =
+				restapi.incubator.set_min_temp(body_table.min_temperature)
 
-    if type(new_max_temp) == "number" and new_max_temp < 42 and new_max_temp >= 0 and new_max_temp >= restapi.incubator.min_temp then
+		if req_change_min_temp == true then
 
-        restapi.incubator.max_temp = new_max_temp
+		else
+			return { status = "400", type = "application/json", body = "Error in min_temp" }
+		end
+	else
+		return { status = "400", type = "application/json", body = "Error missing min_temp" }
+	end
 
-        return {
-            status = "201 Created"
-        }
-    else
+	if body_table.rotation_period then
+		body_table.rotation_period = tonumber(body_table.rotation_period)
 
-        return {
-            status = "400 Bad Request"
-        }
-    end
+		local req_change_rotation_period =
+				restapi.incubator.set_rotation_period(body_table.rotation_period)
+
+		if req_change_rotation_period == true then
+
+		else
+			return { status = "400", type = "application/json", body = "Error in rotation_period" }
+		end
+	else
+		return { status = "400", type = "application/json", body = "Error missing rotation_period" }
+	end
+	-- poner else con un  return que devuelva un error 400
+	if body_table.rotation_duration then
+		body_table.rotation_duration = tonumber(body_table.rotation_duration)
+
+		local req_change_rotation_duration =
+				restapi.incubator.set_rotation_duration(body_table.rotation_duration)
+
+		if req_change_rotation_duration == true then
+
+		else
+			return { status = "400", type = "application/json", body = "Error in rotation_duration" }
+		end
+	else
+		return { status = "400", type = "application/json", body = "Error missing rotation_duration" }
+	end
+
+	-- if body_table.ssid then
+	-- 	body_table.ssid = tostring(body_table.ssid)
+
+	-- 	local req_change_ssid = restapi.incubator.set_passwd(body_table.ssid)
+
+	-- 	if req_change_ssid == true then
+	-- 		return success_response
+	-- 	else
+	-- 		return -- error_changing_config
+	-- 		{ status = "400", type = "application/json", body = "Error en el ssid" }
+	-- 	end
+	-- end
+
+	-- if body_table.passwd then
+	-- 	body_table.passwd = body_table.passwd
+
+	-- 	local req_change_passwd = restapi.incubator.set_passwd(body_table.passwd)
+
+	-- 	if req_change_passwd == true then
+	-- 		return success_response
+	-- 	else
+	-- 		return -- error_changing_config
+	-- 		{ status = "400", type = "application/json", body = "Error en passwd" }
+	-- 	end
+	-- end
+
+	local json_config_file = sjson.encode(body_table)
+
+	local config_file, err = io.open("config.json", "w")
+	if config_file then
+		config_file:write(json_config_file)
+		config_file:close()
+		return success_response
+	else
+		return { status = "400", type = "application/json", body = sjson:encode(err) }
+	end
 end
 
--- ! @function maxtemp   print the current temperature
---
--- !	@param req  				server request
 -------------------------------------
-function restapi.min_temp_post(req)
-
-    local reqbody = req.getbody()
-    print(reqbody)
-
-    local body_json = sjson.decode(reqbody)
-
-    -- Obtener el nuevo valor de max_temp del cuerpo de la solicitud POST
-    print(body_json.mintemp)
-    local new_min_temp = body_json.mintemp
-    if (type(new_min_temp) == "number") then
-        if new_min_temp >= 0 and new_min_temp <= restapi.incubator.max_temp then
-
-            restapi.incubator.min_temp = new_min_temp
-            return {
-                status = "201 Created"
-            }
-
-        else
-            return {
-                status = "400 Bad Request"
-            }
-
-        end
-    end
-end
--------------------------------------
--- ! @function date   		print the current date
---
--- !	@param req  				server request
+-- ! @function config_get   get the current config.json parameters
 -------------------------------------
 
-function restapi.date(req)
-    local inc_date = time.get()
-    local body_data = {
-        message = "success",
-        date = inc_date
-    }
-
-    return {
-        status = "200 OK",
-        type = "application/json",
-        body = sjson.encode(body_data)
-    }
-
-end -- end function
-
--------------------------------------
-
--------------------------------------
--- ! @function version   print the current version
---
--- !	@param req  				server request 
--------------------------------------
-
-function restapi.version(req)
-
-    local body_data = {
-        message = "success",
-        version = "0.0.1"
-    }
-
-    local body_json = sjson.encode(body_data)
-
-    return {
-        status = "200 OK",
-        type = "application/json",
-        body = body_json
-    }
-
-end -- end function
-
--------------------------------------
---! @function wifi_scan_get   print the current avaliables networks
---
---!	@param req  		      		server request
--------------------------------------
-
-local response_data = {
-    message = "error",
-    error_message = err
-}
-  
-function restapi.scan_callback(err, arr)
-    
-
-    if err then
-        response_data = {
-        message = "error",
-        error_message = err
-        }
-    else
-        local networks = {}
-        for i, ap in ipairs(arr) do
-            local network_info = {
-                ssid = ap.ssid,
-                rssi = ap.rssi
-            }
-            table.insert(networks, network_info)
-        end
-        response_data = {
-            message = "success",
-            networks = networks
-        }
-    end
-
+function restapi.config_get()
+	local body_data = restapi.read_config_file()
+	local body_json = sjson.encode(body_data)
+	if body_data == nil then
+		return error_bad_request
+	end
+	return { status = "200 OK", type = "application/json", body = body_json }
 end
 
+-------------------------------------
+-- ! @functiona actual_ht   get the current humidity and temperature
+--
+-- !	@param a_temperature get the current temperature
+-- !	@param a_humidity		 get the current humidity
+-- !	@param a_pressure		 get the current pressure
 
-    
-function restapi.wifi_scan_get(req)
+-------------------------------------
+function restapi.actual_ht(a_temperature, a_humidity, a_pressure)
+	a_temperature, a_humidity, a_pressure = restapi.incubator.get_values()
 
-    wifi.sta.scan({ hidden = 1 }, restapi.scan_callback)
-    
-    local response_json = sjson.encode(response_data)
+	local body_data = {
+		a_temperature = string.format("%.2f", a_temperature),
+		a_humidity = string.format("%.2f", a_humidity),
+		a_pressure = string.format("%.2f", a_pressure)
+	}
 
-    return {
-    status = "200 OK",
-    type = "application/json",
-    body = response_json
-    }
-
-end
-
-function restapi.wifi_scan_post(req)
-    
-    local data = sjson.decode(req.body)
-
-    local response_data = {}
-
-    if data and data.action == "scan" then
-        wifi.sta.scan({ hidden = 1 }, function(err, arr)
-            if err then
-                response_data = {
-                message = "error",
-                error_message = err
-                }
-            else
-                local networks = {}
-                for i, ap in ipairs(arr) do
-                    local network_info = {
-                        ssid = ap.ssid,
-                        rssi = ap.rssi
-                    }
-                    table.insert(networks, network_info)
-                end
-                response_data = {
-                    message = "success",
-                    networks = networks
-                }
-            end
-        end)
-    else
-        response_data = {
-            message = "invalid_request",
-            error_message = "Invalid request."
-        }
-    end
-
-    local response_json = sjson.encode(response_data)
-
-    return {
-        status = "200 OK",
-        type = "application/json",
-        body = response_json
-    }
+	local body_json = sjson.encode(body_data)
+	return { status = "200 OK", type = "application/json", body = body_json }
 end
 
 function restapi.init_module(incubator_object)
-    -- * start local server
-    restapi.incubator = incubator_object
-    print("starting server .. fyi maxtemp " .. restapi.incubator.max_temp)
-    httpd.start({
-        webroot = "web",
-        auto_index = httpd.INDEX_ALL
-    })
+	-- * start local server
+	restapi.incubator = incubator_object
+	print("starting server .. fyi maxtemp " .. restapi.incubator.max_temp)
+	httpd.start({
+		webroot = "web",
+		auto_index = httpd.INDEX_ALL
+	})
 
-    -- * dynamic routes to serve
-    httpd.dynamic(httpd.GET, "/maxtemp", restapi.max_temp_get)
-    httpd.dynamic(httpd.POST, "/maxtemp", restapi.max_temp_post)
-    httpd.dynamic(httpd.GET, "/mintemp", restapi.min_temp_get)
-    httpd.dynamic(httpd.POST, "/mintemp", restapi.min_temp_post)
-    httpd.dynamic(httpd.GET, "/wifi", restapi.wifi_scan_get)
-    httpd.dynamic(httpd.POST, "/wifi", restapi.wifi_scan_post)
+	-- * dynamic routes to serve
+	httpd.dynamic(httpd.GET, "/config", restapi.config_get)
+	httpd.dynamic(httpd.POST, "/config", restapi.change_config_file)
+	httpd.dynamic(httpd.GET, "/actual", restapi.actual_ht)
 end
 
 return restapi
