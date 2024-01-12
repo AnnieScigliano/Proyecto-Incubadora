@@ -6,6 +6,8 @@ import 'package:incubapp_lite/views/home.dart';
 //import 'package:incubapp_lite/views/login.dart';
 import 'package:incubapp_lite/views/wifi_home.dart';
 import 'package:incubapp_lite/services/api_services.dart';
+import 'package:incubapp_lite/views/counter_home.dart';
+import 'package:incubapp_lite/views/graf_home.dart';
 
 void main() => runApp(MaterialApp(    
     debugShowCheckedModeBanner: false,
@@ -41,14 +43,14 @@ class _IHomeState extends State<IHome> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.grey,
       body: _buildBody(size, temperature, humidity),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         backgroundColor: const Color.fromARGB(65, 65, 65, 1),
         selectedItemColor: Colors.grey,
-        unselectedItemColor: Colors.white,
+        unselectedItemColor: Colors.black,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -61,6 +63,14 @@ class _IHomeState extends State<IHome> {
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Configuraciones',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.egg),
+            label: 'Contador',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.monitor_heart),
+            label: 'Grafana',
           ),
         ],
       ),
@@ -140,6 +150,12 @@ class _IHomeState extends State<IHome> {
         break;
       case 2:
         Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+        break;
+      case 3:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => CHome()));
+        break;
+      case 4:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => GHome()));
         break;
     }
   }
