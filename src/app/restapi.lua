@@ -40,7 +40,7 @@ function restapi.change_config_file(req)
 		body = sjson.encode({ message = "JSON updated successfully" })
 	}
 
-	-- JSON example: {"rotation_duration":3500000,"rotation_period":5000,"min_temperature":37.3,"max_temperature":37.8}
+	-- JSON example: {"rotation_duration":3500000,"rotation_period":5000,"min_temperature":37.3,"max_temperature":37.8,"ssid":"incubator","passwd":1234554321}
 
 	-- Local Variables
 	local request_body_json = req.getbody()
@@ -102,7 +102,7 @@ function restapi.change_config_file(req)
 	else
 		return { status = "400", type = "application/json", body = "Error missing rotation_period" }
 	end
-	-- poner else con un  return que devuelva un error 400
+
 	if body_table.rotation_duration then
 		body_table.rotation_duration = tonumber(body_table.rotation_duration)
 
@@ -118,31 +118,35 @@ function restapi.change_config_file(req)
 		return { status = "400", type = "application/json", body = "Error missing rotation_duration" }
 	end
 
-	-- if body_table.ssid then
-	-- 	body_table.ssid = tostring(body_table.ssid)
+	if body_table.ssid then
+		body_table.ssid = body_table.ssid
 
-	-- 	local req_change_ssid = restapi.incubator.set_passwd(body_table.ssid)
+		local req_change_ssid = restapi.incubator.set_new_ssid(body_table.ssid)
 
-	-- 	if req_change_ssid == true then
-	-- 		return success_response
-	-- 	else
-	-- 		return -- error_changing_config
-	-- 		{ status = "400", type = "application/json", body = "Error en el ssid" }
-	-- 	end
-	-- end
+		if req_change_ssid == true then
+			
+			else
+			return 
+			{ status = "400", type = "application/json", body = "Error missing ssid" }
+		end
+	else
+		return { status = "400", type = "application/json", body = "Error missing ssid" }
+	end
 
-	-- if body_table.passwd then
-	-- 	body_table.passwd = body_table.passwd
+	if body_table.passwd then
+		body_table.passwd = body_table.passwd
 
-	-- 	local req_change_passwd = restapi.incubator.set_passwd(body_table.passwd)
+		local req_change_passwd = restapi.incubator.set_passwd(body_table.passwd)
 
-	-- 	if req_change_passwd == true then
-	-- 		return success_response
-	-- 	else
-	-- 		return -- error_changing_config
-	-- 		{ status = "400", type = "application/json", body = "Error en passwd" }
-	-- 	end
-	-- end
+		if req_change_passwd == true then
+		else
+			return 
+			{ status = "400", type = "application/json", body = "Error missing passwd" }
+		end
+	else
+		return 
+		{ status = "400", type = "application/json", body = "Error missing passwd" }
+	end
 
 	local json_config_file = sjson.encode(body_table)
 

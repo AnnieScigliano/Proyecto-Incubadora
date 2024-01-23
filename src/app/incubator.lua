@@ -12,6 +12,26 @@
 --  SPDX-License-Identifier: AGPL-3.0-only
 
 -----------------------------------------------------------------------------
+-- @function read_param_file 	read the current config.json file
+-----------------------------------------------------------------------------
+function read_params_file()
+	-- open file with read permission
+	local file = io.open("config.json", "r")
+
+	if file ~= nil then
+		-- "*a" read all the file
+		local config_json = file:read("*a")
+		-- then close the file
+		file:close()
+		local config_data = sjson.decode(config_json)
+		return config_data
+	end
+end
+-----------------------------------------------------------------------------
+ -- config_params_table 	contains the parameters to read 
+-----------------------------------------------------------------------------
+config_params_table = read_params_file()
+
 require('credentials')
 
 local M = {
@@ -24,14 +44,14 @@ local M = {
 	pressure               = 0,   -- integer value of preassure [Pa]=[0.01 hPa]
 	humidity               = 0,   -- integer value of rel.humidity [0.01 %]
 	is_testing             = false,
-	max_temp               = 37.8,
-	min_temp               = 37.3,
+	max_temp               = config_params_table.max_temperature,
+	min_temp               = config_params_table.min_temperature,
 	is_sensorok            = false,
 	is_simulate_temp_local = false,
-	rotation_duration        = 3600000, -- time in ms
-	rotation_period      = 5000, -- time in ms
-	-- ssid = nil, 
-	-- passwd = nil
+	rotation_duration        = config_params_table.rotation_duration, -- time in ms
+	rotation_period      = config_params_table.rotation_period, -- time in ms
+	ssid = config_params_table.ssid,
+	passwd = config_params_table.passwd
 }
 
 _G[M.name] = M
@@ -249,31 +269,30 @@ function M.set_rotation_duration(new_rotation_duration)
 	end
 end
 
-
 -------------------------------------
 -- @function set_new_ssid	modify the actual ssid WiFi from API
 --
 -- @param	new_ssid comes from json received from API
 -------------------------------------
--- function M.set_new_ssid(new_ssid)
--- 	if new_ssid ~= nil and type(new_ssid) == string then
--- 		M.ssid = new_ssid
--- 		return true
--- 	else
--- 		return false
--- 	end
--- end
+function M.set_new_ssid(new_ssid)
+	if new_ssid ~= nil then
+		M.ssid = new_ssid
+		return true
+	else
+		return false
+	end
+end
 -------------------------------------
 -- @function set_passwd	modify the actual ssid WiFi from API
 --
 -- @param	new_passwd comes from json received from API
 -------------------------------------
--- function M.set_passwd(new_passwd)
--- 	if new_passwd ~= nil  then
--- 		M.passwd = new_passwd
--- 		return true
--- 	else
--- 		return false
--- 	end
--- end
+function M.set_passwd(new_passwd)
+	if new_passwd ~= nil then
+		M.passwd = new_passwd
+		return true
+	else
+		return false
+	end
+end
 return M
