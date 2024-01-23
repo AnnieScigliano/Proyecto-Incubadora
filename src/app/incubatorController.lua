@@ -1,4 +1,4 @@
----@diagnostic disable: lowercase-global, undefined-global, redundant-parameter
+
 -----------------------------------------------------------------------------
 --  This is the reference implementation to train lua fucntions. It
 --  implements part of the core functionality and has some incomplete comments.
@@ -64,17 +64,17 @@ function temp_control(temperature, min_temp, max_temp)
     if temperature <= min_temp then
         if is_temp_changing(temperature) then
             log.trace("temperature is changing")
-            log.trace("trun resistor on")
+            log.trace("turn resistor on")
             incubator.heater(true)
         else
             log.error("temperature is not changing")
             alerts.send_alert_to_grafana("temperature is not changing")
-            log.trace("trun resistor off")
+            log.trace("turn resistor off")
             incubator.heater(false)
         end
     elseif temperature >= max_temp then
         incubator.heater(false)
-        log.trace("trun resistor off")
+        log.trace("turn resistor off")
     end -- end if
 end     -- end function
 
@@ -98,7 +98,7 @@ end -- read_and_send_data end
 ------------------------------------------------------------------------------------
 function stop_rot()
     incubator.rotation(false)
-    log.trace("trun rotation off")
+    log.trace("turn rotation off")
     if rotation_activate == true then
         log.trace("[#] rotation working")
     else
@@ -112,7 +112,7 @@ end
 ------------------------------------------------------------------------------------
 function trigger(pin, _)
     rotation_activate = true
-    print("se activo la rotacion")
+    print("[#] rotation working")
     gpio.trig(pin, gpio.INTR_DISABLE)
 end
 
@@ -128,9 +128,9 @@ function rotate()
     --trigger
     gpio.trig(36, gpio.INTR_LOW, trigger)
     incubator.rotation(true)
-    log.trace("trun rotation on")
+    log.trace("turn rotation on")
     stoprotation = tmr.create()
-    stoprotation:register(5000, tmr.ALARM_SINGLE, stop_rot)
+    stoprotation:register(incubator.rotation_period, tmr.ALARM_SINGLE, stop_rot)
     stoprotation:start()
 end
 
@@ -159,5 +159,5 @@ temp_control_timer:start()
 
 local rotation = tmr.create()
 --rotation:register(20000, tmr.ALARM_AUTO, rotate)
-rotation:register(3600000, tmr.ALARM_AUTO, rotate)
+rotation:register(incubator.rotation_duration, tmr.ALARM_AUTO, rotate)
 rotation:start()
