@@ -1,4 +1,7 @@
-local restapi = { incubator = nil }
+local restapi = {
+	incubator = nil,
+	configurator = require("configurator")
+}
 
 -------------------------------------
 -- ! @function read config   read the current config.json file
@@ -161,12 +164,7 @@ end
 -------------------------------------
 
 function restapi.config_get()
-	local body_data = restapi.read_config_file()
-	local body_json = sjson.encode(body_data)
-	if body_data == nil then
-		return error_bad_request
-	end
-	return { status = "200 OK", type = "application/json", body = body_json }
+	configurator.get_config()
 end
 
 -------------------------------------
