@@ -122,15 +122,15 @@ end
 
 function rotate()
     --gpio config
-    pin = 36
+    pin = GPIOREEDS
     gpio.config({ gpio = { pin }, dir = gpio.IN })
     rotation_activate = false
     --trigger
-    gpio.trig(36, gpio.INTR_LOW, trigger)
+    gpio.trig(GPIOREEDS, gpio.INTR_LOW, trigger)
     incubator.rotation(true)
     log.trace("turn rotation on")
     stoprotation = tmr.create()
-    stoprotation:register(incubator.rotation_period, tmr.ALARM_SINGLE, stop_rot)
+    stoprotation:register(incubator.rotation_duration, tmr.ALARM_SINGLE, stop_rot)
     stoprotation:start()
 end
 
@@ -159,5 +159,5 @@ temp_control_timer:start()
 
 local rotation = tmr.create()
 --rotation:register(20000, tmr.ALARM_AUTO, rotate)
-rotation:register(incubator.rotation_duration, tmr.ALARM_AUTO, rotate)
+rotation:register(incubator.rotation_period, tmr.ALARM_AUTO, rotate)
 rotation:start()

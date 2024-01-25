@@ -11,6 +11,7 @@ GATEWAY = ""     -- your gateway
 --16mb board
 GPIOBMESDA = 21
 GPIOBMESCL = 22
+GPIOREEDS = 36
 --old board
 --GPIOBMESDA = 16
 --GPIOBMESCL = 0

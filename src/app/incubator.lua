@@ -28,8 +28,8 @@ local M = {
 	min_temp               = 37.3,
 	is_sensorok            = false,
 	is_simulate_temp_local = false,
-	rotation_duration        = 3600000, -- time in ms
-	rotation_period      = 5000, -- time in ms
+	rotation_duration        = 5000, -- time in ms
+	rotation_period      = 3600000, -- time in ms
 	-- ssid = nil, 
 	-- passwd = nil
 }
