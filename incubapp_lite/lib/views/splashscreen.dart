@@ -14,8 +14,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
-
 class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -31,7 +29,7 @@ class SplashScreen extends StatelessWidget {
 
     return Scaffold(
       body: Center(
-        child: LogoWidget(), // Reemplaza con tu widget de logo
+        child: LogoWidget(),
       ),
     );
   }
