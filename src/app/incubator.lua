@@ -250,30 +250,30 @@ function M.set_rotation_duration(new_rotation_duration)
 end
 
 
--------------------------------------
+-- -----------------------------------
 -- @function set_new_ssid	modify the actual ssid WiFi from API
---
+
 -- @param	new_ssid comes from json received from API
--------------------------------------
--- function M.set_new_ssid(new_ssid)
--- 	if new_ssid ~= nil and type(new_ssid) == string then
--- 		M.ssid = new_ssid
--- 		return true
--- 	else
--- 		return false
--- 	end
--- end
+-- -----------------------------------
+function M.set_new_ssid(new_ssid)
+	if new_ssid ~= nil then
+		M.ssid = new_ssid
+		return true
+	else
+		return false
+	end
+end
 -------------------------------------
 -- @function set_passwd	modify the actual ssid WiFi from API
 --
 -- @param	new_passwd comes from json received from API
 -------------------------------------
--- function M.set_passwd(new_passwd)
--- 	if new_passwd ~= nil  then
--- 		M.passwd = new_passwd
--- 		return true
--- 	else
--- 		return false
--- 	end
--- end
+function M.set_passwd(new_passwd)
+	if new_passwd ~= nil  then
+		M.passwd = new_passwd
+		return true
+	else
+		return false
+	end
+end
 return M
