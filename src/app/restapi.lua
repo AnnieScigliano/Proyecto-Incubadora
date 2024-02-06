@@ -9,10 +9,21 @@ local restapi = {
 --
 -- !	@param req  		      		server request
 -------------------------------------
-function restapi.change_config_file(req)
-	configurator.save_config(req)
-	config_table = configurator.read_config_file()
-	configurator.change_config_file(config_table)
+function restapi.change_config_file(req) 
+	local new_config_table = configurator:update_config_from_request(req)
+	local is_load_data_success = configurator:load_objects_data(new_config_table)
+
+	if is_load_data_success then
+		return { status = "400", type = "application/json", body = is_load_data_success }
+	else
+		local is_file_encoded = configurator:encode_config_file(new_config_table)
+		
+		if not is_file_encoded  then
+			return { status = "400", type = "application/json", body = is_file_encoded }
+		else	
+		return is_file_encoded
+	end
+end
 end
 
 -------------------------------------
@@ -20,7 +31,13 @@ end
 -------------------------------------
 
 function restapi.config_get()
-	configurator.get_config()
+	local config_table = configurator:read_config_file()
+	body_json = configurator:get_config(config_table)
+	if body_json then
+		return { status = "200 OK", type = "application/json", body = body_json }
+	else
+		return { status = "400", type = "application/json", body = "Error config_table not found" }
+	end
 end
 
 -------------------------------------
@@ -53,8 +70,19 @@ function restapi.init_module(incubator_object)
 		auto_index = httpd.INDEX_ALL
 	})
 
+	local function config_get_handler(req)
+		local headers = {
+			['Access-Control-Allow-Origin'] = '*',
+			['Access-Control-Allow-Methods'] = 'GET, POST'
+		}
+
+		local config_response = restapi.config_get()
+		config_response.headers = headers
+
+		return config_response
+	end
 	-- * dynamic routes to serve
-	httpd.dynamic(httpd.GET, "/config", restapi.config_get)
+	httpd.dynamic(httpd.GET, "/config", config_get_handler)
 	httpd.dynamic(httpd.POST, "/config", restapi.change_config_file)
 	httpd.dynamic(httpd.GET, "/actual", restapi.actual_ht)
 end
