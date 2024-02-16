@@ -12,7 +12,7 @@
 --  SPDX-License-Identifier: AGPL-3.0-only
 
 -----------------------------------------------------------------------------
-require('credentials')
+credentials = require('credentials')
 
 local M = {
 	name                   = ..., -- module name, upvalue from require('module-name')
@@ -238,7 +238,7 @@ end
 -- @param new_rotation_time"	comes from json received from API
 -------------------------------------
 function M.set_rotation_duration(new_rotation_duration)
-	if new_rotation_duration ~= nil and new_rotation_duration >= 900000 
+	if new_rotation_duration ~= nil and new_rotation_duration >= 36000 
 	and tostring(new_rotation_duration):sub(1, 1) ~= '-'  
 	and type(new_rotation_duration) == "number" then
 
@@ -276,4 +276,5 @@ function M.set_passwd(new_passwd)
 		return false
 	end
 end
+
 return M

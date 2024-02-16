@@ -10,21 +10,24 @@ local restapi = {
 -- !	@param req  		      		server request
 -------------------------------------
 function restapi.change_config_file(req) 
-	local new_config_table = configurator:update_config_from_request(req)
-	local is_load_data_success = configurator:load_objects_data(new_config_table)
+	local new_config_table = configurator:json_to_table(req)
+	local status = configurator:load_objects_data(new_config_table)
 
-	if is_load_data_success then
-		return { status = "400", type = "application/json", body = is_load_data_success }
+	for param, success in pairs(status) do
+		if not success then
+			return { status = "400", type = "application/json", body = "Error in setting " .. param }
+		end
+	end
+
+	local is_file_encoded = configurator:encode_config_file(new_config_table)
+	if not is_file_encoded  then
+		return { status = "400", type = "application/json", body = "Error in encode_config_file" }
 	else
-		local is_file_encoded = configurator:encode_config_file(new_config_table)
-		
-		if not is_file_encoded  then
-			return { status = "400", type = "application/json", body = is_file_encoded }
-		else	
-		return is_file_encoded
+		return { status = "201 Created", type = "application/json", body = "JSON updated and encoded successfully" }
 	end
 end
-end
+
+
 
 -------------------------------------
 -- ! @function config_get   get the current config.json parameters
