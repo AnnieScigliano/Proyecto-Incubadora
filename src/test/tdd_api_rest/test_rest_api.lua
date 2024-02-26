@@ -12,25 +12,23 @@ test =
 
 }
 
-print(tables.configs_to_test_numbers.config_10_m10)
--- local colors = require 'ansicolors'
--- print(colors('%{red}Hola santiiii'))
--- print(colors('%{redbg}hello%{reset}'))
--- print(colors('%{bright red underline}hello'))
 
 function test:get_space_location()
 	local body, code, _, status, _ = test.http.request("http://api.open-notify.org/iss-now.json")
-	print(code, status, body)
 	local lua_value = test.JSON:decode(body) -- decode example
 	local lua_value_pretty = test.JSON:encode_pretty(lua_value)
-	print(lua_value.message)
 	assert.are.equal(lua_value.message, "success", test.colors('%{red}Fail to get space location'))
 
 	print(string.format(test.colors([[
-	%{green}[#] Peticion exitosa:
-	%{red}BODY:			%s
-	%{green}RESPONSE CODE: %s
-	
+
+%{green}%{underline}[#] Space Station location:
+
+%{reset}%{red}BODY:		
+
+%s
+
+
+%{green}%{underline}RESPONSE CODE: %s	
 ]]), lua_value_pretty,code))
 
 	return code
@@ -42,7 +40,7 @@ end
 
 describe("[#] API REST TDD", function()
 	describe(test.colors("%{green}[#] Get space station location"), function()
-		code_req_space_station = test:get_space_location()
+		local code_req_space_station = test:get_space_location()
 		it(test.colors("%{red}[!]should return the space station location"), function()
 			assert.are.equal(code_req_space_station, 200)
 		end)
@@ -56,7 +54,7 @@ describe("[#] API REST TDD", function()
 	end)
 
 	describe("%{green}[#] Get actual temperature and humidity", function()
-		code_req_actual_temp_hum = test.config:get_actual()
+		local code_req_actual_temp_hum = test.config:get_actual()
 		it(test.colors("%{red} should return actual temperature and humidity"), function()
 			assert.are.equal(code_req_actual_temp_hum, 200)
 		end)

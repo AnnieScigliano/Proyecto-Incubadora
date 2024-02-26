@@ -1,24 +1,46 @@
 config = {
   tables = require("tables"),
-  http_request_methods = require("http_request_methods")
+  http_request_methods = require("http_request_methods"),
+  colors               = require("ansicolors")
 }
 
 function config:get_config()
   local body, code, _, _ = http_request_methods.http.request(http_request_methods.apiendpoint .. "config")
-  print("[+] La peticíon GET de la configuracion fué exitosa.\n\n\n")
   local body_table = http_request_methods.JSON:decode(body)
   local pretty_json = http_request_methods.JSON:encode_pretty(body_table)
-  http_request_methods.inspect(print(string.format("\n\n\nbody de la peticion GET: \n\n\n %s", pretty_json)))
+  print(string.format(self.colors([[
 
-  return code
+  %{green}%{underline}[#] Get actual Config:%{reset}
+
+  %{red}BODY:		
+
+  %s
+
+
+  %{green}%{underline}RESPONSE CODE: %s	
+]]), pretty_json, code))
+print('\n\n\n')
+
+return code
 end
 
 function config:get_actual()
   local body, code, _, _, _ = http_request_methods.http.request(http_request_methods.apiendpoint .. "actual")
-  http_request_methods.inspect(print("\nBody de la peticion GET: \n " .. body))
   http_request_methods.assert.are.equal(code, 200)
-  print("[+] La peticíon GET de la temperatura y humedad actual fué exitosa.\n\n")
+  local body_table = http_request_methods.JSON:decode(body)
+  local pretty_json = http_request_methods.JSON:encode_pretty(body_table)
+  print(string.format(self.colors([[
 
+  %{green}%{underline}[#] Actual Temperature,Humidity and pressure:%{reset}
+
+  %{red}BODY:		
+
+  %s
+
+
+  %{green}%{underline}RESPONSE CODE: %s	
+]]), pretty_json,code))
+print('\n\n\n')
   return code
 end
 
@@ -34,7 +56,6 @@ function config:get_wifi()
   local lua_value = http_request_methods.JSON:decode(body) -- decode example
   print(lua_value.message)
   http_request_methods.assert.are.equal(lua_value.message, "success")
-  print("\n\n\n[+] La peticíon GET de la estacíon espacial fué exitosa.\n\n\n")
 end
 
 function config:get_wifi_with_5s()
@@ -69,7 +90,8 @@ function config:set_config_ok()
     -- check the changes
     http_request_methods.assert.are.equal(new_config.max_temperature, 50, "Error: max_temperature no es igual a 30")
     http_request_methods.assert.are.equal(new_config.min_temperature, 40, "Error: min_temperature no es igual a 40")
-    http_request_methods.assert.are.equal(new_config.rotation_duration, 36000, "Error: rotation_duration no es igual a 3500000")
+    http_request_methods.assert.are.equal(new_config.rotation_duration, 36000,
+      "Error: rotation_duration no es igual a 3500000")
     http_request_methods.assert.are.equal(new_config.rotation_period, 5000, "Error: rotation_period no es igual a 5000")
     http_request_methods.assert.are.equal(new_config.ssid, "incubator", "Error: ssid no coincide")
     http_request_methods.assert.are.equal(new_config.passwd, "12345678", "Error: passwd no coincide")
@@ -137,7 +159,19 @@ end
 function config:assert_defconfig()
   local body = config.http_request_methods:get_and_assert_200("config")
   local default_config = http_request_methods.JSON:decode(body)
-  http_request_methods.inspect(print(body))
+  local body_table = http_request_methods.JSON:decode(body)
+  local pretty_json = http_request_methods.JSON:encode_pretty(body_table)
+  
+  print(string.format(self.colors([[
+
+  %{magenta}%{underline}[#] Setting Default Config:%{reset}
+  
+  %{cyan}BODY:		
+
+  %s
+
+]]), pretty_json))
+
   http_request_methods.assert.are.equal(default_config.min_temperature, 30)
   http_request_methods.assert.are.equal(default_config.max_temperature, 40)
   http_request_methods.assert.are.equal(default_config.rotation_duration, 36000)
