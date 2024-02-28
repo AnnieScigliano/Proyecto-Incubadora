@@ -10,7 +10,7 @@ local restapi = {
 -- !	@param req  		      		server request
 -------------------------------------
 function restapi.change_config_file(req) 
-	local new_config_table = configurator:json_to_table(req)
+	local new_config_table = sjson.decode(req.getbody())
 	local status = configurator:load_objects_data(new_config_table)
 
 	for param, success in pairs(status) do
@@ -32,10 +32,10 @@ end
 -------------------------------------
 -- ! @function config_get   get the current config.json parameters
 -------------------------------------
-
 function restapi.config_get()
+	
 	local config_table = configurator:read_config_file()
-	body_json = configurator:get_config(config_table)
+	local body_json = sjson.encode(config_table)
 	if body_json then
 		return { status = "200 OK", type = "application/json", body = body_json }
 	else
@@ -64,9 +64,11 @@ function restapi.actual_ht(a_temperature, a_humidity, a_pressure)
 	return { status = "200 OK", type = "application/json", body = body_json }
 end
 
-function restapi.init_module(incubator_object)
+function restapi.init_module(incubator_object,configurator_object)
 	-- * start local server
 	restapi.incubator = incubator_object
+	restapi.configurator = configurator_object
+	
 	print("starting server .. fyi maxtemp " .. restapi.incubator.max_temp)
 	httpd.start({
 		webroot = "web",

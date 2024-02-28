@@ -1,29 +1,20 @@
 configurator =
 {
   wifi = {},
-  incubator = require("incubator")
+  incubator = {}
 
 }
 -------------------------------------------------------------------------------------
---------------------------        API REST       ------------------------------------
+-- @method configurator:init_module   load config file to incubator table
 -------------------------------------------------------------------------------------
--- @method configurator.read_config_file	get the current config.json in json format
--------------------------------------------------------------------------------------
-function configurator:get_config(config_table)
-  local body_json = sjson.encode(config_table)
-  return body_json
-end -- function end
+function configurator:init_module(incubator_object)
+  local config_table = configurator:read_config_file()
+  configurator.incubator = incubator_object
 
-
--------------------------------------------------------------------------------------
--- @method configurator.json_to_table	this funcion convert JSON body in table 
--- @param request                     request from client
--------------------------------------------------------------------------------------
-function configurator:json_to_table(request)
-  local request_body_json = request.getbody()
-  local body_table = sjson.decode(request_body_json)
-  return body_table
-end -- function end
+  if config_table ~= nil then
+    configurator:load_objects_data(config_table)
+  end
+end
 
 -------------------------------------------------------------------------------------
 --------------------------        CONFIGURATOR       --------------------------------
@@ -31,13 +22,7 @@ end -- function end
 -- @method configurator.set_new_credentials	set the new credentials for wifi
 -------------------------------------------------------------------------------------
 function configurator.wifi:set_new_credentials(ssid, passwd)
-  if ssid and passwd ~= incubator.ssid and incubator.passwd then
-  incubator.set_new_ssid(ssid)
-  incubator.set_passwd(passwd)
-  node.restart()
-  else
-    return
-  end
+  -- TODO
 end
 
 -------------------------------------------------------------------------------------
@@ -47,7 +32,7 @@ function configurator:encode_config_file(new_config_table)
   local table_to_json = sjson.encode(new_config_table)
 
   local new_config_file = io.open("config.json", "w")
-  
+
   if not new_config_file then
     return false
   else
@@ -65,7 +50,7 @@ function configurator:create_config_file()
   print("[!] Failed to read JSON file, creating a new one")
   new_file = io.open("config.json", "w")
   new_file:write(
-    '{"rotation_duration":360000,"min_temperature":37.3,"max_temperature":37.8,"ssid":"incubator","passwd":"1234554321"}')
+    '{"rotation_duration":5000,"rotation_period":360000,"min_temperature":37.3,"max_temperature":37.8,"ssid":"incubator","passwd":"1234554321"}')
   new_file:close()
 end
 
@@ -75,23 +60,25 @@ end
 
 function configurator:read_config_file()
   local file = io.open("config.json", "r")
-  if file then
+  if not file then
+    configurator:create_config_file()
+    file = io.open("config.json", "r")
+  end
     local config_json = file:read("*a")
     file:close()
     local config_table = sjson.decode(config_json)
     return config_table
-  else
-    configurator:create_config_file()
-  end
 end
 
 -----------------------------------------------------------------------------------
--- @method configurator.change_config	change the currents parameters in the file
--- @ param new_config_table 
+-- @method configurator.change_config	change currents parameters in the incubator object
+-- and validates input
+
+-- @ param new_config_table
 -----------------------------------------------------------------------------------
 function configurator:load_objects_data(new_config_table)
   local status = {}
-  
+
   for param, value in pairs(new_config_table) do
     if param == "min_temperature" then
       status.min_temp = incubator.set_min_temp(tonumber(value))
@@ -110,4 +97,4 @@ function configurator:load_objects_data(new_config_table)
   return status
 end
 
-
+return configurator

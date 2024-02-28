@@ -190,7 +190,7 @@ function M.set_max_temp(new_max_temp)
 	and type(new_max_temp) == "number"
 	and new_max_temp >= 0  then
 		
-		M.max_temp = new_max_temp
+		M.max_temp = tonumber(new_max_temp)
 		return true
 	else
 		return false
@@ -208,7 +208,7 @@ function M.set_min_temp(new_min_temp)
 	and  tostring(new_min_temp):sub(1, 1) ~= '-'
 	and type(new_min_temp) == "number" then
 
- 		M.min_temp = new_min_temp
+ 		M.min_temp = tonumber(new_min_temp)
 		return true
 	else
 		return false

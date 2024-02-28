@@ -5,8 +5,8 @@ tables = {
       {
         "max_temperature":40,
         "min_temperature":50,
-        "rotation_duration":36000,
-        "rotation_period":5000,
+        "rotation_duration":5000,
+        "rotation_period":36000,
         "ssid":"incubator",
         "passwd":"12345678"
       }
@@ -17,8 +17,8 @@ tables = {
       {
         "max_temperature":50,
         "min_temperature":40,
-        "rotation_duration":36000,
-        "rotation_period":5000,
+        "rotation_duration":5000,
+        "rotation_period":36000,
         "ssid": "incubator",
         "passwd":"12345678"
       }
@@ -41,8 +41,8 @@ tables = {
       {
         "max_temperature":50,
         "min_temperature":-10,
-        "rotation_duration":36000,
-        "rotation_period": 5000,
+        "rotation_duration":5000,
+        "rotation_period": 36000,
         "ssid": "incubator",
         "passwd":"12345678"
       }
@@ -53,8 +53,8 @@ tables = {
       {
         "max_temperature":-10,
         "min_temperature":10,
-        "rotation_duration":36000,
-        "rotation_period": 5000,
+        "rotation_duration":5000,
+        "rotation_period": 36000,
         "ssid": "incubator",
         "passwd":"12345678"
       }
@@ -68,8 +68,8 @@ tables = {
       {
         "max_temperature":50,
         "min_temperature":"lalala",
-        "rotation_duration":36000,
-        "rotation_period": 5000,
+        "rotation_duration":5000,
+        "rotation_period": 36000,
         "ssid": "incubator",
         "passwd":"12345678"
       }
@@ -92,8 +92,8 @@ tables = {
       {
         "max_temperature":"lala",
         "min_temperature":20,
-        "rotation_duration":36000,
-        "rotation_period": 5000,
+        "rotation_duration":5000,
+        "rotation_period": 36000,
         "ssid": "incubator",
         "passwd":"12345678"
       }
