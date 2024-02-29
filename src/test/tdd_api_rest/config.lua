@@ -174,8 +174,8 @@ function config:assert_defconfig()
 
   http_request_methods.assert.are.equal(default_config.min_temperature, 37.3)
   http_request_methods.assert.are.equal(default_config.max_temperature, 37.8)
-  http_request_methods.assert.are.equal(default_config.rotation_duration, 36000)
-  http_request_methods.assert.are.equal(default_config.rotation_period, 5000)
+  http_request_methods.assert.are.equal(default_config.rotation_duration, 5000)
+  http_request_methods.assert.are.equal(default_config.rotation_period, 360000)
   http_request_methods.assert.are.equal(default_config.ssid, "incubator")
   http_request_methods.assert.are.equal(default_config.passwd, "1234554321")
 
