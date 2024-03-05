@@ -1,3 +1,4 @@
+---@diagnostic disable: lowercase-global
 
 -----------------------------------------------------------------------------
 --  This is the reference implementation to train lua fucntions. It
@@ -7,14 +8,13 @@
 --
 --  License:
 -----------------------------------------------------------------------------
-require('credentials')
+require("credentials")
 require("SendToGrafana")
 alerts = require("alerts")
 incubator = require("incubator")
 apiserver = require("restapi")
 deque = require('deque')
 log = require('log')
-
 
 --log.level = "debug"
 --log.usecolor=false
@@ -102,7 +102,7 @@ function stop_rot()
     if rotation_activate == true then
         log.trace("[#] rotation working")
     else
-        alerts.send_alert_to_grafana("[!] rotation error")
+        log.trace("[!] rotation error")
     end
 end
 
@@ -110,10 +110,11 @@ end
 -- ! @function trigger                    is responsible for checking the proper functioning of the rotation
 --! @param pin                            number of pin to watch
 ------------------------------------------------------------------------------------
-function trigger(pin, _)
+
+function trigger(gpio, _)
     rotation_activate = true
     print("[#] rotation working")
-    gpio.trig(pin, gpio.INTR_DISABLE)
+    gpio.trig(gpio, gpio.INTR_DISABLE)
 end
 
 ------------------------------------------------------------------------------------
@@ -121,9 +122,8 @@ end
 ------------------------------------------------------------------------------------
 
 function rotate()
-    --gpio config
-    pin = GPIOREEDS
-    gpio.config({ gpio = { pin }, dir = gpio.IN })
+    -- config
+    gpio.config( { gpio={GPIOREEDS}, dir=gpio.IN})
     rotation_activate = false
     --trigger
     gpio.trig(GPIOREEDS, gpio.INTR_LOW, trigger)
