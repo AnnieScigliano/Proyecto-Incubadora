@@ -15,7 +15,7 @@ tables = {
     config_40_50 =
     [[
       {
-        "max_temperature":50,
+        "max_temperature":70,
         "min_temperature":40,
         "rotation_duration":5000,
         "rotation_period":36000,
@@ -27,7 +27,7 @@ tables = {
     config_1_40_50 =
     [[
       {
-        "max_temperature":50,
+        "max_temperature":70,
         "min_temperature":40,
         "rotation_duration":1,
         "rotation_period": 5000,
@@ -39,7 +39,7 @@ tables = {
     config_m10_50 =
     [[
       {
-        "max_temperature":50,
+        "max_temperature":70,
         "min_temperature":-10,
         "rotation_duration":5000,
         "rotation_period": 36000,
