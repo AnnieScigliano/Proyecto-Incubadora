@@ -15,12 +15,12 @@ LibreMesh unit testing is based in the powerful [busted](https://lunarmodules.gi
 ## Install required software
 ```sh
 apt-get install luarocks
-sudo luarocks install --server=https://luarocks.org/dev ltn12
-sudo luarocks install luasockets
-sudo luarocks install busted
-sudo luarocks install json-lua 
-sudo luarocks install inspect
-sudo luarocks install ansicolors
+sudo luarocks --lua-version 5.1 install --server=https://luarocks.org/dev ltn12
+sudo luarocks --lua-version 5.1 install luasockets
+sudo luarocks --lua-version 5.1 install busted
+sudo luarocks --lua-version 5.1 install json-lua 
+sudo luarocks --lua-version 5.1 install inspect
+sudo luarocks --lua-version 5.1 install ansicolors
 ```
 ## How to run the tests
 
