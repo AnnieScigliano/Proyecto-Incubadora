@@ -1,7 +1,7 @@
 -- First connect to the incubator's own Wi-Fi to perform unit tests (ssid : incubator | passwd : 12345678) default url: "http://192.168.16.10/"
 http_request_methods = {
   http        = require("socket.http"),
-  apiendpoint = "http://192.168.16.10/",
+  apiendpoint = "http://192.168.1.10/",
   JSON        = require("JSON"),
   inspect     = require("inspect"),
   assert      = require("luassert"),
