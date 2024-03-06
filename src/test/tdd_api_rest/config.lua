@@ -115,7 +115,7 @@ function config:set_config_ok()
         http_request_methods.assert.are.equal(new_config.min_temperature, 40,
                                               "Error: min_temperature no es igual a 40")
         http_request_methods.assert.are.equal(new_config.rotation_duration,
-                                              36000,
+        3600000,
                                               "Error: rotation_duration no es igual a 3500000")
         http_request_methods.assert.are.equal(new_config.rotation_period, 5000,
                                               "Error: rotation_period no es igual a 5000")
@@ -218,7 +218,7 @@ function config:assert_defconfig()
     http_request_methods.assert.are
         .equal(default_config.rotation_duration, 5000)
     http_request_methods.assert.are
-        .equal(default_config.rotation_period, 360000)
+        .equal(default_config.rotation_period, 3600000)
     http_request_methods.assert.are.equal(default_config.ssid, "incubator")
     http_request_methods.assert.are.equal(default_config.passwd, "1234554321")
 
