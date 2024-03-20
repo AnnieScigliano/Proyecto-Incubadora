@@ -68,4 +68,21 @@ function send_data_grafana(temperature,humidity,pressure,INICIALES)
 end -- * send_data_grafana end
 
 
+function heap_grafana_message(url)
+  local heap_bytes = node.heap()
+  local node_heap =  tonumber((heap_bytes / 1048576))  -- 1,048,576 bytes = 1Mb
 
+  local response = "heap,device=" .. INICIALES .. " free_heap=" .. node_heap .. string.format("%.0f", ((time.get()) * 1000000000))
+
+  local headers = {
+    ["Content-Type"] = "text/plain",
+    ["Authorization"] = "Basic " .. token_grafana
+  }
+  http.post(url, {headers=headers}, response, function(code, _)
+    if(code ~= 204) then
+      print("heap code status" .. code)
+    end -- if end
+  end) -- callback end
+end -- function end
+
+heap_grafana_message(url,token_grafana)
