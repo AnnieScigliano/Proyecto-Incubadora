@@ -164,3 +164,13 @@ local rotation = tmr.create()
 --rotation:register(20000, tmr.ALARM_AUTO, rotate)
 rotation:register(incubator.rotation_period, tmr.ALARM_AUTO, rotate)
 rotation:start()
+
+local send_data_heap = tmr.create()
+send_data_heap:register(10000, tmr.ALARM_AUTO, heap_grafana_message)
+send_data_heap:start()
+
+
+local send_data_uptime = tmr.create()
+send_data_uptime:register(10000, tmr.ALARM_AUTO, uptime_grafana_message)
+send_data_uptime:start()
+

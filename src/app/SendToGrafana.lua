@@ -4,8 +4,8 @@
 require('credentials')
 
 -- ! Local Variables 
-local token_grafana = "token:e98697797a6a592e6c886277041e6b95"
-local url = SERVER
+token_grafana = "token:e98697797a6a592e6c886277041e6b95"
+url = SERVER
 
 
 ------------------------------------------------------------------------------------
@@ -57,18 +57,17 @@ function send_data_grafana(temperature,humidity,pressure,INICIALES)
 				["Authorization"] = "Basic " .. token_grafana
 		}
 		http.post(url, {headers = headers}, data,
-			
 			function(code_return, data_return) 
-				
 				if (code_return ~= 204) then
 					print(" " .. code_return)
 				end
-			
 		end) -- * post function end
 end -- * send_data_grafana end
 
-
-function heap_grafana_message(url)
+----------------------------------------------------------------
+-- @ function heap_grafana_message  send the free to grafana
+----------------------------------------------------------------
+function heap_grafana_message()
   local heap_bytes = node.heap()
   local node_heap =  tonumber((heap_bytes / 1048576))  -- 1,048,576 bytes = 1Mb
 
@@ -80,9 +79,40 @@ function heap_grafana_message(url)
   }
   http.post(url, {headers=headers}, response, function(code, _)
     if(code ~= 204) then
-      print("heap code status" .. code)
+      print(" " .. code)
     end -- if end
   end) -- callback end
 end -- function end
 
-heap_grafana_message(url,token_grafana)
+-----------------------------------------------------------------
+--@ function uptime_grafana_message   send the uptime to grafana
+------------------------------------------------------------------
+
+function uptime_grafana_message()
+  --The first is the time in microseconds since boot or the last time the counter wrapped 
+  -- and the second is the number of times the counter has wrapped.
+  local high_bytes, _ = node.uptime()
+  local uptime_secs = tonumber((high_bytes / 1000000))
+  -- uptime in minutes
+  local uptime = tonumber(uptime_secs / 60)
+
+  local response = "uptime,device=" .. INICIALES .. " up_time=" .. uptime .. string.format("%.0f", ((time.get()) * 1000000000))
+  local headers = {
+    ["Content-Type"] = "text/plain",
+    ["Authorization"] = "Basic " .. token_grafana
+  }
+  http.post(url, {headers=headers}, response, function (code, _)
+    if(code ~= 204) then
+      print(" " .. code)
+    end -- if end 
+  end) -- callback end
+end -- function end
+
+
+
+
+
+
+
+
+
