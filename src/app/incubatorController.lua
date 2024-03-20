@@ -13,8 +13,10 @@ require("SendToGrafana")
 alerts = require("alerts")
 incubator = require("incubator")
 apiserver = require("restapi")
-deque = require('deque')
-log = require('log')
+deque = require ('deque')
+log = require ('log')
+configurator = require('configurator')
+
 
 --log.level = "debug"
 --log.usecolor=false
@@ -143,7 +145,8 @@ end
 ------------------------------------------------------------------------------------
 
 incubator.init_values()
-apiserver.init_module(incubator)
+configurator.init_module(incubator)
+apiserver.init_module(incubator,configurator)
 incubator.enable_testing(false)
 
 ------------------------------------------------------------------------------------
