@@ -29,7 +29,20 @@ class SplashScreen extends StatelessWidget {
 
     return Scaffold(
       body: Center(
-        child: LogoWidget(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            LogoWidget(),
+            SizedBox(height: 20), // Espaciado entre el logo y el texto
+            Text(
+              'Powered By Altermundi',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

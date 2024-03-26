@@ -19,6 +19,8 @@ class _CHomeState extends State<CHome> {
   
   int _selectedIndex = 0; 
 
+  List<int> _bandejaSelectedIndexList = [1, 1, 1]; // Un índice para cada botón
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,12 +28,81 @@ class _CHomeState extends State<CHome> {
         title: Text('Contador de Días'),
       ),
       body: Center(
-        child: Text(
-          'mimimi',
-          style: TextStyle(
-            fontSize: 24.0,
-            fontWeight: FontWeight.bold,
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 200, // Ancho personalizado para los botones
+              child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    if (_bandejaSelectedIndexList[0] == 0) {
+                      _showRedDialog(0); // Pasa el índice del botón como argumento
+                    } else {
+                      _bandejaSelectedIndexList[0] = 0;
+                      _showGreenDialog();
+                    }
+                  });
+                  print('BANDEJA 1 pressed!');
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: _bandejaSelectedIndexList[0] == 1 ? const Color.fromARGB(255, 138, 201, 140) : const Color.fromARGB(255, 179, 65, 65),
+                ),
+                child: Text(
+                  'BANDEJA 1',
+                  style: TextStyle(color: Colors.white), 
+                  ),
+              ),
+            ),
+            SizedBox(height: 20), // Espacio entre los botones
+            SizedBox(
+              width: 200, // Ancho personalizado para los botones
+              child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    if (_bandejaSelectedIndexList[1] == 0) {
+                      _showRedDialog(1);  // Pasa el índice del botón como argumento
+                    } else {
+                      _bandejaSelectedIndexList[1] = 0;
+                      _showGreenDialog();
+                    }
+                  });
+                  print('BANDEJA 2 pressed!');
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: _bandejaSelectedIndexList[1] == 1 ? const Color.fromARGB(255, 138, 201, 140) :  const Color.fromARGB(255, 179, 65, 65),
+                ),
+                child: Text(
+                  'BANDEJA 2',
+                  style: TextStyle(color: Colors.white), 
+                  ),
+              ),
+            ),
+            SizedBox(height: 20), // Espacio entre los botones
+            SizedBox(
+              width: 200, // Ancho personalizado para los botones
+              child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    if (_bandejaSelectedIndexList[2] == 0) {
+                      _showRedDialog(2); // Pasa el índice del botón como argumento
+                    } else {
+                      _bandejaSelectedIndexList[2] = 0;
+                      _showGreenDialog();
+                    }
+                  });
+                  print('BANDEJA 3 pressed!');
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: _bandejaSelectedIndexList[2] == 1 ? const Color.fromARGB(255, 138, 201, 140) : const Color.fromARGB(255, 179, 65, 65),
+                ),
+                child: Text(
+                  'BANDEJA 3',
+                  style: TextStyle(color: Colors.white), 
+                  ),
+              ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -89,4 +160,53 @@ class _CHomeState extends State<CHome> {
         break;
     }
   }
+
+  void _showGreenDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('La bandeja ha comenzado un nuevo ciclo, los huevos deberán ser movidos a nacedora en 18 días'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Aceptar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showRedDialog(int index) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('El ciclo todavía no terminó. ¿Está seguro de que desea cambiar el estado de la bandeja?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Cerrar el diálogo sin cambiar el color del botón
+            },
+            child: Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _bandejaSelectedIndexList[index] = 1; // Cambiar el color del botón
+              });
+              Navigator.of(context).pop(); // Cerrar el diálogo
+            },
+            child: Text('Aceptar'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
 }

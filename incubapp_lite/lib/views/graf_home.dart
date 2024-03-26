@@ -1,3 +1,4 @@
+import 'dart:io';                     
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,15 +10,24 @@ import 'package:incubapp_lite/views/initial_home.dart';
 //import 'package:incubapp_lite/services/api_services.dart';
 //import 'package:incubapp_lite/services/counter_home.dart';
 import 'package:incubapp_lite/views/counter_home.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:incubapp_lite/utils/constants.dart';
+
+
+
 
 class GHome extends StatefulWidget {
+  const GHome({Key? key}) : super(key: key);
+
   @override
   _GHomeState createState() => _GHomeState();
 }
 
 class _GHomeState extends State<GHome> {
 
-    int _selectedIndex = 0; 
+  int _selectedIndex = 0; 
+
+  late WebViewController _webViewController;
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +35,20 @@ class _GHomeState extends State<GHome> {
       appBar: AppBar(
         title: Text('Visualizador Grafana'),
       ),
-      body: Center(
-        child: Text(
-          'mimimi',
-          style: TextStyle(
-            fontSize: 24.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+      body: WebView(
+        initialUrl: 'https://grafana.altermundi.net/',
+        onWebViewCreated: (WebViewController webViewController) {
+          _webViewController = webViewController;
+        },
+        onPageStarted: (String url) {
+          print('Page started loading: $url');
+        },
+        onPageFinished: (String url) {
+          print('Page finished loading: $url');
+        },
+        onWebResourceError: (WebResourceError error) {
+          print('Encountered an error: $error');
+        },
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
