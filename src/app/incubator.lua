@@ -30,8 +30,8 @@ local M = {
 	is_simulate_temp_local = false,
 	rotation_duration        = 5000, -- time in ms
 	rotation_period      = 3600000, -- time in ms
-	-- ssid = nil, 
-	-- passwd = nil
+	ssid = SSID,
+	passwd = PASSWORD,
 }
 
 _G[M.name] = M

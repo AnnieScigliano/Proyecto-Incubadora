@@ -1,20 +1,18 @@
 -- load credentials, 'SSID' and 'PASSWORD' declared and initialize in there
-
--------------------------------------
 -- global variables come from credentials.lua
--------------------------------------
+
+
+-- global table to handle wifi events
+W = {}
+_G[W] = W
 
 dofile("credentials.lua")
 ONLINE = 0
 IPADD = nil
 IPGW = nil
 
-------------------------------------------------------------------------------------
--- 
 -- ! @function startup                   opens init.lua if exists, otherwise,
 -- !                                     prints "running"
---
-------------------------------------------------------------------------------------
 
 function startup()
 	if file.open("init.lua") == nil then
@@ -22,19 +20,14 @@ function startup()
 	else
 		print("Running")
 		file.close("init.lua")
-		-------------------------------------
 		-- the actual application is stored in 'application.lua'
-		-------------------------------------
 		dofile("application.lua")
 	end -- end else
 end -- end if
 
-------------------------------------------------------------------------------------
---
+
 -- ! @function configwifi                sets the wifi configurations
 -- !                                     uses SSID and PASSWORD from credentials.lua
---
-------------------------------------------------------------------------------------
 
 function configwifi()
 	print("Running")
@@ -64,14 +57,9 @@ function configwifi()
 	wifi.sta.connect()
 end -- end function
 
-------------------------------------------------------------------------------------
---
 -- ! @function wifi_connect_event        establishes connection
---
 -- ! @param ev                           event status
 -- ! @param info                         net information
---
-------------------------------------------------------------------------------------
 
 function wifi_connect_event (ev, info)
 	print(string.format("conecction to AP %s established!", tostring(info.ssid)))
@@ -85,20 +73,13 @@ function wifi_connect_event (ev, info)
 
 end -- end function
 
-------------------------------------------------------------------------------------
---
 -- ! @function wifi_got_ip_event         prints net ip, netmask and gw
---
 -- ! @param ev                           event status
 -- ! @param info                         net information
--- ! 
-------------------------------------------------------------------------------------
 
 function wifi_got_ip_event (ev, info)
-	-------------------------------------
 	-- Note: Having an IP address does not mean there is internet access!
 	-- Internet connectivity can be determined with net.dns.resolve().
-	-------------------------------------
 	ONLINE = 1
 	IPADD = info.ip
 	IPGW = info.gw
@@ -114,36 +95,25 @@ function wifi_got_ip_event (ev, info)
 
 end -- end function
 
-------------------------------------------------------------------------------------
---
 -- ! @function wifi_disconnect_event     when not able to connect, prints why
---
 -- ! @param ev                           event status
 -- ! @param info                         net information
---
-------------------------------------------------------------------------------------
 function wifi_disconnect_event (ev, info)
 	ONLINE = 0
 	print(info)
 	print(info.reason)
 	print(info.ssid)
 	if info.reason == 8 then
-		-------------------------------------
 		--the station has disassociated from a previously connected AP
-		-------------------------------------
 		return
 	end -- end function
 
-	------------------------------------------------------------------------------------
 	-- total_tries: how many times the station will attempt to connect to the AP. Should consider AP reboot duration.
-	------------------------------------------------------------------------------------
 	local total_tries = 10
 	print("\nWiFi connection to AP(" .. info.ssid .. ") has failed!")
 
-	------------------------------------------------------------------------------------
 	-- There are many possible disconnect reasons, the following iterates through
 	-- the list and returns the string corresponding to the disconnect reason.
-	------------------------------------------------------------------------------------
 	print("Disconnect reason: " .. info.reason)
 	if disconnect_ct == nil then
 		disconnect_ct = 1
@@ -156,14 +126,10 @@ function wifi_disconnect_event (ev, info)
 		print("Retrying connection...(attempt " .. (disconnect_ct + 1) .. " of " .. total_tries .. ")")
 	else
 		wifi.sta.disconnect()
-		------------------------------------------------------------------------------------
-		--
-		-- ! @function wifi.sta.scan         prints avaliable networks
-		--
+	
+    -- ! @function wifi.sta.scan         prints avaliable networks
 		-- ! @param err                      when scan fails shows the error
 		-- ! @param arr                      lists the avaliable networks
-		--
-		------------------------------------------------------------------------------------
 		wifi.sta.scan({ hidden = 1 }, 
 			function(err,arr)
 				if err then
@@ -187,3 +153,27 @@ end -- end function
 
 configwifi()
 print("Connecting to WiFi access point...")
+
+
+function W:on_change(new_config_table)
+  local credentials_ssid = SSID
+  local incubator  = require("incubator")
+    if new_config_table.ssid == credentials_ssid then
+      print("[#] same network")
+      incubator:set_new_ssid(credentials_ssid)
+      return
+
+    elseif new_config_table.ssid ~= credentials_ssid then
+      station_cfg.ssid = new_config_table.ssid
+      station_cfg.pwd = new_config_table.passwd
+  	  station_cfg.scan_method = all
+      wifi.stop()
+      wifi.ap.on("sta_connected", function(_, info) print("MAC_id"..info.mac,"Name"..info.id) end) 
+      wifi.start()
+      wifi.sta.config(station_cfg, true)
+      wifi.sta.connect()
+  end
+
+end
+
+return W

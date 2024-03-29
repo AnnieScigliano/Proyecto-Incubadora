@@ -1,6 +1,7 @@
 configurator =
 {
-  wifi = {},
+  wifi = { wifi_handler = require("wifiinit")},
+  
   incubator = {}
 
 }
@@ -16,16 +17,8 @@ function configurator:init_module(incubator_object)
   end
 end
 
--------------------------------------------------------------------------------------
 --------------------------        CONFIGURATOR       --------------------------------
--------------------------------------------------------------------------------------
--- @method configurator.set_new_credentials	set the new credentials for wifi
--------------------------------------------------------------------------------------
-function configurator.wifi:set_new_credentials(ssid, passwd)
-  -- TODO
-end
 
--------------------------------------------------------------------------------------
 -- @method configurator:encode_config_file	encode the new config.json
 -------------------------------------------------------------------------------------
 function configurator:encode_config_file(new_config_table)
@@ -94,6 +87,7 @@ function configurator:load_objects_data(new_config_table)
       status.passwd = incubator.set_passwd(tostring(value))
     end
   end
+  configurator.wifi.wifi_handler:on_change(new_config_table)
   return status
 end
 
