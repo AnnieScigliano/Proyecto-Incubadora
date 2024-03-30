@@ -6,6 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:android_flutter_wifi/android_flutter_wifi.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:incubapp_lite/views/home.dart';
+import 'package:incubapp_lite/views/wifi_home.dart';
+import 'package:incubapp_lite/views/initial_home.dart';
+import 'package:incubapp_lite/services/api_services.dart';
+import 'package:incubapp_lite/views/counter_home.dart';
+import 'package:incubapp_lite/views/graf_home.dart';
 
 class WHome extends StatefulWidget {
   const WHome({Key? key}) : super(key: key);
@@ -15,6 +21,9 @@ class WHome extends StatefulWidget {
 }
 
 class _WHomeState extends State<WHome> {
+  
+  int _selectedIndex = 0;
+
   late Wifi? _wifiModel = null;
 
   @override
@@ -108,6 +117,7 @@ class _WHomeState extends State<WHome> {
     );
 
     if (selectedSSID != null) {
+      // Ahora puedes realizar la conexión con la red seleccionada y la contraseña ingresada
       _connectToWifi(selectedSSID, password);
     }
   }
@@ -158,6 +168,61 @@ class _WHomeState extends State<WHome> {
                 );
               },
             ),
+    
+    bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        backgroundColor: const Color.fromARGB(65, 65, 65, 1),
+        selectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.black,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.wifi),
+            label: 'Conexion',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Configuraciones',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.egg),
+            label: 'Contador',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.monitor_heart),
+            label: 'Grafana',
+          ),
+        ],
+      ),
     );
   }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => IHome()));
+        break;
+      case 1:
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => WHome()));
+        break;
+      case 2:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+        break;
+      case 3:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => CHome()));
+        break;
+      case 4:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => GHome()));
+        break;
+    }
+  }
+
 }

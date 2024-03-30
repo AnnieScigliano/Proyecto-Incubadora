@@ -1,5 +1,3 @@
-//comentario para ver si funciona el pull request
-
 import 'dart:convert';
 
 Wifi wifiFromJson(String str) => Wifi.fromJson(json.decode(str));
