@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:incubapp_lite/models/actual_model.dart';
 import 'package:incubapp_lite/utils/constants.dart';
 import 'package:incubapp_lite/models/max_temp_model.dart';
 import 'package:incubapp_lite/models/min_temp_model.dart';
 import 'package:incubapp_lite/models/version_model.dart';
 import 'package:incubapp_lite/models/rotation_model.dart';
 import 'package:incubapp_lite/models/wifi_model.dart';
+import 'package:incubapp_lite/models/config_model.dart';
 
 // logica para consumo de datos en la api
 
@@ -80,4 +82,41 @@ class ApiService {
     }
     return null;
   }
+
+  Future<Actual?> getActual() async {
+    try {
+      var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.actualEndPoint);
+      print('URL de la API: $url');
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        Actual model = actualFromJson(response.body);
+        return model;
+      } else {
+        print('Respuesta de la API no exitosa: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error en la llamada a la API: $e');
+      log(e.toString());
+    }
+    return null;
+  }
+
+  Future<Config?> getConfig() async {
+    try {
+      var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.configEndPoint);
+      print('URL de la API: $url');
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        Config model = configFromJson(response.body);
+        return model;
+      } else {
+        print('Respuesta de la API no exitosa: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error en la llamada a la API: $e');
+      log(e.toString());
+    }
+    return null;
+  }
+
 }
