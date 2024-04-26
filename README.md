@@ -41,9 +41,13 @@ then download the sdkmanager file to be able to compile the firmware:
 ```bash
  wget -c https://cutt.ly/QwjY9Sdt --output-document sdkconfig --show-progress
 ```
-
 ```bash
 git pull
+```
+```bash
+./install.sh
+```
+```bash
 make menuconfig  
 ```
 
